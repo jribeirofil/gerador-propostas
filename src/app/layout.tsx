@@ -1,0 +1,23 @@
+import type { Metadata } from 'next'
+import './globals.css'
+import ThemeProvider from '@/components/ui/ThemeProvider'
+
+export const metadata: Metadata = {
+  title: 'FineAndYou Propostas',
+  description: 'Gerador de propostas comerciais FineAndYou',
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <div className="fixed inset-x-0 top-0 z-[999] h-[5px] bg-fay-green" />
+          <div className="pt-[5px] flex flex-col" style={{ height: '100dvh' }}>
+            {children}
+          </div>
+        </ThemeProvider>
+      </body>
+    </html>
+  )
+}

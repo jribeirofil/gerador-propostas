@@ -1,0 +1,48 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import crypto from 'crypto'
+
+export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+
+  const db = createAdminClient()
+
+  const { data: proposal, error } = await db
+    .from('proposal')
+    .select('id, public_token, version, status')
+    .eq('id', params.id)
+    .single()
+
+  if (error || !proposal) {
+    return NextResponse.json({ error: 'Proposta não encontrada' }, { status: 404 })
+  }
+
+  const newVersion = (proposal.version as number) + 1
+  const token = (proposal.public_token as string | null) ?? crypto.randomBytes(18).toString('base64url')
+
+  const { error: updateError } = await db
+    .from('proposal')
+    .update({
+      version: newVersion,
+      status: 'sent',
+      public_token: token,
+      has_pending_review: false,
+    })
+    .eq('id', params.id)
+
+  if (updateError) {
+    return NextResponse.json({ error: 'Erro ao publicar versão' }, { status: 500 })
+  }
+
+  await db.from('proposal_event').insert({
+    proposal_id: params.id,
+    event_type: 'sent',
+    created_by: user.id,
+    metadata: { version: String(newVersion) },
+  })
+
+  return NextResponse.json({ token, version: newVersion })
+}

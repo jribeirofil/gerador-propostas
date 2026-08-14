@@ -1,0 +1,53 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+
+  const { status, lost_reason, lost_comment } = await req.json() as {
+    status: string
+    lost_reason?: string
+    lost_comment?: string
+  }
+
+  if (!['open', 'won', 'lost'].includes(status)) {
+    return NextResponse.json({ error: 'Status inválido' }, { status: 400 })
+  }
+
+  if (status === 'lost' && !lost_reason) {
+    return NextResponse.json({ error: 'Motivo de perda é obrigatório' }, { status: 400 })
+  }
+
+  const db = createAdminClient()
+
+  const patch: Record<string, string | null> = { opportunity_status: status }
+  if (status === 'lost') {
+    patch.lost_reason = lost_reason ?? null
+    patch.lost_comment = lost_comment || null
+  } else {
+    patch.lost_reason = null
+    patch.lost_comment = null
+  }
+
+  const { error } = await db.from('proposal').update(patch).eq('id', params.id)
+  if (error) return NextResponse.json({ error: 'Erro ao atualizar' }, { status: 500 })
+
+  const eventType =
+    status === 'won'  ? 'opportunity_won' :
+    status === 'lost' ? 'opportunity_lost' :
+    'opportunity_reopened'
+
+  await db.from('proposal_event').insert({
+    proposal_id: params.id,
+    event_type: eventType,
+    created_by: user.id,
+    metadata: status === 'lost'
+      ? { reason: lost_reason, ...(lost_comment ? { comment: lost_comment } : {}) }
+      : null,
+  })
+
+  return NextResponse.json({ ok: true })
+}

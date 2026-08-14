@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens ──────────────────────────────────────────────── */
+:root {
+  /* Brand */
+  --fay-green:      #1FE97C;
+  --fay-green-deep: #00B765;
+  --fay-mint:       #D7F9DE;
+
+  /* Light mode surfaces */
+  --bg:          #FFFFFF;
+  --surface:     #FFFFFF;
+  --surface-2:   #F0F2F5;
+  --border:      #E4E8EE;
+  --border-subtle: #EDF0F4;
+
+  /* Light mode text */
+  --text:        #0F1318;
+  --text-muted:  #6B7280;
+  --text-subtle: #9CA3AF;
+
+  /* Overlay (replaces bg-white/5, bg-white/10, border-white/10 patterns) */
+  --overlay:        rgba(0,0,0,0.04);
+  --overlay-md:     rgba(0,0,0,0.08);
+  --overlay-lg:     rgba(0,0,0,0.13);
+  --overlay-border: rgba(0,0,0,0.08);
+
+  /* Interactive hover (rows, clickable items) — shared design token */
+  --row-hover: #F0F8F4;
+
+  /* Sidebar light */
+  --sidebar-bg:     #FFFFFF;
+  --sidebar-border: #E4E8EE;
+  --sidebar-active: #F0F8F4;
+  --sidebar-active-text: #00B765;
+  --sidebar-text:   #374151;
+  --sidebar-muted:  #9CA3AF;
+}
+
+.dark {
+  /* Dark mode surfaces */
+  --bg:          #161B20;
+  --surface:     #1C2229;
+  --surface-2:   #222A32;
+  --border:      #2A3038;
+  --border-subtle: #242C35;
+
+  /* Dark mode text */
+  --text:        #F0F4F8;
+  --text-muted:  #8899AA;
+  --text-subtle: #50565C;
+
+  /* Overlay dark */
+  --overlay:        rgba(255,255,255,0.05);
+  --overlay-md:     rgba(255,255,255,0.10);
+  --overlay-lg:     rgba(255,255,255,0.16);
+  --overlay-border: rgba(255,255,255,0.10);
+
+  /* Interactive hover dark */
+  --row-hover: rgba(31,233,124,0.08);
+
+  /* Sidebar dark */
+  --sidebar-bg:     #161B20;
+  --sidebar-border: #2A3038;
+  --sidebar-active: rgba(31,233,124,0.08);
+  --sidebar-active-text: #1FE97C;
+  --sidebar-text:   #C8D4E0;
+  --sidebar-muted:  #50565C;
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, .font-display {
+  font-family: 'Sora', sans-serif;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-subtle); }

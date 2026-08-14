@@ -1,0 +1,19 @@
+# Dependencies / build
+node_modules/
+.next/
+*.tsbuildinfo
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+
+# Tooling artifacts (graphify, gstack)
+graphify-out/
+.gstack/
+
+# Logs
+*.log
