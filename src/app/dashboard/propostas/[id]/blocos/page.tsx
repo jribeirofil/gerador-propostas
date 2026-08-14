@@ -2,6 +2,7 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Breadcrumb from '@/components/ui/Breadcrumb'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getSessionOrgId } from '@/lib/org'
 import { createBlocksFromTemplate } from '@/lib/blocks'
 import BlockEditor from '@/components/proposal/BlockEditor'
 import type { ProposalBlock } from '@/lib/blocks'
@@ -11,6 +12,8 @@ export default async function BlocosPage({ params }: { params: { id: string } })
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  const orgId = await getSessionOrgId()
+
   const db = createAdminClient()
 
   const [proposalRes, blocksRes, profileRes] = await Promise.all([
@@ -18,6 +21,7 @@ export default async function BlocosPage({ params }: { params: { id: string } })
       .from('proposal')
       .select('id, title, template_id, client:clients(empresa), products:proposal_product(snapshot)')
       .eq('id', params.id)
+      .eq('organization_id', orgId)
       .single(),
     db
       .from('proposal_block')

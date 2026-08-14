@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getOrgIdForUser } from '@/lib/org'
 import { searchRDContacts } from '@/lib/rdstation'
 
 export interface ClientSearchResult {
@@ -22,6 +23,9 @@ export async function GET(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
+  const orgId = await getOrgIdForUser(supabase, user.id)
+  if (!orgId) return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 403 })
+
   const q = req.nextUrl.searchParams.get('q')?.trim() || ''
   if (q.length < 2) return NextResponse.json({ results: [] })
 
@@ -31,6 +35,7 @@ export async function GET(req: NextRequest) {
   const { data: localClients } = await db
     .from('clients')
     .select('id, empresa, contato, email, whatsapp, cargo, cnpj, colaboradores, segmento')
+    .eq('organization_id', orgId)
     .or(`empresa.ilike.%${q}%,contato.ilike.%${q}%,email.ilike.%${q}%`)
     .order('empresa')
     .limit(5)

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getOrgIdForUser } from '@/lib/org'
 import crypto from 'crypto'
 
 export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
@@ -8,12 +9,16 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
+  const orgId = await getOrgIdForUser(supabase, user.id)
+  if (!orgId) return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 403 })
+
   const db = createAdminClient()
 
   const { data: proposal, error } = await db
     .from('proposal')
     .select('id, public_token, version, status')
     .eq('id', params.id)
+    .eq('organization_id', orgId)
     .single()
 
   if (error || !proposal) {
@@ -32,6 +37,7 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
       has_pending_review: false,
     })
     .eq('id', params.id)
+    .eq('organization_id', orgId)
 
   if (updateError) {
     return NextResponse.json({ error: 'Erro ao publicar versão' }, { status: 500 })

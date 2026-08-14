@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getOrgIdForUser } from '@/lib/org'
 import { BLOCK_LABELS, type BlockType } from '@/lib/blocks'
 
 const OPERATION_PROMPTS = {
@@ -20,6 +21,9 @@ export async function POST(
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
+  const orgId = await getOrgIdForUser(supabase, user.id)
+  if (!orgId) return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 403 })
+
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) return NextResponse.json({ error: 'ANTHROPIC_API_KEY não configurada.' }, { status: 500 })
 
@@ -36,12 +40,13 @@ export async function POST(
 
   const db = createAdminClient()
 
-  const [blockRes, settingsRes] = await Promise.all([
+  const [blockRes, settingsRes, proposalRes] = await Promise.all([
     db.from('proposal_block').select('id').eq('id', params.blockId).eq('proposal_id', params.id).single(),
-    db.from('company_settings').select('ai_tone').limit(1).maybeSingle(),
+    db.from('company_settings').select('ai_tone').eq('organization_id', orgId).limit(1).maybeSingle(),
+    db.from('proposal').select('id').eq('id', params.id).eq('organization_id', orgId).maybeSingle(),
   ])
 
-  if (!blockRes.data) return NextResponse.json({ error: 'Bloco não encontrado.' }, { status: 404 })
+  if (!blockRes.data || !proposalRes.data) return NextResponse.json({ error: 'Bloco não encontrado.' }, { status: 404 })
 
   const aiTone = settingsRes.data?.ai_tone
 

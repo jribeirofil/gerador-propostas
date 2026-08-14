@@ -5,14 +5,15 @@ import Breadcrumb from '@/components/ui/Breadcrumb'
 import TemplateEditor from '@/components/admin/TemplateEditor'
 
 export default async function TemplateEditorPage({ params }: { params: { id: string } }) {
-  await requireAdmin()
+  const { profile } = await requireAdmin()
   const db = createAdminClient()
+  const orgId = profile?.organization_id ?? null
 
   const [templateRes, blocksRes, productsRes, countRes] = await Promise.all([
-    db.from('proposal_template').select('*').eq('id', params.id).single(),
+    db.from('proposal_template').select('*').eq('id', params.id).eq('organization_id', orgId).single(),
     db.from('template_block').select('*').eq('template_id', params.id).order('sort_order'),
-    db.from('product').select('id, name, slug').eq('active', true).order('sort_order'),
-    db.from('proposal_template').select('id', { count: 'exact', head: true }),
+    db.from('product').select('id, name, slug').eq('active', true).eq('organization_id', orgId).order('sort_order'),
+    db.from('proposal_template').select('id', { count: 'exact', head: true }).eq('organization_id', orgId),
   ])
 
   if (!templateRes.data) notFound()

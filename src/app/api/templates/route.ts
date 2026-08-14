@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getOrgIdForUser } from '@/lib/org'
 import { DEFAULT_BLOCK_ORDER, BLOCK_LABELS, type BlockType } from '@/lib/blocks'
 import type { Json } from '@/types/database.types'
 
@@ -30,6 +31,9 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
+  const orgId = await getOrgIdForUser(supabase, user.id)
+  if (!orgId) return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 403 })
+
   const db = createAdminClient()
   const body = await req.json()
   const { name, description, is_default, product_slugs } = body as {
@@ -43,7 +47,7 @@ export async function POST(req: NextRequest) {
 
   // If setting as default, clear other defaults first
   if (is_default) {
-    await db.from('proposal_template').update({ is_default: false }).eq('is_default', true)
+    await db.from('proposal_template').update({ is_default: false }).eq('is_default', true).eq('organization_id', orgId)
   }
 
   const { data: template, error } = await db
@@ -53,6 +57,7 @@ export async function POST(req: NextRequest) {
       description: description?.trim() || null,
       is_default: is_default ?? false,
       product_slugs: product_slugs || [],
+      organization_id: orgId,
     })
     .select()
     .single()

@@ -12,12 +12,16 @@ export async function POST(request: NextRequest) {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role')
+    .select('role, organization_id')
     .eq('id', user.id)
     .single()
 
   if (profile?.role !== 'admin') {
     return NextResponse.json({ error: 'Acesso negado.' }, { status: 403 })
+  }
+
+  if (!profile?.organization_id) {
+    return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 403 })
   }
 
   const body = await request.json()
@@ -56,6 +60,7 @@ export async function POST(request: NextRequest) {
     phone: phone?.trim() || null,
     role: role || 'seller',
     active: true,
+    organization_id: profile.organization_id,
   })
 
   await supabase.auth.resetPasswordForEmail(email.trim(), {

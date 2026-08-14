@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getOrgIdForUser } from '@/lib/org'
 import { DEFAULT_BLOCK_ORDER, BLOCK_LABELS, type BlockType } from '@/lib/blocks'
 import type { Json } from '@/types/database.types'
 
@@ -35,6 +36,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
+  const orgId = await getOrgIdForUser(supabase, user.id)
+  if (!orgId) return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 403 })
+
   const db = createAdminClient()
   if (!(await requireAdmin(user, db))) return NextResponse.json({ error: 'Acesso negado.' }, { status: 403 })
 
@@ -54,6 +58,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       .from('proposal_template')
       .select('is_default')
       .eq('id', params.id)
+      .eq('organization_id', orgId)
       .single()
 
     if (current?.is_default === true) {
@@ -61,6 +66,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         .from('proposal_template')
         .select('id')
         .eq('is_default', true)
+        .eq('organization_id', orgId)
         .neq('id', params.id)
         .limit(1)
         .maybeSingle()
@@ -76,7 +82,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
   // Setting this as default: clear all other defaults
   if (is_default === true) {
-    await db.from('proposal_template').update({ is_default: false }).eq('is_default', true).neq('id', params.id)
+    await db.from('proposal_template').update({ is_default: false }).eq('is_default', true).eq('organization_id', orgId).neq('id', params.id)
   }
 
   const { data, error } = await db
@@ -90,6 +96,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       ...(cover_video_url !== undefined ? { cover_video_url: cover_video_url || null } : {}),
     })
     .eq('id', params.id)
+    .eq('organization_id', orgId)
     .select()
     .single()
 
@@ -102,12 +109,16 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
+  const orgId = await getOrgIdForUser(supabase, user.id)
+  if (!orgId) return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 403 })
+
   const db = createAdminClient()
   if (!(await requireAdmin(user, db))) return NextResponse.json({ error: 'Acesso negado.' }, { status: 403 })
 
   const { data: allTemplates } = await db
     .from('proposal_template')
     .select('id, is_default')
+    .eq('organization_id', orgId)
     .order('created_at', { ascending: true })
 
   const total = allTemplates?.length ?? 0
@@ -130,7 +141,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   }
 
   await db.from('template_block').delete().eq('template_id', params.id)
-  const { error } = await db.from('proposal_template').delete().eq('id', params.id)
+  const { error } = await db.from('proposal_template').delete().eq('id', params.id).eq('organization_id', orgId)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   return NextResponse.json({ ok: true })
@@ -142,11 +153,14 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
+  const orgId = await getOrgIdForUser(supabase, user.id)
+  if (!orgId) return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 403 })
+
   const db = createAdminClient()
   if (!(await requireAdmin(user, db))) return NextResponse.json({ error: 'Acesso negado.' }, { status: 403 })
 
   const [templateRes, blocksRes] = await Promise.all([
-    db.from('proposal_template').select('*').eq('id', params.id).single(),
+    db.from('proposal_template').select('*').eq('id', params.id).eq('organization_id', orgId).single(),
     db.from('template_block').select('*').eq('template_id', params.id).order('sort_order'),
   ])
 
@@ -159,6 +173,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       description: templateRes.data.description,
       is_default: false,
       product_slugs: templateRes.data.product_slugs,
+      organization_id: orgId,
     })
     .select()
     .single()

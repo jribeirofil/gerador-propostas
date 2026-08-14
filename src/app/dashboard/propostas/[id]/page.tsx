@@ -1,6 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getSessionOrgId } from '@/lib/org'
 import { createBlocksFromTemplate } from '@/lib/blocks'
 import ProposalWorkspace from '@/components/proposal/ProposalWorkspace'
 import type { ProposalBlock } from '@/lib/blocks'
@@ -10,6 +11,8 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  const orgId = await getSessionOrgId()
+
   const db = createAdminClient()
 
   const [proposalRes, blocksRes, eventsRes, profileRes, settingsRes, analyticsRes, catalogRes] = await Promise.all([
@@ -17,6 +20,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       .from('proposal')
       .select('*, client:clients(*), products:proposal_product(*)')
       .eq('id', params.id)
+      .eq('organization_id', orgId)
       .single(),
     db
       .from('proposal_block')
@@ -29,7 +33,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       .eq('proposal_id', params.id)
       .order('created_at', { ascending: false }),
     db.from('profiles').select('full_name, job_title, phone').eq('id', user.id).single(),
-    db.from('company_settings').select('company_name, logo_url, primary_color, company_site, company_email, company_phone, company_whatsapp').limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, logo_url, primary_color, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
     db
       .from('proposal_analytics')
       .select('event_type, session_id, created_at')
@@ -46,6 +50,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
         differentials:product_differential(id, title, sort_order, active)
       `)
       .eq('active', true)
+      .eq('organization_id', orgId)
       .order('sort_order', { ascending: true }),
   ])
 
@@ -69,6 +74,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
     .from('proposal')
     .select('id, version, status, created_at, title')
     .eq('version_group', proposal.version_group)
+    .eq('organization_id', orgId)
     .order('version', { ascending: false })
 
   const profile = profileRes.data

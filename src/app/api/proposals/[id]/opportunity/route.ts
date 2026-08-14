@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getOrgIdForUser } from '@/lib/org'
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+
+  const orgId = await getOrgIdForUser(supabase, user.id)
+  if (!orgId) return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 403 })
 
   const { status, lost_reason, lost_comment } = await req.json() as {
     status: string
@@ -23,6 +27,17 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
   const db = createAdminClient()
 
+  const { data: proposal } = await db
+    .from('proposal')
+    .select('id')
+    .eq('id', params.id)
+    .eq('organization_id', orgId)
+    .maybeSingle()
+
+  if (!proposal) {
+    return NextResponse.json({ error: 'Proposta não encontrada' }, { status: 404 })
+  }
+
   const patch: Record<string, string | null> = { opportunity_status: status }
   if (status === 'lost') {
     patch.lost_reason = lost_reason ?? null
@@ -32,7 +47,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     patch.lost_comment = null
   }
 
-  const { error } = await db.from('proposal').update(patch).eq('id', params.id)
+  const { error } = await db.from('proposal').update(patch).eq('id', params.id).eq('organization_id', orgId)
   if (error) return NextResponse.json({ error: 'Erro ao atualizar' }, { status: 500 })
 
   const eventType =

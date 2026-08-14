@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getOrgIdForUser } from '@/lib/org'
 import { BLOCK_LABELS, type BlockType } from '@/lib/blocks'
 
 const OPERATION_PROMPTS = {
@@ -17,6 +18,9 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
+  const orgId = await getOrgIdForUser(supabase, user.id)
+  if (!orgId) return NextResponse.json({ error: 'Organização não encontrada.' }, { status: 403 })
+
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) return NextResponse.json({ error: 'ANTHROPIC_API_KEY não configurada.' }, { status: 500 })
 
@@ -31,7 +35,7 @@ export async function POST(req: NextRequest) {
   }
 
   const db = createAdminClient()
-  const { data: settings } = await db.from('company_settings').select('ai_tone').limit(1).maybeSingle()
+  const { data: settings } = await db.from('company_settings').select('ai_tone').eq('organization_id', orgId).limit(1).maybeSingle()
   const toneInstruction = settings?.ai_tone ? `\n\nInstrução de tom: ${settings.ai_tone}` : ''
 
   const blockLabel = blockType ? (BLOCK_LABELS[blockType] || blockType) : 'texto de proposta'

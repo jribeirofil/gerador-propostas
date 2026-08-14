@@ -2,6 +2,7 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getSessionOrgId } from '@/lib/org'
 import { createBlocksFromTemplate } from '@/lib/blocks'
 import ProposalPreview from '@/components/proposal/ProposalPreview'
 import PrintButton from './PrintButton'
@@ -13,6 +14,8 @@ export default async function PreviewPage({ params }: { params: { id: string } }
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  const orgId = await getSessionOrgId()
+
   const db = createAdminClient()
 
   const [proposalRes, blocksRes, profileRes, settingsRes] = await Promise.all([
@@ -20,6 +23,7 @@ export default async function PreviewPage({ params }: { params: { id: string } }
       .from('proposal')
       .select('*, client:clients(*), products:proposal_product(*)')
       .eq('id', params.id)
+      .eq('organization_id', orgId)
       .single(),
     db
       .from('proposal_block')
@@ -27,7 +31,7 @@ export default async function PreviewPage({ params }: { params: { id: string } }
       .eq('proposal_id', params.id)
       .order('sort_order'),
     db.from('profiles').select('full_name, job_title, phone').eq('id', user.id).single(),
-    db.from('company_settings').select('company_name, logo_url, primary_color, company_site, company_email, company_phone, company_whatsapp').limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, logo_url, primary_color, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
   ])
 
   if (!proposalRes.data) notFound()
