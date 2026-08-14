@@ -20,6 +20,7 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 |---|---|---|---|---|
 | 0 | Fundação (initial commit) | [PRD-00](../prds/PRD-00-fase-0-fundacao.md) | ✅ Concluída | Baseline: estado atual consolidado em 1 commit |
 | 1 | Motor de Fechamento | [PRD-01](../prds/PRD-01-fase-1-motor-de-fechamento.md) | 🚧 Planejada — não iniciada | Primeira venda + radar de follow-up |
+| 2 | Multi-tenant SaaS | [PRD-02](../prds/PRD-02-multi-tenant-saas.md) | 🚧 Planejada — análise de impacto concluída | Branding/isolamento por organização; ordem: fundação → contratos → lógica → consumidores → integrações → cleanup |
 
 ## Fase 1 — Motor de Fechamento (execução)
 
@@ -69,6 +70,7 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 | Decisão | Contexto | Impacto | Responsável |
 |---|---|---|---|
 | **Branding por empresa** | **DECIDIDO como requisito central** (14/08): cada cliente coloca a própria marca na proposta (logo, cores, informações, conteúdo). Hoje a marca FineAndYou está hardcoded (28 ocorrências) e o produto veste a identidade do piloto | Pré-requisito de qualquer venda fora do piloto; o momento pré-dados é o mais barato para a mudança | dono |
+| **Multi-tenant SaaS** | **DECIDIDO (14/08):** cada organização tem textos, cores, logos, produtos e clientes próprios; novo cadastro cria a própria org. Sequenciamento e análise de impacto em [PRD-02](../prds/PRD-02-multi-tenant-saas.md). Fase 1 roda single-org (raiz) | Bloqueia A6 (layout da empresa) fora do piloto; base para escalar clientes | dono |
 | **Nome do sistema** | Sem nome ainda. "FineAndYou" é o piloto, não o produto. Usar placeholder neutro ("Gerador de Propostas") até decidir | Identidade visual do admin, docs, landing | dono |
 | **Segmento-alvo** | **Fechado (14/08):** produto horizontal/agnóstico — qualquer negócio (agências, LED, rodízio). Piloto FineAndYou não verticaliza | Template padrão genérico; cada empresa preenche o próprio conteúdo | dono |
 | **Pipeline de oportunidades vira CRM vendável?** | Já construído; pode ser produto próprio ou recurso interno | Posicionamento da Fase 2 | dono |
