@@ -15,10 +15,12 @@ export async function GET(_req: NextRequest, { params }: { params: { token: stri
     return NextResponse.json({ error: 'Proposta não encontrada' }, { status: 404 })
   }
 
+  const orgId = proposal.organization_id as string | null
+
   const [itemsRes, blocksRes, settingsRes] = await Promise.all([
     db.from('proposal_product').select('*').eq('proposal_id', proposal.id).order('sort_order'),
     db.from('proposal_block').select('*').eq('proposal_id', proposal.id).eq('enabled', true).order('sort_order'),
-    db.from('company_settings').select('company_name, pdf_footer_text, pdf_default_conditions, company_site, company_email, company_phone, company_whatsapp').limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, pdf_footer_text, pdf_default_conditions, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
   ])
 
   const html = buildPdfHtml({

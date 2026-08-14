@@ -26,6 +26,8 @@ export default async function PublicProposalPage({ params }: { params: { token: 
 
   if (error || !proposal) notFound()
 
+  const orgId = proposal.organization_id as string | null
+
   let blocks: ProposalBlock[] = []
   const { data: rawBlocks } = await db
     .from('proposal_block')
@@ -49,9 +51,9 @@ export default async function PublicProposalPage({ params }: { params: { token: 
     proposal.created_by
       ? db.from('profiles').select('full_name, job_title, phone, email').eq('id', proposal.created_by).single()
       : Promise.resolve({ data: null }),
-    db.from('company_settings').select('company_name, primary_color, cover_bg_url, cover_video_url, company_site, company_email, company_phone, company_whatsapp').limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, primary_color, cover_bg_url, cover_video_url, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
     proposal.template_id
-      ? db.from('proposal_template').select('cover_image_url, cover_video_url').eq('id', proposal.template_id).maybeSingle()
+      ? db.from('proposal_template').select('cover_image_url, cover_video_url').eq('id', proposal.template_id).eq('organization_id', orgId).maybeSingle()
       : Promise.resolve({ data: null }),
     proposal.template_id
       ? db.from('template_block').select('type, sort_order, enabled').eq('template_id', proposal.template_id).order('sort_order')

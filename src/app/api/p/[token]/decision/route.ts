@@ -55,13 +55,15 @@ export async function POST(req: NextRequest, { params }: { params: { token: stri
 
     const { data: proposal, error } = await db
       .from('proposal')
-      .select('id, status, opportunity_status')
+      .select('id, status, opportunity_status, organization_id')
       .eq('public_token', params.token)
       .single()
 
     if (error || !proposal) {
       return NextResponse.json({ error: 'Proposta não encontrada' }, { status: 404 })
     }
+
+    const orgId = proposal.organization_id as string | null
 
     // Bloqueia re-decisão para oportunidades já fechadas (exceto ajustes)
     const oppStatus = proposal.opportunity_status as string | null
@@ -70,7 +72,7 @@ export async function POST(req: NextRequest, { params }: { params: { token: stri
     }
 
     if (type === 'approved') {
-      await db.from('proposal').update({ opportunity_status: 'won' }).eq('id', proposal.id)
+      await db.from('proposal').update({ opportunity_status: 'won' }).eq('id', proposal.id).eq('organization_id', orgId)
       await db.from('proposal_event').insert({
         proposal_id: proposal.id,
         event_type: 'opportunity_won',
@@ -82,7 +84,7 @@ export async function POST(req: NextRequest, { params }: { params: { token: stri
         },
       })
     } else if (type === 'adjustments') {
-      await db.from('proposal').update({ has_pending_review: true }).eq('id', proposal.id)
+      await db.from('proposal').update({ has_pending_review: true }).eq('id', proposal.id).eq('organization_id', orgId)
       await db.from('proposal_event').insert({
         proposal_id: proposal.id,
         event_type: 'adjustments_requested',
@@ -98,7 +100,7 @@ export async function POST(req: NextRequest, { params }: { params: { token: stri
         opportunity_status: 'lost',
         lost_reason: reason || null,
         lost_comment: comment || null,
-      }).eq('id', proposal.id)
+      }).eq('id', proposal.id).eq('organization_id', orgId)
       await db.from('proposal_event').insert({
         proposal_id: proposal.id,
         event_type: 'opportunity_lost',
