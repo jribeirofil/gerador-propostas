@@ -516,10 +516,10 @@ set search_path = public
 as $$
 begin
   if not exists (
-    select 1 from public.profiles
-    where id = auth.uid()
-      and role = 'admin'
-      and organization_id = public.current_org_id()
+    select 1 from public.profiles p
+    where p.id = auth.uid()
+      and p.role = 'admin'
+      and p.organization_id = public.current_org_id()
   ) then
     raise exception 'Access denied';
   end if;
@@ -544,6 +544,9 @@ begin
            u.created_at, u.last_sign_in_at
   order by u.created_at desc;
 end; $$;
+
+grant execute on function public.admin_list_users() to authenticated;
+grant execute on function public.admin_list_users() to service_role;
 
 -- ────────────────────────────────────────────────────────────
 -- 7. VERIFICAÇÃO (rodar após o commit)
