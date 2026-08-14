@@ -14,6 +14,31 @@ demora para sair ou sai amadora. Cada hora montando proposta em Word/Google Docs
 é hora que não vira fechamento. A dor é de receita, não estética: proposta
 lenta/feia = deal perdido ou renegociado para baixo.
 
+## Evidência de demanda (2026-08-14)
+
+Depoimento direto do cliente-alvo (WhatsApp), sobre o concorrente que testou:
+
+> "uma coisa que não consegui executar no meu era ter um modelo de proposta do
+> jeito que desejava. ele gerava um layout lá e só. Eu quero que a empresa inclua
+> o layout que ela quer, por exemplo, informações da empresa, (toda a encheção de
+> linguiça que uma proposta tem) e ao final o valor de investimento."
+
+**Leitura para o produto:** o cliente rejeita o layout genérico do fornecedor.
+A cunha não é "gerar rápido" — é **"o layout é da SUA empresa, você controla"**,
+com informações da empresa + conteúdo institucional + valor de investimento no
+final. O mecanismo já existe (blocos + templates + `company_settings`); o que
+falta é o conteúdo institucional padrão e a propagação das informações da empresa
+para dentro da proposta (ver item A6). Confirma também a decisão em aberto de
+branding por organização no PROGRESS.md.
+
+### Identidade: sistema × cliente (clarificação 14/08)
+
+- **"FineAndYou" é o primeiro cliente piloto**, não o nome do sistema. O sistema ainda não tem nome.
+- O produto é **horizontal e agnóstico de segmento**: deve servir qualquer tipo de negócio — agências, painéis de LED, rodízio de pizza em eventos, etc. Se depender de um segmento, deixa de ser útil para os demais.
+- **Consequência:** cada empresa precisa colocar a própria marca na proposta (logo, cores, informações, conteúdo institucional). Branding por organização é **requisito central**, não opcional.
+- **Dívida atual:** a marca FineAndYou está vazada no código — 28 ocorrências em 17 arquivos (default `company_name`, label "Sobre a FineAndYou", fallback "time FineAndYou") e a skin do sistema em si (`fay-*` no Tailwind, 41 arquivos) usa a identidade do piloto. O item A6 endereça a parte de proposta; a skin do sistema vira débito (D7).
+- **Escopo do piloto:** primeiro pagante = FineAndYou (UM cliente, cunha mais estreita), mas **sem verticalizar o produto** — o que for construído para o piloto vale para qualquer empresa.
+
 ## Contexto de mercado
 
 - Mercado BR: ~74% dos pequenos negócios usam modelos amadores ou Word sem padronização.
@@ -51,6 +76,7 @@ Ordem de execução, pré-piloto (semana 1):
 | A4 | **Guard de status** | Decisão rejeitada a menos que `status='sent'` |
 | A5 | **Tipagem do client admin** | `createAdminClient` tipado com `<Database>` (drift volta a ser erro de compilação) |
 | T1 | **Testes do radar** | Lógica de threshold em função pura + vitest com teste unitário |
+| A6 | **Layout e conteúdo institucional da empresa** *(adicionado 2026-08-14, demand-driven)* | Proposta começa com a cara da empresa: seed de template padrão curado com a "encheção de linguiça" preenchida (sobre, diferenciais, próximos passos), bloco `sobre` alimentado pelas `company_settings` e com label "Sobre a [empresa]", e informações de contato (site/e-mail/whatsapp) propagadas para a proposta/PDF. Remover hardcodes da marca (default `company_name`, label e fallbacks "FineAndYou"). Produto permanece agnóstico de segmento |
 
 ### Especificação do radar de follow-up
 
@@ -83,12 +109,12 @@ CI/CD automático, projeto de auth completo, PDF server-side, CRM multi-tenant.
 - **NF/recibo:** confirmar com o piloto (pessoa física/MEI) antes de cobrar.
 - **Auth:** não é bloqueador — usuário seed `role != admin` (o `requireAdmin()` já oculta superfícies admin).
 - **Escopo do que o piloto vê:** congelar/ocultar superfícies admin para o piloto — só o fluxo proposta + link.
-- **Segmento-alvo:** agências/estúdios digitais (hipótese) — confirmar com o cliente antes de qualquer mensagem pública.
+- **Segmento-alvo:** produto **horizontal** — qualquer tipo de negócio (agências, painéis de LED, rodízio de pizza em eventos). Piloto FineAndYou não verticaliza o produto; o template padrão é genérico e cada empresa preenche o próprio conteúdo.
 - **Oportunidades como CRM:** pipeline já construído vira CRM vendável sozinho ou fica interno? (decisão aberta)
 
 ## Decisões travadas na revisão
 
-A1 schema sync (agora), A2 `sent_at` (coluna), A3 audit trail IP+UA (ok), A4 guard `status='sent'` (ok), A5 tipar client admin (ok), T1 vitest para radar (ok). **Zero questões em aberto no escopo da fase.**
+A1 schema sync (agora), A2 `sent_at` (coluna), A3 audit trail IP+UA (ok), A4 guard `status='sent'` (ok), A5 tipar client admin (ok), T1 vitest para radar (ok), A6 layout/conteúdo institucional da empresa + branding por empresa como requisito central (adicionado por evidência de demanda de 2026-08-14). **Zero questões em aberto no escopo da fase.**
 
 ## Notas de governança
 

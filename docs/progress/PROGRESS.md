@@ -4,6 +4,14 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 
 Última atualização: **2026-08-14**
 
+> **Evidência de demanda (14/08):** cliente-alvo rejeitou o concorrente porque "gerava um layout lá e só";
+> quer o layout da empresa (informações + conteúdo institucional + valor de investimento ao final).
+> Vira o item **A6** e reforça o posicionamento "o layout é da SUA empresa". Detalhe no PRD-01.
+>
+> **Identidade (14/08):** "FineAndYou" é o primeiro cliente **piloto**, não o nome do sistema (ainda sem nome).
+> O produto é **horizontal/agnóstico de segmento** — agências, painéis de LED, rodízio de pizza, etc.
+> Branding por empresa é requisito central; remover hardcodes da marca (28 ocorrências em 17 arquivos).
+
 ---
 
 ## Fases
@@ -30,6 +38,10 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 - [ ] **A3 — Audit trail do aceite** (IP + user-agent na decisão)
 - [ ] **A4 — Guard de status** (decisão só com `status='sent'`)
 - [ ] **T1 — Testes do radar** (função pura do threshold + vitest)
+- [ ] **A6 — Layout da empresa** *(adicionado 2026-08-14 — evidência do cliente)*
+  - [ ] Seed de template padrão com conteúdo institucional preenchido (sobre, diferenciais, próximos passos)
+  - [ ] Bloco `sobre` alimentado pelas `company_settings`, label "Sobre a [empresa]"
+  - [ ] Contatos da empresa (site/e-mail/whatsapp) propagados para proposta/PDF
 
 ### Checklist pré-cobrança (antes de features novas)
 
@@ -53,9 +65,10 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 
 | Decisão | Contexto | Impacto | Responsável |
 |---|---|---|---|
-| **Multi-tenant / branding por organização** | Visão SaaS: cada cliente quer a proposta com a própria marca. Hoje o branding é FineAndYou (single-org). Fase 1 roda piloto single-org; per-org branding é pré-requisito de venda fora do piloto | Pré-requisito para escalar venda; o momento pré-dados é o mais barato para a mudança | dono |
+| **Branding por empresa** | **DECIDIDO como requisito central** (14/08): cada cliente coloca a própria marca na proposta (logo, cores, informações, conteúdo). Hoje a marca FineAndYou está hardcoded (28 ocorrências) e o produto veste a identidade do piloto | Pré-requisito de qualquer venda fora do piloto; o momento pré-dados é o mais barato para a mudança | dono |
+| **Nome do sistema** | Sem nome ainda. "FineAndYou" é o piloto, não o produto. Usar placeholder neutro ("Gerador de Propostas") até decidir | Identidade visual do admin, docs, landing | dono |
+| **Segmento-alvo** | **Fechado (14/08):** produto horizontal/agnóstico — qualquer negócio (agências, LED, rodízio). Piloto FineAndYou não verticaliza | Template padrão genérico; cada empresa preenche o próprio conteúdo | dono |
 | **Pipeline de oportunidades vira CRM vendável?** | Já construído; pode ser produto próprio ou recurso interno | Posicionamento da Fase 2 | dono |
-| **Segmento-alvo (agências/estúdios?)** | Hipótese a confirmar com o primeiro cliente | Mensagem e templates | dono |
 
 ## Dívidas registradas (baseline Fase 0)
 
@@ -67,6 +80,7 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 | D4 | Sem billing | Média | Pós-piloto |
 | D5 | `database.types.ts` desatualizado | Média | Fase 1 (A1) |
 | D6 | PDF server-side, auth completo | Baixa | Pós-piloto |
+| D7 | Marca do piloto no produto (FineAndYou hardcoded + skin `fay-*`) | Média | Fase 1 (A6) |
 
 ## Como usar este arquivo
 

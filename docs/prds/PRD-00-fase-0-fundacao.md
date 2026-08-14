@@ -15,9 +15,11 @@ commit inicial do repositório, com histórico consolidado e documentação mín
 
 ## O que o produto é hoje (estado da arte)
 
-**FineAndYou Propostas** — plataforma web para montar, enviar e acompanhar
+**Gerador de Propostas** — plataforma web para montar, enviar e acompanhar
 propostas comerciais. Fases A–I anteriores (templates, blocks, identidade
-visual, oportunidades) estão consolidadas nesta fase.
+visual, oportunidades) estão consolidadas nesta fase. O nome do produto ainda
+não foi definido; "FineAndYou" é o primeiro cliente piloto, não o nome do sistema.
+O produto é agnóstico de segmento — deve servir qualquer tipo de negócio.
 
 ### Stack
 
@@ -63,6 +65,7 @@ visual, oportunidades) estão consolidadas nesta fase.
 | D4 | **Sem billing:** nenhuma integração de pagamento (Stripe/Asaas/etc.) | Média |
 | D5 | **`database.types.ts` desatualizado/desconfiado:** tipos não regenerados do schema vivo | Média |
 | D6 | PDF server-side e auth multi-usuário completo ficam para depois | Baixa |
+| D7 | **Marca do piloto no produto:** "FineAndYou" hardcoded (28 ocorrências em 17 arquivos) e skin do sistema (`fay-*`, 41 arquivos) usa a identidade do cliente piloto — sistema não tem nome próprio | Média |
 
 ## Critérios de conclusão
 
