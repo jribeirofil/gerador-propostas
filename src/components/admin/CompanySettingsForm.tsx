@@ -16,7 +16,7 @@ const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
 const sectionClass = 'bg-app-surface border border-app-border rounded-2xl p-6 space-y-4 shadow-sm'
 
 export default function CompanySettingsForm({ settings }: Props) {
-  const [companyName, setCompanyName] = useState(settings?.company_name || 'FineAndYou')
+  const [companyName, setCompanyName] = useState(settings?.company_name || '')
   const [companySite, setCompanySite] = useState(settings?.company_site || '')
   const [companyEmail, setCompanyEmail] = useState(settings?.company_email || '')
   const [companyPhone, setCompanyPhone] = useState(maskPhone(settings?.company_phone || ''))
@@ -121,7 +121,7 @@ export default function CompanySettingsForm({ settings }: Props) {
             value={companyName}
             onChange={e => setCompanyName(e.target.value)}
             className={inputClass}
-            placeholder="FineAndYou"
+            placeholder="Nome da empresa"
           />
         </div>
 
@@ -132,7 +132,7 @@ export default function CompanySettingsForm({ settings }: Props) {
               value={companySite}
               onChange={e => setCompanySite(e.target.value)}
               className={inputClass}
-              placeholder="fineandyou.com.br"
+              placeholder="www.empresa.com.br"
             />
           </div>
           <div>

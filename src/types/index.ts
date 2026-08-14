@@ -92,7 +92,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'ecossistema',
-    name: 'Pacote Ecossistema FineAndYou',
+    name: 'Pacote Ecossistema',
     description: 'Combinação estratégica entre diagnóstico, prevenção, educação, canal de denúncia e intervenção humana qualificada.',
     icon: 'layout-grid',
     default_price_label: 'Personalizado',

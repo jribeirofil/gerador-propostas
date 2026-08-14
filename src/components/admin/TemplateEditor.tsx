@@ -30,7 +30,7 @@ const CONTENT_HINTS: Partial<Record<BlockType, string>> = {
   cenario:         'Descreva o contexto e desafio padrão para propostas deste template.',
   objetivos:       'Quais resultados a solução costuma entregar?',
   proximos_passos: 'Um passo por linha. Esses são os passos padrão após a aprovação.',
-  sobre:           'Texto de apresentação da FineAndYou para o cliente.',
+  sobre:           'Texto de apresentação da empresa para o cliente.',
 }
 
 interface StructureBlock {

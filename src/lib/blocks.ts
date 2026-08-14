@@ -18,7 +18,7 @@ export const BLOCK_LABELS: Record<BlockType, string> = {
   diferenciais: 'Diferenciais',
   faq: 'FAQ',
   proximos_passos: 'Próximos Passos',
-  sobre: 'Sobre a FineAndYou',
+  sobre: 'Sobre a empresa',
   investimento: 'Investimento',
   assinatura: 'Assinatura',
 }
@@ -103,7 +103,7 @@ function fallbackContent(type: BlockType, productContent?: ProductBlockContent):
           'Reunião de alinhamento técnico e comercial',
           'Aceite e assinatura do contrato',
           'Implantação e onboarding',
-          'Acompanhamento contínuo com o time FineAndYou',
+          'Acompanhamento contínuo',
         ],
       } as unknown as Json
     case 'beneficios':

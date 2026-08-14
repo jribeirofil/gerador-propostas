@@ -13,7 +13,7 @@ function defaultContent(type: BlockType): Json {
           'Reunião de alinhamento técnico e comercial',
           'Aceite e assinatura do contrato',
           'Implantação e onboarding',
-          'Acompanhamento contínuo com o time FineAndYou',
+          'Acompanhamento contínuo',
         ],
       } as unknown as Json
     case 'cenario':

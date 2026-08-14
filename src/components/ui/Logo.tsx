@@ -20,14 +20,14 @@ export default function Logo({ src, srcDark, height = 36, maxWidth, className = 
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={lightSrc}
-        alt="FineAndYou"
+        alt="Logo da empresa"
         className="block dark:hidden w-auto h-full object-contain select-none"
         draggable={false}
       />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={darkSrc}
-        alt="FineAndYou"
+        alt="Logo da empresa"
         className="hidden dark:block w-auto h-full object-contain select-none"
         draggable={false}
       />

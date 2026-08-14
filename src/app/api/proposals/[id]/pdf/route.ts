@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   const [itemsRes, blocksRes, settingsRes] = await Promise.all([
     supabase.from('proposal_product').select('*').eq('proposal_id', params.id).order('sort_order'),
     supabase.from('proposal_block').select('*').eq('proposal_id', params.id).eq('enabled', true).order('sort_order'),
-    supabase.from('company_settings').select('company_name, pdf_footer_text, pdf_default_conditions').limit(1).maybeSingle(),
+    supabase.from('company_settings').select('company_name, pdf_footer_text, pdf_default_conditions, company_site, company_email, company_phone, company_whatsapp').limit(1).maybeSingle(),
   ])
 
   const items = itemsRes.data

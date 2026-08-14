@@ -127,6 +127,12 @@ interface Props {
   signerData: { name: string; job_title: string; email: string; phone: string }
   companyName: string
   primaryColor: string
+  companyContact?: {
+    site?: string | null
+    email?: string | null
+    phone?: string | null
+    whatsapp?: string | null
+  }
   analyticsSummary?: AnalyticsSummary | null
   analyticsTimeline?: Array<{ label: string; date: string }>
   catalogProducts?: CatalogProduct[]
@@ -158,6 +164,7 @@ export default function ProposalWorkspace({
   signerData,
   companyName,
   primaryColor,
+  companyContact,
   analyticsSummary,
   analyticsTimeline = [],
   catalogProducts = [],
@@ -665,6 +672,7 @@ export default function ProposalWorkspace({
                 signerData={signerData}
                 companyName={companyName}
                 primaryColor={primaryColor}
+                companyContact={companyContact}
               />
             </div>
           </div>

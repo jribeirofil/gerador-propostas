@@ -57,6 +57,13 @@ interface SignerData {
   phone: string
 }
 
+interface CompanyContact {
+  site?: string | null
+  email?: string | null
+  phone?: string | null
+  whatsapp?: string | null
+}
+
 interface Props {
   proposal: Proposal
   blocks: ProposalBlock[]
@@ -65,6 +72,7 @@ interface Props {
   primaryColor: string
   coverBgUrl?: string | null
   coverVideoUrl?: string | null
+  companyContact?: CompanyContact
   variant?: Variant
 }
 
@@ -129,12 +137,13 @@ function WebLabel({ text, color }: { text: string; color: string }) {
 
 // ─── BlockCover (shared — already premium) ────────────────────────────────────
 
-function BlockCover({ proposal, companyName, coverBgUrl, coverVideoUrl, primaryColor, variant = 'document' }: {
+function BlockCover({ proposal, companyName, coverBgUrl, coverVideoUrl, primaryColor, companyContact, variant = 'document' }: {
   proposal: Proposal
   companyName: string
   coverBgUrl?: string | null
   coverVideoUrl?: string | null
   primaryColor: string
+  companyContact?: CompanyContact
   variant?: Variant
 }) {
   const client = proposal.client
@@ -196,7 +205,15 @@ function BlockCover({ proposal, companyName, coverBgUrl, coverVideoUrl, primaryC
             <p className="mt-3 text-xs text-[#50565C]">{client.segmento}</p>
           )}
         </div>
-        <p className="text-[#2A3038] text-xs italic">Tecnologia com coração para cuidar de pessoas e empresas.</p>
+        {[companyContact?.site, companyContact?.email, companyContact?.phone, companyContact?.whatsapp]
+          .filter(Boolean)
+          .length > 0 && (
+          <p className="text-[#2A3038] text-xs italic">
+            {[companyContact?.site, companyContact?.email, companyContact?.phone, companyContact?.whatsapp]
+              .filter(Boolean)
+              .join(' · ')}
+          </p>
+        )}
       </div>
     </section>
   )
@@ -482,8 +499,9 @@ function BlockProxPassos({ block, primaryColor, variant = 'document' }: {
 
 // ─── BlockSobre ───────────────────────────────────────────────────────────────
 
-function BlockSobre({ block, primaryColor, variant = 'document' }: {
+function BlockSobre({ block, companyName, primaryColor, variant = 'document' }: {
   block: ProposalBlock
+  companyName: string
   primaryColor: string
   variant?: Variant
 }) {
@@ -491,11 +509,15 @@ function BlockSobre({ block, primaryColor, variant = 'document' }: {
   const text = content.text
   if (!text) return null
 
+  const label = block.title && block.title !== BLOCK_LABELS['sobre']
+    ? block.title
+    : `Sobre a ${companyName}`
+
   if (variant === 'web') {
     return (
       <section className="py-24 lg:py-32" style={{ backgroundColor: '#161b22' }}>
         <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-20">
-          <WebLabel text={block.title || BLOCK_LABELS['sobre']} color={primaryColor} />
+          <WebLabel text={label} color={primaryColor} />
           <p className="text-white/60 font-light leading-relaxed text-xl lg:text-2xl max-w-2xl">
             {text}
           </p>
@@ -507,7 +529,7 @@ function BlockSobre({ block, primaryColor, variant = 'document' }: {
   return (
     <section className="px-16 py-20 bg-[#0f1318] border-b border-white/5">
       <p className="text-[10px] font-semibold text-[#1FE97C] uppercase tracking-[3px] mb-8">
-        {block.title || BLOCK_LABELS['sobre']}
+        {label}
       </p>
       <p className="text-[#8A9099] font-light leading-relaxed max-w-2xl text-lg">{text}</p>
     </section>
@@ -805,7 +827,7 @@ function BlockAssinatura({ block, signerData, primaryColor, variant = 'document'
 // ─── Main renderer ─────────────────────────────────────────────────────────────
 
 export default function ProposalPreview({
-  proposal, blocks, signerData, companyName, primaryColor, coverBgUrl, coverVideoUrl, variant = 'document',
+  proposal, blocks, signerData, companyName, primaryColor, coverBgUrl, coverVideoUrl, companyContact, variant = 'document',
 }: Props) {
   const activeBlocks = blocks.filter(b => b.enabled).sort((a, b) => a.sort_order - b.sort_order)
   const products = proposal.products || []
@@ -821,7 +843,7 @@ export default function ProposalPreview({
 
         switch (type) {
           case 'cover':
-            return <BlockCover key={block.id} proposal={proposal} companyName={companyName} coverBgUrl={coverBgUrl} coverVideoUrl={coverVideoUrl} primaryColor={primaryColor} variant={variant} />
+            return <BlockCover key={block.id} proposal={proposal} companyName={companyName} coverBgUrl={coverBgUrl} coverVideoUrl={coverVideoUrl} primaryColor={primaryColor} companyContact={companyContact} variant={variant} />
           case 'cenario':
             return <BlockCenario key={block.id} block={block} proposal={proposal} primaryColor={primaryColor} variant={variant} />
           case 'objetivos':
@@ -839,7 +861,7 @@ export default function ProposalPreview({
           case 'proximos_passos':
             return <BlockProxPassos key={block.id} block={block} primaryColor={primaryColor} variant={variant} />
           case 'sobre':
-            return <BlockSobre key={block.id} block={block} primaryColor={primaryColor} variant={variant} />
+            return <BlockSobre key={block.id} block={block} companyName={companyName} primaryColor={primaryColor} variant={variant} />
           case 'investimento':
             return <BlockInvestimento key={block.id} block={block} proposal={proposal} primaryColor={primaryColor} variant={variant} />
           case 'assinatura':
@@ -848,6 +870,17 @@ export default function ProposalPreview({
             return null
         }
       })}
+      {variant === 'document' && (
+        <footer className="px-16 py-8 border-t border-gray-100">
+          <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs text-gray-400">
+            <span>{companyName}</span>
+            {companyContact?.site && <span>{companyContact.site}</span>}
+            {companyContact?.email && <span>{companyContact.email}</span>}
+            {companyContact?.phone && <span>{companyContact.phone}</span>}
+            {companyContact?.whatsapp && <span>{companyContact.whatsapp}</span>}
+          </div>
+        </footer>
+      )}
     </div>
   )
 }

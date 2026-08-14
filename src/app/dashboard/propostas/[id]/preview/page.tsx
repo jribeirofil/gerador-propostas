@@ -27,7 +27,7 @@ export default async function PreviewPage({ params }: { params: { id: string } }
       .eq('proposal_id', params.id)
       .order('sort_order'),
     db.from('profiles').select('full_name, job_title, phone').eq('id', user.id).single(),
-    db.from('company_settings').select('company_name, logo_url, primary_color').limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, logo_url, primary_color, company_site, company_email, company_phone, company_whatsapp').limit(1).maybeSingle(),
   ])
 
   if (!proposalRes.data) notFound()
@@ -84,8 +84,14 @@ export default async function PreviewPage({ params }: { params: { id: string } }
         proposal={proposal as Parameters<typeof ProposalPreview>[0]['proposal']}
         blocks={blocks}
         signerData={signerData}
-        companyName={settings?.company_name || 'FineAndYou'}
+        companyName={settings?.company_name || 'Sua empresa'}
         primaryColor={settings?.primary_color || '#1FE97C'}
+        companyContact={{
+          site: settings?.company_site,
+          email: settings?.company_email,
+          phone: settings?.company_phone,
+          whatsapp: settings?.company_whatsapp,
+        }}
       />
     </div>
   )

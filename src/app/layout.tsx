@@ -3,8 +3,8 @@ import './globals.css'
 import ThemeProvider from '@/components/ui/ThemeProvider'
 
 export const metadata: Metadata = {
-  title: 'FineAndYou Propostas',
-  description: 'Gerador de propostas comerciais FineAndYou',
+  title: 'Gerador de Propostas',
+  description: 'Monte, envie e acompanhe propostas comerciais com a marca da sua empresa',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

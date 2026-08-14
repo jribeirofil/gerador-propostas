@@ -86,7 +86,7 @@ export default function CadastroPage() {
         </p>
       </div>
       <div className="flex items-center justify-between text-xs text-[#6B7280]">
-        <span>© 2026 FineAndYou</span>
+        <span>© 2026 Gerador de Propostas</span>
         <span>Propostas Comerciais</span>
       </div>
     </div>
@@ -129,7 +129,7 @@ export default function CadastroPage() {
 
           <div className="flex items-center gap-2 mb-10 lg:hidden">
             <div className="w-2 h-2 rounded-full bg-[#1FE97C]" />
-            <span className="font-sora font-semibold text-lg text-[#0F1318]">FineAndYou</span>
+            <span className="font-sora font-semibold text-lg text-[#0F1318]">Propostas</span>
           </div>
 
           <h2 className="font-sora font-bold text-[26px] text-[#0F1318] mb-1">Criar conta</h2>

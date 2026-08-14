@@ -29,7 +29,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       .eq('proposal_id', params.id)
       .order('created_at', { ascending: false }),
     db.from('profiles').select('full_name, job_title, phone').eq('id', user.id).single(),
-    db.from('company_settings').select('company_name, logo_url, primary_color').limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, logo_url, primary_color, company_site, company_email, company_phone, company_whatsapp').limit(1).maybeSingle(),
     db
       .from('proposal_analytics')
       .select('event_type, session_id, created_at')
@@ -131,8 +131,14 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       events={eventsRes.data || []}
       versionHistory={versionHistory || []}
       signerData={signerData}
-      companyName={settings?.company_name || 'FineAndYou'}
+      companyName={settings?.company_name || 'Sua empresa'}
       primaryColor={settings?.primary_color || '#1FE97C'}
+      companyContact={{
+        site: settings?.company_site,
+        email: settings?.company_email,
+        phone: settings?.company_phone,
+        whatsapp: settings?.company_whatsapp,
+      }}
       analyticsSummary={analyticsSummary}
       analyticsTimeline={analyticsTimeline}
       catalogProducts={catalogProducts}

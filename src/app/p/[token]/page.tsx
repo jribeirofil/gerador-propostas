@@ -49,7 +49,7 @@ export default async function PublicProposalPage({ params }: { params: { token: 
     proposal.created_by
       ? db.from('profiles').select('full_name, job_title, phone, email').eq('id', proposal.created_by).single()
       : Promise.resolve({ data: null }),
-    db.from('company_settings').select('company_name, primary_color, cover_bg_url, cover_video_url').limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, primary_color, cover_bg_url, cover_video_url, company_site, company_email, company_phone, company_whatsapp').limit(1).maybeSingle(),
     proposal.template_id
       ? db.from('proposal_template').select('cover_image_url, cover_video_url').eq('id', proposal.template_id).maybeSingle()
       : Promise.resolve({ data: null }),
@@ -83,12 +83,19 @@ export default async function PublicProposalPage({ params }: { params: { token: 
     phone: profile?.phone || '',
   }
 
-  const companyName = settings?.company_name || 'FineAndYou'
+  const companyName = settings?.company_name || 'Sua empresa'
   const primaryColor = settings?.primary_color || '#1FE97C'
   // Template assets take priority over global settings
   const coverBgUrl = templateAssets?.cover_image_url || settings?.cover_bg_url || null
   const coverVideoUrl = templateAssets?.cover_video_url || settings?.cover_video_url || null
   const clientName = (proposal.client as { empresa?: string } | null)?.empresa || ''
+
+  const companyContact = {
+    site: settings?.company_site,
+    email: settings?.company_email,
+    phone: settings?.company_phone,
+    whatsapp: settings?.company_whatsapp,
+  }
 
   const expiryDate = computeExpiry(proposal.created_at as string | null, proposal.validade_dias as number | null)
   const isExpired = expiryDate ? expiryDate < new Date() : false
@@ -112,6 +119,7 @@ export default async function PublicProposalPage({ params }: { params: { token: 
           primaryColor={primaryColor}
           coverBgUrl={coverBgUrl}
           coverVideoUrl={coverVideoUrl}
+          companyContact={companyContact}
         />
         {isExpired ? (
           <ExpiredProposalView

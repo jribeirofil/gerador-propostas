@@ -39,9 +39,12 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 - [ ] **A4 — Guard de status** (decisão só com `status='sent'`)
 - [ ] **T1 — Testes do radar** (função pura do threshold + vitest)
 - [ ] **A6 — Layout da empresa** *(adicionado 2026-08-14 — evidência do cliente)*
-  - [ ] Seed de template padrão com conteúdo institucional preenchido (sobre, diferenciais, próximos passos)
-  - [ ] Bloco `sobre` alimentado pelas `company_settings`, label "Sobre a [empresa]"
-  - [ ] Contatos da empresa (site/e-mail/whatsapp) propagados para proposta/PDF
+  - [x] Remover hardcodes da marca (30 ocorrências em 17 arquivos — capa/PDF/login/APIs)
+  - [x] Label dinâmico "Sobre a [empresa]" (preview web, documento e PDF)
+  - [x] Contatos da empresa (site/e-mail/whatsapp) na capa, rodapé e PDF
+  - [x] Fallbacks do PDF neutralizados (cenário não assume vertical saúde mental)
+  - [ ] Campo `about_text` em `company_settings` + prefill do bloco `sobre` *(depende de A1 — migration)*
+  - [ ] Template padrão curado no banco (seed) *(depende de A1 — migration)*
 
 ### Checklist pré-cobrança (antes de features novas)
 
@@ -81,6 +84,7 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 | D5 | `database.types.ts` desatualizado | Média | Fase 1 (A1) |
 | D6 | PDF server-side, auth completo | Baixa | Pós-piloto |
 | D7 | Marca do piloto no produto (FineAndYou hardcoded + skin `fay-*`) | Média | Fase 1 (A6) |
+| D8 | ESLint sem configuração (`next lint` abre wizard) | Baixa | Pós-piloto |
 
 ## Como usar este arquivo
 

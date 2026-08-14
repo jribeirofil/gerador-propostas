@@ -156,7 +156,7 @@ function SourceBadge({ source }: { source: 'local' | 'rd_station' }) {
   }
   return (
     <span className="flex-shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-fay-green/15 text-fay-green-deep font-medium">
-      FineAndYou
+      Local
     </span>
   )
 }

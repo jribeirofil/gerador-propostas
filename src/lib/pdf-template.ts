@@ -25,6 +25,10 @@ interface PdfCompanySettings {
   company_name: string
   pdf_footer_text?: string | null
   pdf_default_conditions?: string | null
+  company_site?: string | null
+  company_email?: string | null
+  company_phone?: string | null
+  company_whatsapp?: string | null
 }
 
 interface PdfBlock {
@@ -117,8 +121,17 @@ export function buildPdfHtml(proposal: PdfProposal): string {
     ? format(new Date(proposal.created_at), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
     : format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
 
-  const companyName = proposal.settings?.company_name || 'FineAndYou'
-  const footerText = proposal.settings?.pdf_footer_text || 'contato@fineandyou.com.br · fineandyou.com.br'
+  const companyName = proposal.settings?.company_name || 'Sua empresa'
+  const footerText = proposal.settings?.pdf_footer_text || ''
+  const coverContacts = [
+    proposal.settings?.company_site,
+    proposal.settings?.company_email,
+    proposal.settings?.company_phone,
+    proposal.settings?.company_whatsapp,
+  ].filter(Boolean).join(' · ')
+  const coverContactsHtml = coverContacts
+    ? `<p style="color:#50565C;font-size:12px;margin-top:16px;font-style:italic;">${coverContacts}</p>`
+    : ''
 
   // Override text content from blocks if available
   const cenarioBlock = blockContent(blocks, 'cenario')
@@ -236,7 +249,7 @@ export function buildPdfHtml(proposal: PdfProposal): string {
       <p style="color:#50565C;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Proposta Comercial</p>
       <h1 style="color:white;font-size:28px;font-weight:700;margin-bottom:6px;">${client.empresa}</h1>
       <p style="color:#8A9099;font-size:13px;">${today}</p>
-      <p style="color:#50565C;font-size:12px;margin-top:16px;font-style:italic;">Tecnologia com coração para cuidar de pessoas e empresas.</p>
+      ${coverContactsHtml}
     </div>
   </div>
 
@@ -255,7 +268,7 @@ export function buildPdfHtml(proposal: PdfProposal): string {
         ${cenarioText
           ? cenarioText.replace(/\n/g, '<br>')
           : `Com base no cenário apresentado${proposal.diagnosis ? ` — <strong>${proposal.diagnosis.toLowerCase()}</strong> —` : ','}
-        entendemos que a empresa busca uma solução prática, segura e humana para cuidar da saúde mental, bem-estar e conformidade dos colaboradores.
+        entendemos que a empresa busca uma solução prática e profissional para as necessidades apresentadas.
         ${proposal.objectives ? `<br><br>${proposal.objectives}` : ''}`
         }
         ${objetivosText && !cenarioText ? `<br><br>${objetivosText.replace(/\n/g, '<br>')}` : ''}
@@ -348,20 +361,18 @@ export function buildPdfHtml(proposal: PdfProposal): string {
         <li>Reunião de alinhamento técnico e comercial</li>
         <li>Aceite e assinatura digital do contrato</li>
         <li>Implantação em ${proposal.prazo_implantacao || '24–48 horas'}</li>
-        <li>Acompanhamento contínuo com o time FineAndYou</li>`
+        <li>Acompanhamento contínuo</li>`
         }
       </ol>
     </div>
 
+    ${sobreText ? `
     <div style="margin-bottom:28px;">
-      <div class="section-title">Sobre a FineAndYou</div>
+      <div class="section-title">Sobre a ${companyName}</div>
       <p style="font-size:12px;color:#444;line-height:1.7">
-        ${sobreText
-          ? sobreText.replace(/\n/g, '<br>')
-          : 'A FineAndYou é um ecossistema de saúde mental e bem-estar que une tecnologia, educação e intervenção humana. Nossa missão é transformar o cuidado com pessoas em uma prática acessível, preventiva e estratégica dentro das empresas.'
-        }
+        ${sobreText.replace(/\n/g, '<br>')}
       </p>
-    </div>
+    </div>` : ''}
 
   </div>
 

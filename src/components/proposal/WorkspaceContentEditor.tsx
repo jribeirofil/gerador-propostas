@@ -12,7 +12,7 @@ const SECTION_HINTS: Partial<Record<BlockType, string>> = {
   objetivos:      'Quais resultados a solução vai entregar?',
   diferenciais:   'Um diferencial por linha.',
   proximos_passos:'Um passo por linha.',
-  sobre:          'Apresentação da FineAndYou para o cliente.',
+  sobre:          'Apresentação da empresa para o cliente.',
 }
 
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'

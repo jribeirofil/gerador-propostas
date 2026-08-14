@@ -25,7 +25,7 @@ export default async function PreviewWebPage({ params }: { params: { id: string 
       .eq('proposal_id', params.id)
       .order('sort_order'),
     db.from('profiles').select('full_name, job_title, phone').eq('id', user.id).single(),
-    db.from('company_settings').select('company_name, primary_color, cover_bg_url, cover_video_url').limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, primary_color, cover_bg_url, cover_video_url, company_site, company_email, company_phone, company_whatsapp').limit(1).maybeSingle(),
   ])
 
   if (!proposalRes.data) notFound()
@@ -82,11 +82,18 @@ export default async function PreviewWebPage({ params }: { params: { id: string 
     phone: profile?.phone || '',
   }
 
-  const companyName = settings?.company_name || 'FineAndYou'
+  const companyName = settings?.company_name || 'Sua empresa'
   const primaryColor = settings?.primary_color || '#1FE97C'
   const coverBgUrl = templateAssets?.cover_image_url || settings?.cover_bg_url || null
   const coverVideoUrl = templateAssets?.cover_video_url || settings?.cover_video_url || null
   const clientName = proposal.client?.empresa || ''
+
+  const companyContact = {
+    site: settings?.company_site,
+    email: settings?.company_email,
+    phone: settings?.company_phone,
+    whatsapp: settings?.company_whatsapp,
+  }
 
   return (
     <>
@@ -106,6 +113,7 @@ export default async function PreviewWebPage({ params }: { params: { id: string 
           primaryColor={primaryColor}
           coverBgUrl={coverBgUrl}
           coverVideoUrl={coverVideoUrl}
+          companyContact={companyContact}
         />
       </main>
     </>
