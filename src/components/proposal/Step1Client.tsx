@@ -13,7 +13,7 @@ interface Props {
   setValue: UseFormSetValue<ProposalFormData>
 }
 
-const inputClass = 'w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors'
+const inputClass = 'w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors'
 const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
 
 export default function Step1Client({ register, errors, setValue }: Props) {

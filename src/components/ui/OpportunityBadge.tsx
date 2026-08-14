@@ -1,6 +1,6 @@
 const MAP: Record<string, { label: string; className: string; dot: string }> = {
   open:   { label: 'Aberta',  className: 'bg-blue-500/15 text-blue-500 dark:text-blue-400',     dot: 'bg-blue-400' },
-  won:    { label: 'Ganha',   className: 'bg-fay-green/20 text-fay-green-deep',                  dot: 'bg-fay-green-deep' },
+  won:    { label: 'Ganha',   className: 'bg-brand-green/20 text-brand-green-deep',                  dot: 'bg-brand-green-deep' },
   lost:   { label: 'Perdida', className: 'bg-red-500/15 text-red-500 dark:text-red-400',         dot: 'bg-red-400' },
 }
 

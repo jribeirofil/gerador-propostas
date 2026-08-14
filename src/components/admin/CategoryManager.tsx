@@ -10,7 +10,7 @@ interface Props {
 }
 
 const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
-const inputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text focus:outline-none focus:border-fay-green-deep transition-colors'
+const inputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors'
 
 function ColorPicker({
   value,
@@ -152,7 +152,7 @@ export default function CategoryManager({ initialCategories, productCounts = {} 
               type="button"
               onClick={handleCreate}
               disabled={!editName.trim() || saving}
-              className="px-4 py-2 bg-fay-green text-fay-dark text-sm font-semibold rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-40"
+              className="px-4 py-2 bg-brand-green text-brand-dark text-sm font-semibold rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-40"
             >
               {saving ? 'Salvando...' : 'Criar categoria'}
             </button>
@@ -201,7 +201,7 @@ export default function CategoryManager({ initialCategories, productCounts = {} 
                         type="button"
                         onClick={handleUpdate}
                         disabled={!editName.trim() || saving}
-                        className="px-4 py-1.5 bg-fay-green text-fay-dark text-sm font-semibold rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-40"
+                        className="px-4 py-1.5 bg-brand-green text-brand-dark text-sm font-semibold rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-40"
                       >
                         {saving ? 'Salvando...' : 'Salvar'}
                       </button>
@@ -254,7 +254,7 @@ export default function CategoryManager({ initialCategories, productCounts = {} 
         <button
           type="button"
           onClick={startCreate}
-          className="flex items-center gap-2 px-4 py-2 text-sm text-app-muted border border-dashed border-app-border rounded-xl hover:text-app-text hover:border-fay-green-deep/50 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 text-sm text-app-muted border border-dashed border-app-border rounded-xl hover:text-app-text hover:border-brand-green-deep/50 transition-colors"
         >
           <Plus size={14} />
           Nova categoria

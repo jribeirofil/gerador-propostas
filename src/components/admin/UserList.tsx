@@ -13,7 +13,7 @@ interface Props {
 }
 
 const AVATAR_COLORS = [
-  'bg-fay-green/20 text-fay-green-deep',
+  'bg-brand-green/20 text-brand-green-deep',
   'bg-blue-500/20 text-blue-400',
   'bg-violet-500/20 text-violet-400',
   'bg-amber-500/20 text-amber-400',
@@ -91,7 +91,7 @@ export default function UserList({ users: initial, currentUserId }: Props) {
         <button
           type="button"
           onClick={() => setNewUserOpen(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-fay-green text-fay-dark rounded-lg text-sm font-semibold hover:bg-fay-green-deep hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-green text-brand-dark rounded-lg text-sm font-semibold hover:bg-brand-green-deep hover:text-white transition-colors"
         >
           + Novo usuário
         </button>
@@ -100,7 +100,7 @@ export default function UserList({ users: initial, currentUserId }: Props) {
       {users.length === 0 ? (
         <div className="bg-app-surface rounded-2xl border border-app-border p-16 text-center shadow-sm">
           <p className="text-sm font-semibold text-app-text mb-1.5">Nenhum usuário encontrado.</p>
-          <button type="button" onClick={() => setNewUserOpen(true)} className="text-sm text-fay-green-deep hover:underline mt-2">
+          <button type="button" onClick={() => setNewUserOpen(true)} className="text-sm text-brand-green-deep hover:underline mt-2">
             Criar o primeiro usuário →
           </button>
         </div>
@@ -166,9 +166,9 @@ export default function UserList({ users: initial, currentUserId }: Props) {
                         title={reason}
                         className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${
                           !allowed ? 'opacity-40 cursor-not-allowed' : 'hover:opacity-75 cursor-pointer'
-                        } ${user.active ? 'text-fay-green-deep' : 'text-app-muted'}`}
+                        } ${user.active ? 'text-brand-green-deep' : 'text-app-muted'}`}
                       >
-                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${user.active ? 'bg-fay-green' : 'bg-app-border'}`} />
+                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${user.active ? 'bg-brand-green' : 'bg-app-border'}`} />
                         {isLoading ? '...' : user.active ? 'Ativo' : 'Inativo'}
                       </button>
                     </td>

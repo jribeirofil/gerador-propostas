@@ -150,9 +150,9 @@ export default function Step6Review({ data, setValue }: Props) {
                   <td className="px-5 py-2 text-right text-app-text">{fmt(totals.subtotal_setup)}</td>
                 </tr>
               )}
-              <tr className="bg-fay-green/5">
+              <tr className="bg-brand-green/5">
                 <td colSpan={5} className="px-5 py-3 text-right text-app-text font-semibold">Total mensal</td>
-                <td className="px-5 py-3 text-right text-fay-green-deep font-bold text-sm">{fmt(totals.total_monthly)}</td>
+                <td className="px-5 py-3 text-right text-brand-green-deep font-bold text-sm">{fmt(totals.total_monthly)}</td>
               </tr>
             </tfoot>
           )}
@@ -168,7 +168,7 @@ export default function Step6Review({ data, setValue }: Props) {
           <select
             value={data.template_id || ''}
             onChange={e => setValue('template_id', e.target.value || undefined)}
-            className="w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text focus:outline-none focus:border-fay-green-deep transition-colors"
+            className="w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
           >
             <option value="">Automático (baseado nos produtos)</option>
             {templates.map(t => (

@@ -75,7 +75,7 @@ function TextEditor({
         value={text}
         onChange={e => setText(e.target.value)}
         rows={5}
-        className="w-full bg-overlay border border-overlay rounded-lg px-3 py-2.5 text-sm text-app-text placeholder-fay-muted resize-none focus:outline-none focus:border-fay-green-deep transition-colors"
+        className="w-full bg-overlay border border-overlay rounded-lg px-3 py-2.5 text-sm text-app-text placeholder-brand-muted resize-none focus:outline-none focus:border-brand-green-deep transition-colors"
         placeholder={`Texto do bloco ${BLOCK_LABELS[block.type]}...`}
       />
       <div className="flex items-center justify-between">
@@ -85,7 +85,7 @@ function TextEditor({
               type="button"
               onClick={() => setShowAiMenu(v => !v)}
               disabled={aiLoading || !text.trim()}
-              className="text-xs text-fay-green-deep hover:underline disabled:opacity-40"
+              className="text-xs text-brand-green-deep hover:underline disabled:opacity-40"
             >
               {aiLoading ? '✨ Processando...' : '✨ IA'}
             </button>
@@ -109,7 +109,7 @@ function TextEditor({
           type="button"
           onClick={() => onSave(block.id, { text } as unknown as Json)}
           disabled={saving}
-          className="px-3 py-1.5 bg-fay-green text-fay-dark text-xs font-semibold rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50"
+          className="px-3 py-1.5 bg-brand-green text-brand-dark text-xs font-semibold rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar'}
         </button>
@@ -146,7 +146,7 @@ function ListEditor({
           <input
             value={item}
             onChange={e => setItems(prev => prev.map((it, i) => i === idx ? e.target.value : it))}
-            className="flex-1 bg-overlay border border-overlay rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-none focus:border-fay-green-deep transition-colors"
+            className="flex-1 bg-overlay border border-overlay rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
           />
           <button
             type="button"
@@ -163,12 +163,12 @@ function ListEditor({
           onChange={e => setNewItem(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addItem() } }}
           placeholder="Adicionar item..."
-          className="flex-1 bg-overlay border border-overlay rounded-lg px-2.5 py-1.5 text-sm text-app-text placeholder-fay-muted focus:outline-none focus:border-fay-green-deep transition-colors"
+          className="flex-1 bg-overlay border border-overlay rounded-lg px-2.5 py-1.5 text-sm text-app-text placeholder-brand-muted focus:outline-none focus:border-brand-green-deep transition-colors"
         />
         <button
           type="button"
           onClick={addItem}
-          className="text-fay-green-deep text-xs font-medium hover:underline"
+          className="text-brand-green-deep text-xs font-medium hover:underline"
         >
           + Adicionar
         </button>
@@ -178,7 +178,7 @@ function ListEditor({
           type="button"
           onClick={() => onSave(block.id, { items } as unknown as Json)}
           disabled={saving}
-          className="px-3 py-1.5 bg-fay-green text-fay-dark text-xs font-semibold rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50"
+          className="px-3 py-1.5 bg-brand-green text-brand-dark text-xs font-semibold rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar'}
         </button>
@@ -219,21 +219,21 @@ function FaqEditor({
             value={item.question}
             onChange={e => setItems(prev => prev.map((it, i) => i === idx ? { ...it, question: e.target.value } : it))}
             placeholder="Pergunta"
-            className="w-full bg-overlay border border-overlay rounded px-2.5 py-1.5 text-sm text-app-text focus:outline-none focus:border-fay-green-deep transition-colors"
+            className="w-full bg-overlay border border-overlay rounded px-2.5 py-1.5 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
           />
           <textarea
             value={item.answer}
             onChange={e => setItems(prev => prev.map((it, i) => i === idx ? { ...it, answer: e.target.value } : it))}
             placeholder="Resposta"
             rows={2}
-            className="w-full bg-overlay border border-overlay rounded px-2.5 py-1.5 text-sm text-app-text resize-none focus:outline-none focus:border-fay-green-deep transition-colors"
+            className="w-full bg-overlay border border-overlay rounded px-2.5 py-1.5 text-sm text-app-text resize-none focus:outline-none focus:border-brand-green-deep transition-colors"
           />
         </div>
       ))}
       <button
         type="button"
         onClick={() => setItems(prev => [...prev, { question: '', answer: '' }])}
-        className="text-fay-green-deep text-xs font-medium hover:underline"
+        className="text-brand-green-deep text-xs font-medium hover:underline"
       >
         + Adicionar pergunta
       </button>
@@ -242,7 +242,7 @@ function FaqEditor({
           type="button"
           onClick={() => onSave(block.id, { items } as unknown as Json)}
           disabled={saving}
-          className="px-3 py-1.5 bg-fay-green text-fay-dark text-xs font-semibold rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50"
+          className="px-3 py-1.5 bg-brand-green text-brand-dark text-xs font-semibold rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar'}
         </button>
@@ -331,7 +331,7 @@ function BlockRow({
             <span className="text-[10px] text-app-muted bg-overlay px-1.5 py-0.5 rounded">auto</span>
           )}
           {hasAI && (
-            <span className="text-[10px] text-fay-green-deep bg-fay-green/10 px-1.5 py-0.5 rounded">✨ IA</span>
+            <span className="text-[10px] text-brand-green-deep bg-brand-green/10 px-1.5 py-0.5 rounded">✨ IA</span>
           )}
         </div>
 
@@ -341,7 +341,7 @@ function BlockRow({
           onClick={() => onToggleEnabled(block.id)}
           disabled={isRequired}
           className={`relative w-9 h-5 rounded-full transition-colors ${
-            block.enabled ? 'bg-fay-green' : 'bg-overlay-md'
+            block.enabled ? 'bg-brand-green' : 'bg-overlay-md'
           } ${isRequired ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
         >
           <span
@@ -367,7 +367,7 @@ function BlockRow({
             <button
               type="button"
               onClick={() => onOpenLibrary(block.id, type)}
-              className="mt-3 text-xs text-app-muted hover:text-fay-green-deep transition-colors"
+              className="mt-3 text-xs text-app-muted hover:text-brand-green-deep transition-colors"
             >
               📚 Buscar da biblioteca
             </button>
@@ -410,7 +410,7 @@ function LibraryPickerModal({
           {items?.length === 0 && (
             <p className="text-xs text-app-muted text-center py-4">
               Nenhum item na biblioteca para este tipo.{' '}
-              <a href="/dashboard/admin/conteudo" className="text-fay-green-deep hover:underline">Criar itens</a>
+              <a href="/dashboard/admin/conteudo" className="text-brand-green-deep hover:underline">Criar itens</a>
             </p>
           )}
           {items?.map(item => (
@@ -497,7 +497,7 @@ export default function BlockEditor({ proposalId, initialBlocks, signerData }: P
         <p className="text-xs text-app-muted">{activeCount} de {blocks.length} blocos ativos</p>
         <a
           href={`/dashboard/propostas/${proposalId}/preview`}
-          className="text-xs text-fay-green-deep hover:underline"
+          className="text-xs text-brand-green-deep hover:underline"
         >
           Prévia web →
         </a>
@@ -544,7 +544,7 @@ export default function BlockEditor({ proposalId, initialBlocks, signerData }: P
           <span className="text-app-text">{signerData.phone || '—'}</span>
         </div>
         <p className="text-xs text-app-muted mt-2">
-          Para atualizar, vá em <a href="/dashboard/admin/usuarios" className="text-fay-green-deep hover:underline">Administração → Usuários</a>.
+          Para atualizar, vá em <a href="/dashboard/admin/usuarios" className="text-brand-green-deep hover:underline">Administração → Usuários</a>.
         </p>
       </div>
     </div>

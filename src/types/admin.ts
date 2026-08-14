@@ -11,7 +11,7 @@ export interface Category {
 
 export const CATEGORY_COLOR_OPTIONS = [
   { value: 'blue',   label: 'Azul',    classes: 'bg-blue-500/15 text-blue-400',        dot: 'bg-blue-400'       },
-  { value: 'green',  label: 'Verde',   classes: 'bg-fay-green/15 text-fay-green-deep', dot: 'bg-fay-green'      },
+  { value: 'green',  label: 'Verde',   classes: 'bg-brand-green/15 text-brand-green-deep', dot: 'bg-brand-green'      },
   { value: 'amber',  label: 'Âmbar',   classes: 'bg-amber-500/15 text-amber-400',      dot: 'bg-amber-400'      },
   { value: 'purple', label: 'Roxo',    classes: 'bg-purple-500/15 text-purple-400',    dot: 'bg-purple-400'     },
   { value: 'rose',   label: 'Rosa',    classes: 'bg-rose-500/15 text-rose-400',        dot: 'bg-rose-400'       },
@@ -40,7 +40,7 @@ export const PRODUCT_CATEGORIES: { value: string; label: string }[] = [
 /** @deprecated use getCategoryClasses(category.color) */
 export const PRODUCT_CATEGORY_COLORS: Record<string, string> = {
   compliance:   'bg-blue-500/15 text-blue-400',
-  saude_mental: 'bg-fay-green/15 text-fay-green-deep',
+  saude_mental: 'bg-brand-green/15 text-brand-green-deep',
   educacao:     'bg-amber-500/15 text-amber-400',
   ecossistema:  'bg-purple-500/15 text-purple-400',
 }
@@ -132,10 +132,10 @@ export const ROLE_LABELS: Record<string, string> = {
 }
 
 export const ROLE_COLORS: Record<string, string> = {
-  admin: 'bg-fay-green/15 text-fay-green-deep',
+  admin: 'bg-brand-green/15 text-brand-green-deep',
   manager: 'bg-blue-500/15 text-blue-400',
-  seller: 'bg-white/10 text-fay-muted',
-  viewer: 'bg-white/10 text-fay-muted',
+  seller: 'bg-white/10 text-brand-muted',
+  viewer: 'bg-white/10 text-brand-muted',
 }
 
 export interface AdminUser {

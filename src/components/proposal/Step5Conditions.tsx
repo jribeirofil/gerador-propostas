@@ -16,7 +16,7 @@ const PAYMENT_OPTIONS = [
   'Cartão de crédito',
 ]
 
-const inputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors'
+const inputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors'
 const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
 
 export default function Step5Conditions({ register, watch, setValue }: Props) {
@@ -86,7 +86,7 @@ export default function Step5Conditions({ register, watch, setValue }: Props) {
                 onClick={() => toggle(opt)}
                 className={`h-8 px-3.5 rounded-full text-xs font-medium border transition-colors ${
                   isActive
-                    ? 'bg-fay-green-deep text-white border-fay-green-deep'
+                    ? 'bg-brand-green-deep text-white border-brand-green-deep'
                     : 'border-app-border text-app-muted hover:text-app-text hover:border-app-text/30'
                 }`}
               >

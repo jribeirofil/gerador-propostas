@@ -89,7 +89,7 @@ export default function TemplateList({ initialTemplates }: Props) {
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="text-sm font-semibold text-app-text truncate">{t.name}</h3>
                   {t.is_default && (
-                    <span className="shrink-0 text-[11px] bg-fay-green/15 text-fay-green-deep px-2 py-0.5 rounded-full font-medium">
+                    <span className="shrink-0 text-[11px] bg-brand-green/15 text-brand-green-deep px-2 py-0.5 rounded-full font-medium">
                       Padrão
                     </span>
                   )}

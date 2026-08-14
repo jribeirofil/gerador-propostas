@@ -63,7 +63,7 @@ function SortableRow({ item, onEdit, onDelete }: {
           onChange={e => setDraft(e.target.value)}
           onBlur={save}
           onKeyDown={e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') { setDraft(item.title); setEditing(false) } }}
-          className="flex-1 bg-overlay-md border border-fay-green-deep rounded px-2 py-1 text-sm text-app-text focus:outline-none"
+          className="flex-1 bg-overlay-md border border-brand-green-deep rounded px-2 py-1 text-sm text-app-text focus:outline-none"
         />
       ) : (
         <span
@@ -178,7 +178,7 @@ export default function SortableListEditor({ productId, type, initialItems }: Pr
           onChange={e => setNewTitle(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter') handleAdd() }}
           placeholder={`Adicionar ${labels.singular.toLowerCase()}...`}
-          className="flex-1 bg-overlay border border-overlay rounded px-3 py-2 text-sm text-app-text placeholder-fay-muted focus:outline-none focus:border-fay-green-deep transition-colors"
+          className="flex-1 bg-overlay border border-overlay rounded px-3 py-2 text-sm text-app-text placeholder-brand-muted focus:outline-none focus:border-brand-green-deep transition-colors"
         />
         <button
           type="button"

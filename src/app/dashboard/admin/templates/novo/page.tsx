@@ -52,7 +52,7 @@ export default function NovoTemplatePage() {
             value={name}
             onChange={e => setName(e.target.value)}
             autoFocus
-            className="w-full bg-overlay border border-overlay rounded-xl px-4 py-2.5 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors"
+            className="w-full bg-overlay border border-overlay rounded-xl px-4 py-2.5 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors"
             placeholder="Ex: Canal de Denúncias, Marketplace RH..."
           />
         </div>
@@ -63,7 +63,7 @@ export default function NovoTemplatePage() {
             value={description}
             onChange={e => setDescription(e.target.value)}
             rows={3}
-            className="w-full bg-overlay border border-overlay rounded-xl px-4 py-3 text-sm text-app-text placeholder-app-muted resize-none focus:outline-none focus:border-fay-green-deep transition-colors"
+            className="w-full bg-overlay border border-overlay rounded-xl px-4 py-3 text-sm text-app-text placeholder-app-muted resize-none focus:outline-none focus:border-brand-green-deep transition-colors"
             placeholder="Quando usar este template? Para quais clientes?"
           />
         </div>
@@ -74,7 +74,7 @@ export default function NovoTemplatePage() {
           <button
             type="submit"
             disabled={!name.trim() || loading}
-            className="px-5 py-2 bg-fay-green text-fay-dark text-sm font-semibold rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-40"
+            className="px-5 py-2 bg-brand-green text-brand-dark text-sm font-semibold rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-40"
           >
             {loading ? 'Criando...' : 'Criar template'}
           </button>

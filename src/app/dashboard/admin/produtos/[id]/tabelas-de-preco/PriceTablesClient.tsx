@@ -176,13 +176,13 @@ export default function PriceTablesClient() {
               onChange={e => setNewTableName(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleCreateTable() }}
               placeholder="Ex: Promoção Julho, Parceiro Premium..."
-              className="flex-1 bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors"
+              className="flex-1 bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors"
             />
             <button
               type="button"
               onClick={handleCreateTable}
               disabled={!newTableName.trim() || creating}
-              className="flex items-center gap-1.5 px-4 py-2 bg-fay-green text-fay-dark rounded-xl text-sm font-semibold hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 px-4 py-2 bg-brand-green text-brand-dark rounded-xl text-sm font-semibold hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-40"
             >
               <Plus size={14} />
               Criar tabela

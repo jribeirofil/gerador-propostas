@@ -95,12 +95,12 @@ export default function ClientSearch({ onSelect }: Props) {
           onChange={e => setQuery(e.target.value)}
           onFocus={() => results.length > 0 && setOpen(true)}
           placeholder="Digite empresa, nome ou e-mail..."
-          className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors pl-8 pr-8"
+          className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors pl-8 pr-8"
           autoComplete="off"
         />
         {loading ? (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <div className="w-3.5 h-3.5 border-2 border-overlay-md border-t-fay-green rounded-full animate-spin" />
+            <div className="w-3.5 h-3.5 border-2 border-overlay-md border-t-brand-green rounded-full animate-spin" />
           </div>
         ) : query.length > 0 && (
           <button
@@ -155,7 +155,7 @@ function SourceBadge({ source }: { source: 'local' | 'rd_station' }) {
     )
   }
   return (
-    <span className="flex-shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-fay-green/15 text-fay-green-deep font-medium">
+    <span className="flex-shrink-0 text-[10px] px-1.5 py-0.5 rounded bg-brand-green/15 text-brand-green-deep font-medium">
       Local
     </span>
   )

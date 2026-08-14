@@ -26,8 +26,8 @@ const PAGE_SIZE = 15
 function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; sortDir: SortDir }) {
   if (col !== sortKey) return <ArrowUpDown size={12} className="text-app-muted/40" />
   return sortDir === 'asc'
-    ? <ArrowUp size={12} className="text-fay-green-deep" />
-    : <ArrowDown size={12} className="text-fay-green-deep" />
+    ? <ArrowUp size={12} className="text-brand-green-deep" />
+    : <ArrowDown size={12} className="text-brand-green-deep" />
 }
 
 function SortTh({
@@ -231,7 +231,7 @@ export default function ProductTable({ products: allProducts, categories }: Prop
             placeholder="Buscar por nome, descrição ou categoria..."
             value={search}
             onChange={e => handleSearch(e.target.value)}
-            className="w-full h-9 pl-8 pr-3 text-sm bg-app-surface border border-app-border rounded-xl text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep hover:bg-[var(--row-hover)] hover:border-fay-green-deep/40 focus:bg-app-surface transition-colors"
+            className="w-full h-9 pl-8 pr-3 text-sm bg-app-surface border border-app-border rounded-xl text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep hover:bg-[var(--row-hover)] hover:border-brand-green-deep/40 focus:bg-app-surface transition-colors"
           />
         </div>
 
@@ -271,7 +271,7 @@ export default function ProductTable({ products: allProducts, categories }: Prop
               <button
                 type="button"
                 onClick={() => { setSearch(''); setCategoryFilter('all'); setStatusFilter('all') }}
-                className="text-xs text-fay-green-deep hover:underline"
+                className="text-xs text-brand-green-deep hover:underline"
               >
                 Limpar filtros
               </button>
@@ -320,7 +320,7 @@ export default function ProductTable({ products: allProducts, categories }: Prop
                     <td className="px-5 py-3.5">
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
                         p.active
-                          ? 'bg-fay-green/15 text-fay-green-deep'
+                          ? 'bg-brand-green/15 text-brand-green-deep'
                           : 'bg-app-border/60 text-app-muted'
                       }`}>
                         {p.active ? 'Ativo' : 'Inativo'}

@@ -246,7 +246,7 @@ export default function Sidebar({ userName, userRole, userId, logoUrl }: Props) 
           <Link
             href="/dashboard/nova"
             title={isCollapsed ? 'Nova proposta' : undefined}
-            className={`flex items-center gap-2 rounded-lg font-semibold text-sm transition-all duration-150 bg-fay-green text-fay-dark hover:bg-fay-green-deep hover:text-white ${
+            className={`flex items-center gap-2 rounded-lg font-semibold text-sm transition-all duration-150 bg-brand-green text-brand-dark hover:bg-brand-green-deep hover:text-white ${
               isCollapsed
                 ? 'justify-center w-10 h-10 mx-auto'
                 : 'px-3 py-2 w-full'
@@ -307,8 +307,8 @@ export default function Sidebar({ userName, userRole, userId, logoUrl }: Props) 
             isCollapsed ? 'justify-center' : 'hover:bg-[var(--row-hover)] -mx-1 px-1 py-1'
           }`}
         >
-          <div className="w-7 h-7 rounded-lg bg-fay-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-fay-green/25 transition-colors">
-            <span className="text-[10px] font-semibold text-fay-green">{initials}</span>
+          <div className="w-7 h-7 rounded-lg bg-brand-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-green/25 transition-colors">
+            <span className="text-[10px] font-semibold text-brand-green">{initials}</span>
           </div>
 
           {!isCollapsed && (

@@ -40,7 +40,7 @@ export default function ProductsTabs({ active }: { active: string }) {
           >
             {tab.label}
             {isActive && (
-              <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-fay-green-deep rounded-t-full" />
+              <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-green-deep rounded-t-full" />
             )}
           </button>
         )

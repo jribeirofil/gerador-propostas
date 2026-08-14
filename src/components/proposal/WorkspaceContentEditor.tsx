@@ -118,7 +118,7 @@ export default function WorkspaceContentEditor({ proposalId, initialBlocks }: Pr
                 status === 'idle' ? 'opacity-0' : 'opacity-100'
               } ${
                 status === 'saving' ? 'text-app-muted' :
-                status === 'saved'  ? 'text-fay-green-deep' :
+                status === 'saved'  ? 'text-brand-green-deep' :
                 'text-red-400'
               }`}>
                 {status === 'saving' ? 'Salvando...' :
@@ -146,7 +146,7 @@ export default function WorkspaceContentEditor({ proposalId, initialBlocks }: Pr
                   type="button"
                   onClick={() => setShowAiMenu(prev => ({ ...prev, [block.id]: !prev[block.id] }))}
                   disabled={aiLoading[block.id] || !value.trim()}
-                  className="text-[11px] text-app-muted hover:text-fay-green-deep transition-colors disabled:opacity-30 flex items-center gap-1"
+                  className="text-[11px] text-app-muted hover:text-brand-green-deep transition-colors disabled:opacity-30 flex items-center gap-1"
                 >
                   {aiLoading[block.id] ? '✨ Processando...' : '✨ Melhorar com IA'}
                 </button>

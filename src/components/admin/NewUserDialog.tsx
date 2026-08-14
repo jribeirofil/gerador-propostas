@@ -11,7 +11,7 @@ interface Props {
 }
 
 const inputClass =
-  'w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors'
+  'w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors'
 const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
 
 export default function NewUserDialog({ open, onClose }: Props) {
@@ -144,8 +144,8 @@ export default function NewUserDialog({ open, onClose }: Props) {
                   onClick={() => setRole(value)}
                   className={`px-4 py-2 rounded-xl border text-sm font-medium transition-colors ${
                     role === value
-                      ? 'bg-fay-green/15 border-fay-green-deep text-fay-green-deep'
-                      : 'border-app-border text-app-muted hover:text-app-text hover:border-fay-green-deep/40 bg-app-surface'
+                      ? 'bg-brand-green/15 border-brand-green-deep text-brand-green-deep'
+                      : 'border-app-border text-app-muted hover:text-app-text hover:border-brand-green-deep/40 bg-app-surface'
                   }`}
                 >
                   {label}
@@ -176,7 +176,7 @@ export default function NewUserDialog({ open, onClose }: Props) {
             type="button"
             onClick={handleCreate}
             disabled={loading || !email.trim()}
-            className="px-4 py-2 text-sm font-semibold bg-fay-green text-fay-dark rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-semibold bg-brand-green text-brand-dark rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {loading ? 'Criando...' : 'Criar usuário'}
           </button>

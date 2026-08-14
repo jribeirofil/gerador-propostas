@@ -29,7 +29,7 @@ export default async function TemplateEditorPage({ params }: { params: { id: str
           <span className="text-app-muted text-sm">›</span>
           <h1 className="font-sora text-xl font-semibold text-app-text">{templateRes.data.name}</h1>
           {templateRes.data.is_default && (
-            <span className="text-[11px] bg-fay-green/15 text-fay-green-deep px-2 py-0.5 rounded-full font-medium">
+            <span className="text-[11px] bg-brand-green/15 text-brand-green-deep px-2 py-0.5 rounded-full font-medium">
               Padrão
             </span>
           )}

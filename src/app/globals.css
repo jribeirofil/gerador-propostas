@@ -7,9 +7,9 @@
 /* ── Design tokens ──────────────────────────────────────────────── */
 :root {
   /* Brand */
-  --fay-green:      #1FE97C;
-  --fay-green-deep: #00B765;
-  --fay-mint:       #D7F9DE;
+  --brand-green:      #1FE97C;
+  --brand-green-deep: #00B765;
+  --brand-mint:       #D7F9DE;
 
   /* Light mode surfaces */
   --bg:          #FFFFFF;

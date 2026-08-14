@@ -11,7 +11,7 @@ const config: Config = {
     extend: {
       colors: {
         // Brand
-        fay: {
+        brand: {
           dark:         '#161B20',
           green:        '#1FE97C',
           'green-deep': '#00B765',

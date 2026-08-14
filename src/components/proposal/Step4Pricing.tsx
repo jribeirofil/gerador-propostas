@@ -30,7 +30,7 @@ interface Props {
   setValue: UseFormSetValue<ProposalFormData>
 }
 
-const inputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors'
+const inputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors'
 const readOnlyInputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-muted cursor-not-allowed opacity-60'
 const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
 
@@ -326,7 +326,7 @@ export default function Step4Pricing({ watch, setValue }: Props) {
                   {p.discount_percent > 0 ? (
                     <>
                       {' '}= R$ {fmtBRL(gross)}
-                      {' '}<span className="text-fay-green-deep">− {p.discount_percent}% = R$ {fmtBRL(netTotal)}</span>
+                      {' '}<span className="text-brand-green-deep">− {p.discount_percent}% = R$ {fmtBRL(netTotal)}</span>
                     </>
                   ) : (
                     <> = R$ {fmtBRL(netTotal)}</>

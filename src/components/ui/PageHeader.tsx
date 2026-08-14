@@ -44,7 +44,7 @@ export default function PageHeader({
       {action && (
         <Link
           href={action.href}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-fay-green text-fay-dark rounded-lg text-sm font-semibold hover:bg-fay-green-deep hover:text-white transition-colors shadow-sm"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-green text-brand-dark rounded-lg text-sm font-semibold hover:bg-brand-green-deep hover:text-white transition-colors shadow-sm"
         >
           <Plus size={15} strokeWidth={2.5} />
           {action.label}

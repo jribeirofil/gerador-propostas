@@ -16,7 +16,7 @@ interface Props {
   categories?: Category[]
 }
 
-const inputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2.5 text-sm text-app-text placeholder-fay-muted focus:outline-none focus:border-fay-green-deep transition-colors'
+const inputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2.5 text-sm text-app-text placeholder-brand-muted focus:outline-none focus:border-brand-green-deep transition-colors'
 const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
 
 export default function ProductForm({ product, categories = [] }: Props) {
@@ -126,7 +126,7 @@ export default function ProductForm({ product, categories = [] }: Props) {
                 className={`px-4 py-2 rounded-xl border text-sm font-medium transition-colors ${
                   isSelected
                     ? `${colorClasses} border-current`
-                    : 'border-app-border text-app-muted hover:text-app-text hover:border-fay-green-deep/40 bg-app-surface'
+                    : 'border-app-border text-app-muted hover:text-app-text hover:border-brand-green-deep/40 bg-app-surface'
                 }`}
               >
                 {c.name}
@@ -160,7 +160,7 @@ export default function ProductForm({ product, categories = [] }: Props) {
       </div>
 
       <label className="flex items-center gap-2 cursor-pointer w-fit">
-        <input type="checkbox" checked={active} onChange={e => setActive(e.target.checked)} className="w-4 h-4 accent-fay-green" />
+        <input type="checkbox" checked={active} onChange={e => setActive(e.target.checked)} className="w-4 h-4 accent-brand-green" />
         <span className="text-sm text-app-text">Produto ativo (visível para seleção em propostas)</span>
       </label>
 
@@ -199,7 +199,7 @@ export default function ProductForm({ product, categories = [] }: Props) {
             ) : priceTables.length === 0 ? (
               <div className="text-xs text-app-muted bg-app-surface border border-app-border rounded-xl px-3 py-2.5 flex items-center justify-between">
                 <span>Nenhuma tabela de preço criada ainda.</span>
-                <Link href={`/dashboard/admin/produtos/${product.id}/tabelas-de-preco`} className="text-fay-green-deep hover:underline whitespace-nowrap ml-2">
+                <Link href={`/dashboard/admin/produtos/${product.id}/tabelas-de-preco`} className="text-brand-green-deep hover:underline whitespace-nowrap ml-2">
                   Criar tabela →
                 </Link>
               </div>
@@ -229,7 +229,7 @@ export default function ProductForm({ product, categories = [] }: Props) {
         <button
           type="submit"
           disabled={saving}
-          className="px-5 py-2 bg-fay-green text-fay-dark rounded-lg text-sm font-semibold hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50"
+          className="px-5 py-2 bg-brand-green text-brand-dark rounded-lg text-sm font-semibold hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50"
         >
           {saving ? 'Salvando...' : isEditing ? 'Salvar alterações' : 'Criar produto'}
         </button>

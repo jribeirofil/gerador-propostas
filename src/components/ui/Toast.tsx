@@ -39,7 +39,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={toast.id}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium shadow-lg animate-in fade-in slide-in-from-bottom-2 ${
               toast.type === 'success'
-                ? 'bg-fay-green text-fay-dark'
+                ? 'bg-brand-green text-brand-dark'
                 : 'bg-red-500 text-white'
             }`}
           >

@@ -10,7 +10,7 @@ interface Props {
   watch: UseFormWatch<ProposalFormData>
 }
 
-const CUSTOM_KEY = 'fay:motivacoes:custom'
+const CUSTOM_KEY = 'brand:motivacoes:custom'
 
 export default function Step2Diagnostic({ setValue, watch }: Props) {
   const motivacoes = watch('motivacoes') || []
@@ -112,8 +112,8 @@ export default function Step2Diagnostic({ setValue, watch }: Props) {
                   onClick={() => toggleMotivacao(label)}
                   className={`text-sm px-3.5 py-1.5 rounded-full border transition-colors ${
                     selected
-                      ? 'bg-fay-green/15 border-fay-green-deep text-fay-green-deep font-medium'
-                      : 'border-app-border text-app-muted hover:text-app-text hover:border-fay-green-deep/40'
+                      ? 'bg-brand-green/15 border-brand-green-deep text-brand-green-deep font-medium'
+                      : 'border-app-border text-app-muted hover:text-app-text hover:border-brand-green-deep/40'
                   } ${isCustom ? 'pr-7' : ''}`}
                 >
                   {label}
@@ -145,12 +145,12 @@ export default function Step2Diagnostic({ setValue, watch }: Props) {
                   if (e.key === 'Escape') { setAddingCustom(false); setCustomInput('') }
                 }}
                 placeholder="Nome da motivação"
-                className="text-sm px-3.5 py-1.5 rounded-full border border-fay-green-deep bg-overlay text-app-text placeholder-app-muted focus:outline-none w-48"
+                className="text-sm px-3.5 py-1.5 rounded-full border border-brand-green-deep bg-overlay text-app-text placeholder-app-muted focus:outline-none w-48"
               />
               <button
                 type="button"
                 onClick={addCustom}
-                className="text-sm px-3.5 py-1.5 rounded-full bg-fay-green text-fay-dark font-medium hover:bg-fay-green-deep hover:text-white transition-colors"
+                className="text-sm px-3.5 py-1.5 rounded-full bg-brand-green text-brand-dark font-medium hover:bg-brand-green-deep hover:text-white transition-colors"
               >
                 Adicionar
               </button>
@@ -166,7 +166,7 @@ export default function Step2Diagnostic({ setValue, watch }: Props) {
             <button
               type="button"
               onClick={() => setAddingCustom(true)}
-              className="flex items-center gap-1.5 text-sm px-3.5 py-1.5 rounded-full border border-dashed border-app-border text-app-muted hover:border-fay-green-deep/40 hover:text-app-text transition-colors"
+              className="flex items-center gap-1.5 text-sm px-3.5 py-1.5 rounded-full border border-dashed border-app-border text-app-muted hover:border-brand-green-deep/40 hover:text-app-text transition-colors"
             >
               <Plus size={13} />
               Adicionar outra
@@ -188,7 +188,7 @@ export default function Step2Diagnostic({ setValue, watch }: Props) {
               type="button"
               onClick={handleImprove}
               disabled={improving}
-              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-app-border text-app-muted hover:text-fay-green-deep hover:border-fay-green-deep/50 transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-app-border text-app-muted hover:text-brand-green-deep hover:border-brand-green-deep/50 transition-colors disabled:opacity-40"
             >
               <Sparkles size={12} />
               {improving ? 'Melhorando...' : 'Melhorar redação'}
@@ -199,7 +199,7 @@ export default function Step2Diagnostic({ setValue, watch }: Props) {
           value={contextoValue}
           onChange={handleContextoChange}
           rows={4}
-          className="w-full bg-app-surface border border-app-border rounded-xl px-4 py-3 text-sm text-app-text placeholder-app-muted resize-y focus:outline-none focus:border-fay-green-deep transition-colors"
+          className="w-full bg-app-surface border border-app-border rounded-xl px-4 py-3 text-sm text-app-text placeholder-app-muted resize-y focus:outline-none focus:border-brand-green-deep transition-colors"
           placeholder="Descreva rapidamente o contexto, situação ou necessidade do cliente."
         />
         <p className="text-xs text-app-muted mt-2">Opcional. A IA só reescreve o que você escreveu, sem inventar informações.</p>

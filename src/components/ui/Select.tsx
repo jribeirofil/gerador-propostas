@@ -12,7 +12,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <select
           ref={ref}
           {...props}
-          className="w-full appearance-none bg-app-surface border border-app-border rounded-xl px-4 py-2.5 pr-9 text-sm text-app-text focus:outline-none focus:border-fay-green-deep transition-colors cursor-pointer"
+          className="w-full appearance-none bg-app-surface border border-app-border rounded-xl px-4 py-2.5 pr-9 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors cursor-pointer"
         >
           {children}
         </select>

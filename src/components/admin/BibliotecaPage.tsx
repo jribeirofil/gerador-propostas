@@ -63,7 +63,7 @@ function TemplatesTab({ templates }: { templates: TemplateItem[] }) {
         </div>
         <Link
           href="/dashboard/admin/templates/novo"
-          className="flex items-center gap-1.5 h-9 px-4 bg-fay-green text-fay-dark text-sm font-semibold rounded-xl hover:bg-fay-green-deep hover:text-white transition-colors"
+          className="flex items-center gap-1.5 h-9 px-4 bg-brand-green text-brand-dark text-sm font-semibold rounded-xl hover:bg-brand-green-deep hover:text-white transition-colors"
         >
           <Plus size={14} />
           Novo template
@@ -79,7 +79,7 @@ function TemplatesTab({ templates }: { templates: TemplateItem[] }) {
           <p className="text-xs text-app-muted mb-5">Templates definem a estratégia de apresentação das propostas.</p>
           <Link
             href="/dashboard/admin/templates/novo"
-            className="h-8 px-4 bg-fay-green text-fay-dark text-sm font-semibold rounded-xl hover:bg-fay-green-deep hover:text-white transition-colors inline-flex items-center gap-1.5"
+            className="h-8 px-4 bg-brand-green text-brand-dark text-sm font-semibold rounded-xl hover:bg-brand-green-deep hover:text-white transition-colors inline-flex items-center gap-1.5"
           >
             <Plus size={13} /> Criar primeiro template
           </Link>
@@ -89,7 +89,7 @@ function TemplatesTab({ templates }: { templates: TemplateItem[] }) {
           {templates.map(t => (
             <div
               key={t.id}
-              className="bg-app-surface border border-app-border rounded-2xl p-5 flex flex-col gap-4 hover:border-fay-green-deep/40 transition-colors group"
+              className="bg-app-surface border border-app-border rounded-2xl p-5 flex flex-col gap-4 hover:border-brand-green-deep/40 transition-colors group"
             >
               {/* Header */}
               <div className="flex items-start justify-between gap-3">
@@ -97,7 +97,7 @@ function TemplatesTab({ templates }: { templates: TemplateItem[] }) {
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-sora font-semibold text-base text-app-text truncate">{t.name}</h3>
                     {t.is_default && (
-                      <span className="flex items-center gap-1 text-[10px] font-semibold text-fay-green-deep bg-fay-green/15 px-2 py-0.5 rounded-full flex-shrink-0">
+                      <span className="flex items-center gap-1 text-[10px] font-semibold text-brand-green-deep bg-brand-green/15 px-2 py-0.5 rounded-full flex-shrink-0">
                         <Star size={9} fill="currentColor" /> Padrão
                       </span>
                     )}
@@ -131,7 +131,7 @@ function TemplatesTab({ templates }: { templates: TemplateItem[] }) {
               <div className="mt-auto pt-2 border-t border-app-border flex items-center justify-end">
                 <Link
                   href={`/dashboard/admin/templates/${t.id}`}
-                  className="flex items-center gap-1.5 text-xs font-medium text-app-muted hover:text-app-text transition-colors group-hover:text-fay-green-deep"
+                  className="flex items-center gap-1.5 text-xs font-medium text-app-muted hover:text-app-text transition-colors group-hover:text-brand-green-deep"
                 >
                   <Pencil size={11} />
                   Editar
@@ -194,7 +194,7 @@ function NewBlockForm({
   const isList = ['proximos_passos', 'diferenciais', 'beneficios', 'escopo'].includes(type)
   const isFaq = type === 'faq'
 
-  const inputCls = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors'
+  const inputCls = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors'
 
   function buildContent(): Json {
     if (isText) return { text } as unknown as Json
@@ -222,7 +222,7 @@ function NewBlockForm({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 h-8 px-3 text-xs font-medium text-app-muted border border-app-border rounded-xl hover:text-app-text hover:border-fay-green-deep transition-colors"
+        className="flex items-center gap-1.5 h-8 px-3 text-xs font-medium text-app-muted border border-app-border rounded-xl hover:text-app-text hover:border-brand-green-deep transition-colors"
       >
         <Plus size={12} /> Novo bloco
       </button>
@@ -230,7 +230,7 @@ function NewBlockForm({
   }
 
   return (
-    <div className="bg-app-surface border border-fay-green-deep/30 rounded-2xl p-5 space-y-3 mb-4">
+    <div className="bg-app-surface border border-brand-green-deep/30 rounded-2xl p-5 space-y-3 mb-4">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold text-app-muted uppercase tracking-widest">Novo bloco</p>
         <button type="button" onClick={() => setOpen(false)} className="text-xs text-app-muted hover:text-app-text">Cancelar</button>
@@ -271,7 +271,7 @@ function NewBlockForm({
               className={inputCls}
             />
             <button type="button" onClick={() => { if (newListItem.trim()) { setItems(p => [...p, newListItem.trim()]); setNewListItem('') } }}
-              className="text-fay-green-deep text-xs font-medium px-2">+ Add</button>
+              className="text-brand-green-deep text-xs font-medium px-2">+ Add</button>
           </div>
         </div>
       )}
@@ -290,12 +290,12 @@ function NewBlockForm({
             </div>
           ))}
           <button type="button" onClick={() => setFaqItems(p => [...p, { question: '', answer: '' }])}
-            className="text-fay-green-deep text-xs font-medium">+ Adicionar pergunta</button>
+            className="text-brand-green-deep text-xs font-medium">+ Adicionar pergunta</button>
         </div>
       )}
       <div className="flex justify-end">
         <button type="button" onClick={save} disabled={saving || !title.trim()}
-          className="px-4 py-2 bg-fay-green text-fay-dark text-sm font-semibold rounded-xl hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50">
+          className="px-4 py-2 bg-brand-green text-brand-dark text-sm font-semibold rounded-xl hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50">
           {saving ? 'Salvando...' : 'Criar bloco'}
         </button>
       </div>
@@ -342,13 +342,13 @@ function BlocosTab({ initialItems, userId }: { initialItems: LibraryItem[]; user
                 onClick={() => setActiveType(type)}
                 className={`w-full text-left flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-colors ${
                   isActive
-                    ? 'bg-fay-green/10 text-fay-green-deep font-medium'
+                    ? 'bg-brand-green/10 text-brand-green-deep font-medium'
                     : 'text-app-muted hover:text-app-text hover:bg-[var(--row-hover)]'
                 }`}
               >
                 <span>{BLOCK_LABELS[type]}</span>
                 {count > 0 && (
-                  <span className={`text-[11px] tabular-nums ${isActive ? 'text-fay-green-deep' : 'text-app-muted'}`}>
+                  <span className={`text-[11px] tabular-nums ${isActive ? 'text-brand-green-deep' : 'text-app-muted'}`}>
                     {count}
                   </span>
                 )}
@@ -458,7 +458,7 @@ export default function BibliotecaPage({ templates, libraryItems, userId }: Prop
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px ${
                 isActive
-                  ? 'border-fay-green-deep text-fay-green-deep'
+                  ? 'border-brand-green-deep text-brand-green-deep'
                   : 'border-transparent text-app-muted hover:text-app-text'
               }`}
             >

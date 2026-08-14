@@ -16,7 +16,7 @@ interface Props {
   onDelete: (priceTableId: string) => void
 }
 
-const inputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors'
+const inputClass = 'w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors'
 
 function fmt(value: number): string {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
@@ -97,7 +97,7 @@ export default function PriceTableEditor({ priceTable, initialItems, isDefault, 
           >
             <span className="text-sm font-medium text-app-text">{priceTable.name}</span>
             {isDefault && (
-              <span className="text-[11px] bg-fay-green/15 text-fay-green-deep px-2 py-0.5 rounded-full font-medium">
+              <span className="text-[11px] bg-brand-green/15 text-brand-green-deep px-2 py-0.5 rounded-full font-medium">
                 Padrão
               </span>
             )}
@@ -201,7 +201,7 @@ export default function PriceTableEditor({ priceTable, initialItems, isDefault, 
             <button
               type="button"
               onClick={addItem}
-              className="mt-3 flex items-center gap-1.5 text-xs text-app-muted hover:text-app-text border border-dashed border-app-border hover:border-fay-green-deep/50 rounded-xl px-3 py-2 transition-colors w-full justify-center"
+              className="mt-3 flex items-center gap-1.5 text-xs text-app-muted hover:text-app-text border border-dashed border-app-border hover:border-brand-green-deep/50 rounded-xl px-3 py-2 transition-colors w-full justify-center"
             >
               <Plus size={12} />
               Adicionar faixa

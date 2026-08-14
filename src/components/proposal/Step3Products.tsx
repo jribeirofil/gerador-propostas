@@ -118,7 +118,7 @@ export default function Step3Products({ watch, setValue }: Props) {
           placeholder="Buscar produto..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full h-9 pl-8 pr-8 text-sm bg-app-surface border border-app-border rounded-xl text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors"
+          className="w-full h-9 pl-8 pr-8 text-sm bg-app-surface border border-app-border rounded-xl text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors"
         />
         {search && (
           <button
@@ -138,7 +138,7 @@ export default function Step3Products({ watch, setValue }: Props) {
           onClick={() => setCategoryFilter('all')}
           className={`h-7 px-3 rounded-full text-xs font-medium border transition-colors ${
             categoryFilter === 'all'
-              ? 'bg-fay-green-deep text-white border-fay-green-deep'
+              ? 'bg-brand-green-deep text-white border-brand-green-deep'
               : 'border-app-border text-app-muted hover:text-app-text'
           }`}
         >
@@ -181,16 +181,16 @@ export default function Step3Products({ watch, setValue }: Props) {
                 onClick={() => toggle(prod.id)}
                 className={`w-full text-left flex items-start gap-3 px-4 py-3 rounded-xl border transition-colors ${
                   isSelected
-                    ? 'border-fay-green-deep/50 bg-fay-green/5'
+                    ? 'border-brand-green-deep/50 bg-brand-green/5'
                     : 'border-transparent hover:border-app-border hover:bg-overlay'
                 }`}
               >
                 <span className={`mt-0.5 w-4 h-4 flex-shrink-0 rounded border flex items-center justify-center transition-colors ${
                   isSelected
-                    ? 'bg-fay-green border-fay-green'
+                    ? 'bg-brand-green border-brand-green'
                     : 'border-app-border bg-transparent'
                 }`}>
-                  {isSelected && <Check size={10} className="text-fay-dark" strokeWidth={3} />}
+                  {isSelected && <Check size={10} className="text-brand-dark" strokeWidth={3} />}
                 </span>
 
                 <div className="flex-1 min-w-0">

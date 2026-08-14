@@ -85,7 +85,7 @@ function NewItemForm({
         value={title}
         onChange={e => setTitle(e.target.value)}
         placeholder="Título (ex: Cenário padrão canal de denúncias)"
-        className="w-full bg-overlay border border-overlay rounded-lg px-3 py-2 text-sm text-app-text placeholder-fay-muted focus:outline-none focus:border-fay-green-deep transition-colors"
+        className="w-full bg-overlay border border-overlay rounded-lg px-3 py-2 text-sm text-app-text placeholder-brand-muted focus:outline-none focus:border-brand-green-deep transition-colors"
       />
       {isText && (
         <textarea
@@ -93,7 +93,7 @@ function NewItemForm({
           onChange={e => setText(e.target.value)}
           rows={4}
           placeholder="Texto do bloco..."
-          className="w-full bg-overlay border border-overlay rounded-lg px-3 py-2 text-sm text-app-text placeholder-fay-muted resize-none focus:outline-none focus:border-fay-green-deep transition-colors"
+          className="w-full bg-overlay border border-overlay rounded-lg px-3 py-2 text-sm text-app-text placeholder-brand-muted resize-none focus:outline-none focus:border-brand-green-deep transition-colors"
         />
       )}
       {isList && (
@@ -101,7 +101,7 @@ function NewItemForm({
           {items.map((item, idx) => (
             <div key={idx} className="flex gap-2">
               <input value={item} onChange={e => setItems(prev => prev.map((it, i) => i === idx ? e.target.value : it))}
-                className="flex-1 bg-overlay border border-overlay rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-none focus:border-fay-green-deep" />
+                className="flex-1 bg-overlay border border-overlay rounded-lg px-2.5 py-1.5 text-sm text-app-text focus:outline-none focus:border-brand-green-deep" />
               <button type="button" onClick={() => setItems(prev => prev.filter((_, i) => i !== idx))}
                 className="text-app-muted hover:text-red-400 text-xs">✕</button>
             </div>
@@ -110,9 +110,9 @@ function NewItemForm({
             <input value={newListItem} onChange={e => setNewListItem(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); if (newListItem.trim()) { setItems(p => [...p, newListItem.trim()]); setNewListItem('') } } }}
               placeholder="Adicionar item..."
-              className="flex-1 bg-overlay border border-overlay rounded-lg px-2.5 py-1.5 text-sm text-app-text placeholder-fay-muted focus:outline-none focus:border-fay-green-deep" />
+              className="flex-1 bg-overlay border border-overlay rounded-lg px-2.5 py-1.5 text-sm text-app-text placeholder-brand-muted focus:outline-none focus:border-brand-green-deep" />
             <button type="button" onClick={() => { if (newListItem.trim()) { setItems(p => [...p, newListItem.trim()]); setNewListItem('') } }}
-              className="text-fay-green-deep text-xs">+ Add</button>
+              className="text-brand-green-deep text-xs">+ Add</button>
           </div>
         </div>
       )}
@@ -132,12 +132,12 @@ function NewItemForm({
             </div>
           ))}
           <button type="button" onClick={() => setFaqItems(p => [...p, { question: '', answer: '' }])}
-            className="text-fay-green-deep text-xs">+ Adicionar pergunta</button>
+            className="text-brand-green-deep text-xs">+ Adicionar pergunta</button>
         </div>
       )}
       <div className="flex justify-end">
         <button type="button" onClick={save} disabled={saving || !title.trim()}
-          className="px-4 py-2 bg-fay-green text-fay-dark text-sm font-semibold rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50">
+          className="px-4 py-2 bg-brand-green text-brand-dark text-sm font-semibold rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50">
           {saving ? 'Salvando...' : 'Criar item'}
         </button>
       </div>
@@ -179,7 +179,7 @@ export default function ContentLibraryManager({ initialItems, userId }: Props) {
             onClick={() => setActiveTab(type)}
             className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
               activeTab === type
-                ? 'bg-fay-green text-fay-dark font-semibold'
+                ? 'bg-brand-green text-brand-dark font-semibold'
                 : 'bg-overlay text-app-muted hover:text-app-text'
             }`}
           >

@@ -62,16 +62,16 @@ function SortableFaqRow({ item, onEdit, onDelete }: {
                 value={q}
                 onChange={e => setQ(e.target.value)}
                 placeholder="Pergunta"
-                className="w-full bg-overlay-md border border-fay-green-deep rounded px-2 py-1 text-sm text-app-text focus:outline-none"
+                className="w-full bg-overlay-md border border-brand-green-deep rounded px-2 py-1 text-sm text-app-text focus:outline-none"
               />
               <textarea
                 value={a}
                 onChange={e => setA(e.target.value)}
                 placeholder="Resposta"
-                className="w-full bg-overlay-md border border-fay-green-deep rounded px-2 py-1 text-sm text-app-text focus:outline-none resize-y min-h-16"
+                className="w-full bg-overlay-md border border-brand-green-deep rounded px-2 py-1 text-sm text-app-text focus:outline-none resize-y min-h-16"
               />
               <div className="flex gap-2">
-                <button type="button" onClick={save} className="text-xs px-2.5 py-1 bg-fay-green text-fay-dark rounded font-medium">Salvar</button>
+                <button type="button" onClick={save} className="text-xs px-2.5 py-1 bg-brand-green text-brand-dark rounded font-medium">Salvar</button>
                 <button type="button" onClick={() => { setQ(item.question); setA(item.answer); setEditing(false) }} className="text-xs px-2.5 py-1 text-app-muted hover:text-app-text">Cancelar</button>
               </div>
             </div>
@@ -184,26 +184,26 @@ export default function SortableFaqEditor({ productId, initialItems }: Props) {
       </DndContext>
 
       {adding ? (
-        <div className="bg-overlay border border-fay-green-deep rounded-lg px-3 py-2.5 space-y-2">
+        <div className="bg-overlay border border-brand-green-deep rounded-lg px-3 py-2.5 space-y-2">
           <input
             autoFocus
             value={newQ}
             onChange={e => setNewQ(e.target.value)}
             placeholder="Pergunta"
-            className="w-full bg-overlay-md border border-overlay rounded px-2 py-1.5 text-sm text-app-text placeholder-fay-muted focus:outline-none focus:border-fay-green-deep"
+            className="w-full bg-overlay-md border border-overlay rounded px-2 py-1.5 text-sm text-app-text placeholder-brand-muted focus:outline-none focus:border-brand-green-deep"
           />
           <textarea
             value={newA}
             onChange={e => setNewA(e.target.value)}
             placeholder="Resposta"
-            className="w-full bg-overlay-md border border-overlay rounded px-2 py-1.5 text-sm text-app-text placeholder-fay-muted focus:outline-none focus:border-fay-green-deep resize-y min-h-16"
+            className="w-full bg-overlay-md border border-overlay rounded px-2 py-1.5 text-sm text-app-text placeholder-brand-muted focus:outline-none focus:border-brand-green-deep resize-y min-h-16"
           />
           <div className="flex gap-2">
             <button
               type="button"
               onClick={handleAdd}
               disabled={saving}
-              className="text-xs px-3 py-1.5 bg-fay-green text-fay-dark rounded font-semibold disabled:opacity-50"
+              className="text-xs px-3 py-1.5 bg-brand-green text-brand-dark rounded font-semibold disabled:opacity-50"
             >
               Adicionar
             </button>

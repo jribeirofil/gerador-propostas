@@ -60,7 +60,7 @@ const EVENT_LABELS: Record<string, string> = {
 
 const OPPORTUNITY_CONFIG: Record<string, { label: string; color: string }> = {
   open: { label: 'Aberta',  color: 'text-blue-400'       },
-  won:  { label: 'Ganha',   color: 'text-fay-green-deep' },
+  won:  { label: 'Ganha',   color: 'text-brand-green-deep' },
   lost: { label: 'Perdida', color: 'text-red-400'        },
 }
 
@@ -90,10 +90,10 @@ interface TimelineItem {
 }
 
 function getTimelineIcon(item: TimelineItem): { Icon: LucideIcon; color: string } {
-  if (item.kind === 'analytics') return { Icon: Eye,          color: 'text-fay-green' }
+  if (item.kind === 'analytics') return { Icon: Eye,          color: 'text-brand-green' }
   if (item.kind === 'version')   return { Icon: GitBranch,    color: 'text-blue-400'  }
   switch (item.eventType) {
-    case 'viewed':                return { Icon: Eye,          color: 'text-fay-green'   }
+    case 'viewed':                return { Icon: Eye,          color: 'text-brand-green'   }
     case 'pdf_generated':         return { Icon: Download,     color: 'text-app-muted'   }
     case 'sent':                  return { Icon: Send,         color: 'text-blue-400'    }
     case 'created':               return { Icon: FileText,     color: 'text-app-muted'   }
@@ -438,7 +438,7 @@ export default function ProposalWorkspace({
               {/* Subtitle: resultado · versão · última enviada */}
               <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
                 <span className={`text-[13px] font-semibold ${
-                  opportunityStatus === 'won'  ? 'text-fay-green-deep' :
+                  opportunityStatus === 'won'  ? 'text-brand-green-deep' :
                   opportunityStatus === 'lost' ? 'text-red-400' :
                   'text-app-muted'
                 }`}>
@@ -496,7 +496,7 @@ export default function ProposalWorkspace({
                 type="button"
                 onClick={handleShare}
                 disabled={shareLoading}
-                className="inline-flex items-center gap-1.5 h-8 px-3.5 text-xs font-semibold bg-fay-green text-fay-dark rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 h-8 px-3.5 text-xs font-semibold bg-brand-green text-brand-dark rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50"
               >
                 <Share2 size={12} strokeWidth={2.5} />
                 {shareLoading ? 'Gerando...' : hasBeenShared ? 'Copiar link' : 'Compartilhar'}
@@ -543,7 +543,7 @@ export default function ProposalWorkspace({
             {TABS.map(tab => {
               const tabClass = `px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'border-fay-green text-app-text'
+                  ? 'border-brand-green text-app-text'
                   : 'border-transparent text-app-muted hover:text-app-text'
               }`
               if (tab.href) {
@@ -756,7 +756,7 @@ export default function ProposalWorkspace({
                               {p.monthly_value > 0 && (
                                 <div>
                                   <span className="text-[10px] font-semibold text-app-muted/60 uppercase tracking-wider block mb-0.5">Mensal</span>
-                                  <span className="text-base font-bold text-fay-green">{fmt(p.monthly_value)}</span>
+                                  <span className="text-base font-bold text-brand-green">{fmt(p.monthly_value)}</span>
                                 </div>
                               )}
                               {p.setup_value > 0 && (
@@ -813,12 +813,12 @@ export default function ProposalWorkspace({
                                   {item.label}
                                 </Link>
                               ) : (
-                                <span className={`text-sm truncate ${item.kind === 'analytics' ? 'text-fay-green-deep font-medium' : 'text-app-text'}`}>
+                                <span className={`text-sm truncate ${item.kind === 'analytics' ? 'text-brand-green-deep font-medium' : 'text-app-text'}`}>
                                   {item.label}
                                 </span>
                               )}
                               {item.isCurrent && (
-                                <span className="text-[10px] bg-fay-green/10 text-fay-green-deep px-1.5 py-0.5 rounded-full shrink-0">atual</span>
+                                <span className="text-[10px] bg-brand-green/10 text-brand-green-deep px-1.5 py-0.5 rounded-full shrink-0">atual</span>
                               )}
                             </div>
                             <span className="text-[11px] text-app-muted shrink-0 tabular-nums">{fmtDateTime(item.date)}</span>
@@ -886,7 +886,7 @@ export default function ProposalWorkspace({
                                       : 'text-app-muted hover:text-app-text hover:bg-[var(--row-hover)]'
                                   }`}
                                 >
-                                  {opportunityStatus === opt.value && <span className="w-1 h-1 rounded-full bg-fay-green-deep" />}
+                                  {opportunityStatus === opt.value && <span className="w-1 h-1 rounded-full bg-brand-green-deep" />}
                                   {opt.label}
                                 </button>
                               ))}
@@ -932,7 +932,7 @@ export default function ProposalWorkspace({
                       {expiryDate && (
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-app-muted">Validade</span>
-                          <span className={`text-xs font-medium ${isExpired ? 'text-red-400' : 'text-fay-green-deep'}`}>
+                          <span className={`text-xs font-medium ${isExpired ? 'text-red-400' : 'text-brand-green-deep'}`}>
                             {isExpired ? 'Expirada' : 'Vigente'}
                             <span className="text-app-muted font-normal ml-1">
                               ({expiryDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })})
@@ -943,7 +943,7 @@ export default function ProposalWorkspace({
                       {analyticsSummary && analyticsSummary.totalViews > 0 && (
                         <div className="flex items-center justify-between pt-1 border-t border-app-border">
                           <span className="text-xs text-app-muted">Visualizações</span>
-                          <span className="text-xs font-semibold text-fay-green-deep">{analyticsSummary.totalViews}</span>
+                          <span className="text-xs font-semibold text-brand-green-deep">{analyticsSummary.totalViews}</span>
                         </div>
                       )}
                     </div>
@@ -955,11 +955,11 @@ export default function ProposalWorkspace({
                 {(totalMonthly || (totalSetup != null && totalSetup > 0)) && (
                   <section>
                     <h2 className="text-[11px] font-semibold text-app-muted uppercase tracking-widest mb-3">Receita</h2>
-                    <div className="bg-app-surface rounded-2xl p-4 shadow-sm space-y-4" style={{ border: '1.5px solid var(--fay-green)' }}>
+                    <div className="bg-app-surface rounded-2xl p-4 shadow-sm space-y-4" style={{ border: '1.5px solid var(--brand-green)' }}>
                       {totalMonthly ? (
                         <div>
                           <span className="text-[10px] font-semibold text-app-muted/60 uppercase tracking-wider block mb-1.5">Recorrente mensal</span>
-                          <span className="text-[26px] font-bold text-fay-green leading-none">{fmt(totalMonthly)}</span>
+                          <span className="text-[26px] font-bold text-brand-green leading-none">{fmt(totalMonthly)}</span>
                         </div>
                       ) : null}
                       {totalSetup != null && totalSetup > 0 && (
@@ -986,7 +986,7 @@ export default function ProposalWorkspace({
                       type="button"
                       onClick={handleShare}
                       disabled={shareLoading}
-                      className="w-full inline-flex items-center justify-center gap-2 h-9 text-xs font-semibold bg-fay-green text-fay-dark rounded-xl hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50"
+                      className="w-full inline-flex items-center justify-center gap-2 h-9 text-xs font-semibold bg-brand-green text-brand-dark rounded-xl hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50"
                     >
                       <Share2 size={13} strokeWidth={2.5} />
                       {shareLoading ? 'Gerando link...' : 'Compartilhar link'}
@@ -1069,7 +1069,7 @@ export default function ProposalWorkspace({
                   type="button"
                   onClick={handleShare}
                   disabled={shareLoading}
-                  className="mt-4 px-4 py-2 text-sm font-semibold bg-fay-green text-fay-dark rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50"
+                  className="mt-4 px-4 py-2 text-sm font-semibold bg-brand-green text-brand-dark rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50"
                 >
                   {shareLoading ? 'Gerando...' : 'Compartilhar link'}
                 </button>
@@ -1087,7 +1087,7 @@ export default function ProposalWorkspace({
                     <div key={item.id} className="flex items-start gap-5 pl-10 relative py-4">
                       <div className={`absolute left-[9px] top-5 w-2 h-2 rounded-full ${
                         item.kind === 'analytics'
-                          ? 'bg-fay-green/60 border-2 border-fay-green/30'
+                          ? 'bg-brand-green/60 border-2 border-brand-green/30'
                           : 'bg-app-bg border-2 border-app-border'
                       }`} />
                       <div className="flex-1">
@@ -1100,12 +1100,12 @@ export default function ProposalWorkspace({
                               {item.label}
                             </Link>
                           ) : (
-                            <p className={`text-sm ${item.kind === 'analytics' ? 'text-fay-green-deep' : 'text-app-text'}`}>
+                            <p className={`text-sm ${item.kind === 'analytics' ? 'text-brand-green-deep' : 'text-app-text'}`}>
                               {item.label}
                             </p>
                           )}
                           {item.isCurrent && (
-                            <span className="text-[11px] bg-fay-green/15 text-fay-green-deep px-1.5 py-0.5 rounded-full">
+                            <span className="text-[11px] bg-brand-green/15 text-brand-green-deep px-1.5 py-0.5 rounded-full">
                               atual
                             </span>
                           )}
@@ -1195,7 +1195,7 @@ export default function ProposalWorkspace({
                   value={lostComment}
                   onChange={e => setLostComment(e.target.value)}
                   placeholder="Descreva o motivo..."
-                  className="w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors"
+                  className="w-full bg-app-surface border border-app-border rounded-xl px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors"
                   autoFocus
                 />
               </div>
@@ -1236,7 +1236,7 @@ export default function ProposalWorkspace({
               </div>
               <div>
                 <p className="text-[10px] font-semibold text-app-muted uppercase tracking-wider mb-1">Nova versão</p>
-                <p className="text-xl font-bold text-fay-green">v{(proposal.version as number) + 1}</p>
+                <p className="text-xl font-bold text-brand-green">v{(proposal.version as number) + 1}</p>
               </div>
             </div>
             <div className="flex gap-3">
@@ -1252,7 +1252,7 @@ export default function ProposalWorkspace({
                 type="button"
                 onClick={handlePublish}
                 disabled={publishing}
-                className="flex-1 h-9 text-xs font-semibold bg-fay-green text-fay-dark rounded-xl hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50"
+                className="flex-1 h-9 text-xs font-semibold bg-brand-green text-brand-dark rounded-xl hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50"
               >
                 {publishing ? 'Publicando...' : `Publicar v${(proposal.version as number) + 1}`}
               </button>

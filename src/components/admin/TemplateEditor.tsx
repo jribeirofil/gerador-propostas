@@ -125,7 +125,7 @@ function SortableBlockItem({
           type="button"
           onClick={() => onToggle(block.type)}
           className={`relative w-9 h-5 rounded-full transition-colors ${
-            block.enabled ? 'bg-fay-green' : 'bg-overlay-md'
+            block.enabled ? 'bg-brand-green' : 'bg-overlay-md'
           }`}
         >
           <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
@@ -203,7 +203,7 @@ function ContentCard({
           status === 'idle' ? 'opacity-0' : 'opacity-100'
         } ${
           status === 'saving' ? 'text-app-muted' :
-          status === 'saved'  ? 'text-fay-green-deep' : 'text-red-400'
+          status === 'saved'  ? 'text-brand-green-deep' : 'text-red-400'
         }`}>
           {status === 'saving' ? 'Salvando...' : status === 'saved' ? 'Salvo ✓' : status === 'error' ? 'Erro' : ''}
         </span>
@@ -224,7 +224,7 @@ function ContentCard({
           type="button"
           onClick={() => setShowAiMenu(v => !v)}
           disabled={aiLoading || !value.trim()}
-          className="text-[11px] text-app-muted hover:text-fay-green-deep transition-colors disabled:opacity-30"
+          className="text-[11px] text-app-muted hover:text-brand-green-deep transition-colors disabled:opacity-30"
         >
           {aiLoading ? '✨ Processando...' : '✨ Melhorar com IA'}
         </button>
@@ -441,7 +441,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               activeTab === tab.id
-                ? 'border-fay-green text-app-text'
+                ? 'border-brand-green text-app-text'
                 : 'border-transparent text-app-muted hover:text-app-text'
             }`}
           >
@@ -459,7 +459,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full bg-app-surface border border-app-border rounded-xl px-4 py-2.5 text-sm text-app-text placeholder-fay-muted focus:outline-none focus:border-fay-green-deep transition-colors"
+              className="w-full bg-app-surface border border-app-border rounded-xl px-4 py-2.5 text-sm text-app-text placeholder-brand-muted focus:outline-none focus:border-brand-green-deep transition-colors"
               placeholder="Nome do template"
             />
           </div>
@@ -470,7 +470,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
               value={description}
               onChange={e => setDescription(e.target.value)}
               rows={3}
-              className="w-full bg-app-surface border border-app-border rounded-xl px-4 py-3 text-sm text-app-text placeholder-fay-muted resize-none focus:outline-none focus:border-fay-green-deep transition-colors"
+              className="w-full bg-app-surface border border-app-border rounded-xl px-4 py-3 text-sm text-app-text placeholder-brand-muted resize-none focus:outline-none focus:border-brand-green-deep transition-colors"
               placeholder="Descreva quando usar este template..."
             />
           </div>
@@ -490,7 +490,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
               disabled={isOnlyTemplate}
               title={isOnlyTemplate ? 'Único template disponível — não pode ser removido do padrão' : undefined}
               className={`relative w-10 h-6 rounded-full transition-colors ${
-                isDefault ? 'bg-fay-green' : 'bg-overlay-md'
+                isDefault ? 'bg-brand-green' : 'bg-overlay-md'
               } ${isOnlyTemplate ? 'opacity-40 cursor-not-allowed' : ''}`}
             >
               <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${isDefault ? 'translate-x-4' : 'translate-x-0'}`} />
@@ -510,7 +510,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
                       type="checkbox"
                       checked={productSlugs.includes(p.slug)}
                       onChange={() => toggleProductSlug(p.slug)}
-                      className="w-4 h-4 rounded accent-fay-green"
+                      className="w-4 h-4 rounded accent-brand-green"
                     />
                     <span className="text-sm text-app-text">{p.name}</span>
                   </label>
@@ -537,7 +537,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
                 )}
               </div>
               <label className={`flex items-center gap-3 h-10 px-4 border border-dashed rounded-xl cursor-pointer transition-colors ${
-                uploadingImage ? 'opacity-50 pointer-events-none border-app-border' : 'border-app-border hover:border-fay-green-deep/60 hover:bg-fay-green/5'
+                uploadingImage ? 'opacity-50 pointer-events-none border-app-border' : 'border-app-border hover:border-brand-green-deep/60 hover:bg-brand-green/5'
               }`}>
                 <Upload size={13} className="text-app-muted flex-shrink-0" />
                 <span className="text-sm text-app-muted flex-1">
@@ -570,7 +570,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
                 )}
               </div>
               <label className={`flex items-center gap-3 h-10 px-4 border border-dashed rounded-xl cursor-pointer transition-colors ${
-                uploadingVideo ? 'opacity-50 pointer-events-none border-app-border' : 'border-app-border hover:border-fay-green-deep/60 hover:bg-fay-green/5'
+                uploadingVideo ? 'opacity-50 pointer-events-none border-app-border' : 'border-app-border hover:border-brand-green-deep/60 hover:bg-brand-green/5'
               }`}>
                 <Upload size={13} className="text-app-muted flex-shrink-0" />
                 <span className="text-sm text-app-muted flex-1">
@@ -595,7 +595,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
               type="button"
               onClick={saveGeneral}
               disabled={!name.trim() || generalSaving}
-              className="px-5 py-2 bg-fay-green text-fay-dark text-sm font-semibold rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-40"
+              className="px-5 py-2 bg-brand-green text-brand-dark text-sm font-semibold rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-40"
             >
               {generalSaving ? 'Salvando...' : 'Salvar'}
             </button>
@@ -625,7 +625,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
               type="button"
               onClick={saveStructure}
               disabled={structureSaving}
-              className="px-5 py-2 bg-fay-green text-fay-dark text-sm font-semibold rounded-lg hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-40"
+              className="px-5 py-2 bg-brand-green text-brand-dark text-sm font-semibold rounded-lg hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-40"
             >
               {structureSaving ? 'Salvando...' : 'Salvar estrutura'}
             </button>

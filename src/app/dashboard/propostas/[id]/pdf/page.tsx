@@ -84,7 +84,7 @@ export default function PdfPage() {
     return (
       <div className="text-center py-16">
         <p className="text-app-muted mb-4">Proposta não encontrada.</p>
-        <Link href="/dashboard" className="text-fay-green-deep text-sm hover:underline">Voltar ao dashboard</Link>
+        <Link href="/dashboard" className="text-brand-green-deep text-sm hover:underline">Voltar ao dashboard</Link>
       </div>
     )
   }
@@ -146,7 +146,7 @@ export default function PdfPage() {
           </button>
           <button
             onClick={downloadPdf}
-            className="px-4 py-1.5 bg-fay-green text-fay-dark rounded-lg text-sm font-semibold hover:bg-fay-green-deep hover:text-white transition-colors"
+            className="px-4 py-1.5 bg-brand-green text-brand-dark rounded-lg text-sm font-semibold hover:bg-brand-green-deep hover:text-white transition-colors"
           >
             Exportar PDF ↓
           </button>

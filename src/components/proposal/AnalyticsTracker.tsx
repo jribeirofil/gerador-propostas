@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 
 export default function AnalyticsTracker({ token }: { token: string }) {
   useEffect(() => {
-    const storageKey = `fay_sid_${token}`
+    const storageKey = `sid_${token}`
     let sessionId = sessionStorage.getItem(storageKey)
     if (!sessionId) {
       sessionId = Math.random().toString(36).slice(2, 10) + Date.now().toString(36)

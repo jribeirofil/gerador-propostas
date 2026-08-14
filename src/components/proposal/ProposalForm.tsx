@@ -90,10 +90,10 @@ export default function ProposalForm({
 
   const draftKey =
     mode === 'edit'
-      ? `fay:draft:edit:${sourceProposalId}`
+      ? `brand:draft:edit:${sourceProposalId}`
       : mode === 'duplicate'
-        ? `fay:draft:dup:${sourceProposalId}`
-        : 'fay:draft:new'
+        ? `brand:draft:dup:${sourceProposalId}`
+        : 'brand:draft:new'
 
   const defaultVals: Partial<ProposalFormData> = {
     product_ids: [],
@@ -493,7 +493,7 @@ export default function ProposalForm({
                   autosaveReady.current = true
                   setShowDraftModal(false)
                 }}
-                className="w-full py-2.5 bg-fay-green text-fay-dark rounded-xl text-sm font-semibold hover:bg-fay-green-deep hover:text-white transition-colors"
+                className="w-full py-2.5 bg-brand-green text-brand-dark rounded-xl text-sm font-semibold hover:bg-brand-green-deep hover:text-white transition-colors"
               >
                 Continuar rascunho
               </button>
@@ -547,12 +547,12 @@ export default function ProposalForm({
               <button
                 type="button"
                 onClick={nextStep}
-                className="px-5 py-2 bg-fay-green text-fay-dark rounded-lg text-sm font-semibold hover:bg-fay-green-deep hover:text-white transition-colors"
+                className="px-5 py-2 bg-brand-green text-brand-dark rounded-lg text-sm font-semibold hover:bg-brand-green-deep hover:text-white transition-colors"
               >
                 Continuar
               </button>
             ) : saveSuccess ? (
-              <span className="px-5 py-2 bg-fay-green/15 text-fay-green-deep rounded-lg text-sm font-semibold">
+              <span className="px-5 py-2 bg-brand-green/15 text-brand-green-deep rounded-lg text-sm font-semibold">
                 Salvo com sucesso
               </span>
             ) : (
@@ -560,7 +560,7 @@ export default function ProposalForm({
                 type="button"
                 disabled={loading}
                 onClick={handleSubmit(onSubmit)}
-                className="px-5 py-2 bg-fay-green text-fay-dark rounded-lg text-sm font-semibold hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50"
+                className="px-5 py-2 bg-brand-green text-brand-dark rounded-lg text-sm font-semibold hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50"
               >
                 {loading
                   ? 'Salvando...'

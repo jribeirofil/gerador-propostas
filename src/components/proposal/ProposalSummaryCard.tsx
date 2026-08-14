@@ -54,7 +54,7 @@ export default function ProposalSummaryCard({ watch }: Props) {
                   <span className="text-[10px] text-app-muted">
                     {calc.quantity} {product.unit_label || 'unidades'} × {fmt(calc.unit_value)}
                     {p.discount_percent > 0 && (
-                      <span className="text-fay-green-deep ml-1">− {p.discount_percent}%</span>
+                      <span className="text-brand-green-deep ml-1">− {p.discount_percent}%</span>
                     )}
                   </span>
                   <span className="text-xs text-app-text font-medium">
@@ -72,14 +72,14 @@ export default function ProposalSummaryCard({ watch }: Props) {
             {descontoPct > 0 && totals.general_discount_value > 0 && (
               <div className="flex justify-between items-baseline">
                 <span className="text-[10px] text-app-muted">Desconto geral ({descontoPct}%)</span>
-                <span className="text-[10px] text-fay-green-deep">− {fmt(totals.general_discount_value)}</span>
+                <span className="text-[10px] text-brand-green-deep">− {fmt(totals.general_discount_value)}</span>
               </div>
             )}
 
             {totals.total_monthly > 0 && (
               <div className="flex justify-between items-baseline">
                 <span className="text-xs text-app-muted">Total mensal</span>
-                <span className="text-base font-bold text-fay-green">{fmt(totals.total_monthly)}</span>
+                <span className="text-base font-bold text-brand-green">{fmt(totals.total_monthly)}</span>
               </div>
             )}
 

@@ -109,8 +109,8 @@ function FilterSelect({
         onClick={() => setOpen(o => !o)}
         className={`flex items-center gap-2 border rounded-xl px-3.5 py-2.5 text-xs font-medium transition-colors shadow-sm whitespace-nowrap ${
           isFiltered
-            ? 'bg-fay-green/10 border-fay-green-deep/30 text-fay-green-deep'
-            : 'bg-app-surface border-app-border text-app-muted hover:bg-[var(--row-hover)] hover:border-fay-green-deep/30'
+            ? 'bg-brand-green/10 border-brand-green-deep/30 text-brand-green-deep'
+            : 'bg-app-surface border-app-border text-app-muted hover:bg-[var(--row-hover)] hover:border-brand-green-deep/30'
         }`}
       >
         {selected.label}
@@ -125,12 +125,12 @@ function FilterSelect({
               onClick={() => { onChange(o.value); setOpen(false) }}
               className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors ${
                 o.value === value
-                  ? 'text-fay-green-deep bg-[var(--row-hover)]'
+                  ? 'text-brand-green-deep bg-[var(--row-hover)]'
                   : 'text-app-text hover:bg-[var(--row-hover)]'
               }`}
             >
               <span className="w-3.5 flex-shrink-0">
-                {o.value === value && <Check size={13} className="text-fay-green-deep" />}
+                {o.value === value && <Check size={13} className="text-brand-green-deep" />}
               </span>
               {o.label}
             </button>
@@ -237,8 +237,8 @@ export default function ProposalTable({ proposals: initial, currentUserId }: Pro
   function SortIcon({ col }: { col: SortKey }) {
     if (sortKey !== col) return <ArrowUpDown size={12} className="text-app-muted/40 group-hover:text-app-muted transition-colors" />
     return sortDir === 'asc'
-      ? <ArrowUp size={12} className="text-fay-green-deep" />
-      : <ArrowDown size={12} className="text-fay-green-deep" />
+      ? <ArrowUp size={12} className="text-brand-green-deep" />
+      : <ArrowDown size={12} className="text-brand-green-deep" />
   }
 
   function SortTh({ col, label, className }: { col: SortKey; label: string; className?: string }) {
@@ -249,7 +249,7 @@ export default function ProposalTable({ proposals: initial, currentUserId }: Pro
           type="button"
           onClick={() => handleSort(col)}
           className={`group flex items-center gap-1.5 text-xs font-semibold tracking-wide transition-colors ${
-            active ? 'text-fay-green-deep' : 'text-app-muted hover:text-app-text'
+            active ? 'text-brand-green-deep' : 'text-app-muted hover:text-app-text'
           }`}
         >
           {label}
@@ -365,7 +365,7 @@ export default function ProposalTable({ proposals: initial, currentUserId }: Pro
         <p className="text-xs text-app-muted mb-6">Crie sua primeira proposta para começar.</p>
         <Link
           href="/dashboard/nova"
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-fay-green text-fay-dark rounded-lg text-sm font-semibold hover:bg-fay-green-deep hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-brand-green text-brand-dark rounded-lg text-sm font-semibold hover:bg-brand-green-deep hover:text-white transition-colors"
         >
           + Criar proposta
         </Link>
@@ -383,7 +383,7 @@ export default function ProposalTable({ proposals: initial, currentUserId }: Pro
           placeholder="Buscar por empresa, contato ou #código..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full bg-app-surface border border-app-border rounded-full pl-11 pr-10 py-3 text-sm text-app-text placeholder-app-muted hover:bg-[var(--row-hover)] hover:border-fay-green-deep/40 focus:outline-none focus:bg-app-surface focus:border-fay-green-deep transition-colors shadow-sm"
+          className="w-full bg-app-surface border border-app-border rounded-full pl-11 pr-10 py-3 text-sm text-app-text placeholder-app-muted hover:bg-[var(--row-hover)] hover:border-brand-green-deep/40 focus:outline-none focus:bg-app-surface focus:border-brand-green-deep transition-colors shadow-sm"
         />
         {search && (
           <button
@@ -407,7 +407,7 @@ export default function ProposalTable({ proposals: initial, currentUserId }: Pro
               onClick={() => setOppFilter(tab.value)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                 active
-                  ? 'bg-fay-green/15 text-fay-green-deep border border-fay-green-deep/20'
+                  ? 'bg-brand-green/15 text-brand-green-deep border border-brand-green-deep/20'
                   : 'text-app-muted hover:text-app-text hover:bg-[var(--row-hover)] border border-transparent'
               }`}
             >
@@ -473,9 +473,9 @@ export default function ProposalTable({ proposals: initial, currentUserId }: Pro
                     <td className="px-4 py-5">
                       <div className="flex items-center gap-3.5">
                         <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                          archived ? 'bg-app-muted/10' : 'bg-fay-green/10'
+                          archived ? 'bg-app-muted/10' : 'bg-brand-green/10'
                         }`}>
-                          <Building2 size={16} className={archived ? 'text-app-muted' : 'text-fay-green-deep'} strokeWidth={1.75} />
+                          <Building2 size={16} className={archived ? 'text-app-muted' : 'text-brand-green-deep'} strokeWidth={1.75} />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">

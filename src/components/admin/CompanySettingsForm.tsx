@@ -11,7 +11,7 @@ interface Props {
   settings: CompanySettings | null
 }
 
-const inputClass = 'w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors'
+const inputClass = 'w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors'
 const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
 const sectionClass = 'bg-app-surface border border-app-border rounded-2xl p-6 space-y-4 shadow-sm'
 
@@ -189,7 +189,7 @@ export default function CompanySettingsForm({ settings }: Props) {
               <label className={`flex items-center gap-3 h-12 px-4 border border-dashed rounded-xl transition-colors cursor-pointer ${
                 uploading
                   ? 'border-app-border opacity-60 pointer-events-none'
-                  : 'border-app-border hover:border-fay-green-deep/60 hover:bg-fay-green/5'
+                  : 'border-app-border hover:border-brand-green-deep/60 hover:bg-brand-green/5'
               }`}>
                 <Upload size={14} className="text-app-muted flex-shrink-0" />
                 <span className="text-sm text-app-muted">
@@ -269,7 +269,7 @@ export default function CompanySettingsForm({ settings }: Props) {
         <button
           type="submit"
           disabled={saving}
-          className="px-5 py-2 bg-fay-green text-fay-dark rounded-lg text-sm font-semibold hover:bg-fay-green-deep hover:text-white transition-colors disabled:opacity-50"
+          className="px-5 py-2 bg-brand-green text-brand-dark rounded-lg text-sm font-semibold hover:bg-brand-green-deep hover:text-white transition-colors disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar configurações'}
         </button>

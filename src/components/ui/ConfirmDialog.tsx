@@ -88,7 +88,7 @@ export default function ConfirmDialog({
               onKeyDown={e => {
                 if (e.key === 'Enter' && canConfirm && !loading) onConfirm()
               }}
-              className="w-full bg-overlay border border-app-border rounded px-3 py-2 text-sm text-app-text font-mono placeholder-app-muted focus:outline-none focus:border-fay-green-deep transition-colors"
+              className="w-full bg-overlay border border-app-border rounded px-3 py-2 text-sm text-app-text font-mono placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors"
               placeholder={requireTyping}
               autoComplete="off"
               spellCheck={false}
@@ -112,7 +112,7 @@ export default function ConfirmDialog({
             className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
               variant === 'danger'
                 ? 'bg-red-500 text-white hover:bg-red-600'
-                : 'bg-fay-green text-fay-dark hover:bg-fay-green-deep hover:text-white'
+                : 'bg-brand-green text-brand-dark hover:bg-brand-green-deep hover:text-white'
             }`}
           >
             {loading ? 'Aguarde...' : confirmText}

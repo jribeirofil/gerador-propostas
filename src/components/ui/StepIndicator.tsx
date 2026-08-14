@@ -24,9 +24,9 @@ export default function StepIndicator({ current, onStepClick }: Props) {
                 disabled={!clickable}
                 className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-colors ${
                   done
-                    ? 'bg-fay-green-deep text-white'
+                    ? 'bg-brand-green-deep text-white'
                     : active
-                    ? 'bg-fay-green text-fay-dark'
+                    ? 'bg-brand-green text-brand-dark'
                     : 'bg-overlay-md text-app-muted border border-overlay'
                 } ${clickable ? 'cursor-pointer hover:opacity-80' : 'cursor-default'}`}
               >
@@ -42,7 +42,7 @@ export default function StepIndicator({ current, onStepClick }: Props) {
               </span>
             </div>
             {i < STEPS.length - 1 && (
-              <div className={`flex-1 h-px mx-1 mb-5 ${done ? 'bg-fay-green-deep' : 'bg-overlay-md'}`} />
+              <div className={`flex-1 h-px mx-1 mb-5 ${done ? 'bg-brand-green-deep' : 'bg-overlay-md'}`} />
             )}
           </div>
         )
