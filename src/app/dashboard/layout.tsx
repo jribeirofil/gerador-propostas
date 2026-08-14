@@ -13,7 +13,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const [{ data: profile }, { data: settings }] = await Promise.all([
     supabase.from('profiles').select('full_name, role').eq('id', user.id).single(),
-    supabase.from('company_settings').select('logo_url').limit(1).maybeSingle(),
+    supabase.from('company_settings').select('logo_url, company_name').limit(1).maybeSingle(),
   ])
 
   return (
@@ -25,6 +25,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             userRole={profile?.role}
             userId={user.id}
             logoUrl={settings?.logo_url}
+            companyName={settings?.company_name || null}
           />
         </div>
         <main className="flex-1 h-full overflow-y-auto">

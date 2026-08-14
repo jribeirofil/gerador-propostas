@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Mail, Lock, Eye, EyeOff, User, UserPlus } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, User, Building2, UserPlus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 function DotGrid() {
@@ -20,6 +20,7 @@ function DotGrid() {
 
 export default function CadastroPage() {
   const [fullName, setFullName] = useState('')
+  const [companyName, setCompanyName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -36,7 +37,7 @@ export default function CadastroPage() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName } },
+      options: { data: { full_name: fullName, company_name: companyName } },
     })
     if (error) {
       if (error.message.includes('already registered')) {
@@ -148,6 +149,21 @@ export default function CadastroPage() {
                   value={fullName}
                   onChange={e => setFullName(e.target.value)}
                   placeholder="Seu nome"
+                  className="w-full border border-[#E4E8EE] rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] placeholder-[#9CA3AF] focus:outline-none focus:border-[#00B765] transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#0F1318] mb-2">Empresa</label>
+              <div className="relative">
+                <Building2 size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] pointer-events-none" />
+                <input
+                  type="text"
+                  required
+                  value={companyName}
+                  onChange={e => setCompanyName(e.target.value)}
+                  placeholder="Nome da sua empresa"
                   className="w-full border border-[#E4E8EE] rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] placeholder-[#9CA3AF] focus:outline-none focus:border-[#00B765] transition-colors"
                 />
               </div>

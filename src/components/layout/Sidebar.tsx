@@ -66,6 +66,7 @@ interface Props {
   userRole?: string | null
   userId?: string | null
   logoUrl?: string | null
+  companyName?: string | null
 }
 
 function NavItem({
@@ -125,7 +126,7 @@ function ThemeToggle({ collapsed }: { collapsed: boolean }) {
   )
 }
 
-export default function Sidebar({ userName, userRole, userId, logoUrl }: Props) {
+export default function Sidebar({ userName, userRole, userId, logoUrl, companyName }: Props) {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
@@ -191,13 +192,31 @@ export default function Sidebar({ userName, userRole, userId, logoUrl }: Props) 
         {isCollapsed ? (
           <div className="flex justify-center w-full">
             <Link href="/dashboard" title="Início">
-              <Logo src={logoUrl} height={40} maxWidth={40} />
+              {logoUrl ? (
+                <Logo src={logoUrl} height={40} maxWidth={40} />
+              ) : (
+                <span
+                  className="font-sora font-black text-base leading-none flex items-center justify-center w-10 h-10 rounded-lg"
+                  style={{ color: 'var(--sidebar-active-text)', background: 'var(--sidebar-active)' }}
+                >
+                  {(companyName || 'P').charAt(0).toUpperCase()}
+                </span>
+              )}
             </Link>
           </div>
         ) : (
           <div className="flex items-center justify-between w-full">
             <Link href="/dashboard" title="Início">
-              <Logo src={logoUrl} height={52} maxWidth={104} />
+              {logoUrl ? (
+                <Logo src={logoUrl} height={52} maxWidth={104} />
+              ) : (
+                <span
+                  className="font-sora font-black text-lg leading-none truncate max-w-[104px]"
+                  style={{ color: 'var(--sidebar-active-text)' }}
+                >
+                  {companyName || 'Propostas'}
+                </span>
+              )}
             </Link>
 
             <div className="flex items-center flex-shrink-0">

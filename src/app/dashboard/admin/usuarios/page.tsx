@@ -23,7 +23,9 @@ export default async function UsuariosPage() {
       {error ? (
         <div className="bg-app-surface border border-app-border rounded-2xl p-6 text-center shadow-sm">
           <p className="text-sm text-red-400">Não foi possível carregar os usuários.</p>
-          <p className="text-xs text-app-muted mt-1">Verifique se o SQL da Fase O.2 foi executado no Supabase.</p>
+          {error.message && (
+            <p className="text-xs text-app-muted mt-1 font-mono">{error.message}</p>
+          )}
         </div>
       ) : (
         <UserList
