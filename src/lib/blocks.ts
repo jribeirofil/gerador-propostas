@@ -117,31 +117,34 @@ export async function resolveTemplate(
   return defaultTpl?.id ?? templates[0]?.id ?? null
 }
 
-export async function createBlocksFromTemplate(
-  supabase: SupabaseClient,
-  proposalId: string,
-  templateId: string | null,
+export interface TemplateBlockRow {
+  type: string
+  sort_order: number
+  enabled: boolean
+  title: string | null
+  default_content: Json
+}
+
+export interface AssembledBlock {
+  type: string
+  sort_order: number
+  enabled: boolean
+  title: string
+  content_json: Json
+}
+
+// Monta a lista final de blocos a partir do template (ou do fallback padrão),
+// mesclando o conteúdo derivado dos produtos nos blocos de produto. Função
+// pura — compartilhada pelo save (createBlocksFromTemplate) e pela prévia do
+// passo Resumo, garantindo que os dois vejam EXATAMENTE o mesmo documento.
+export function assembleBlocks(
+  templateBlocks: TemplateBlockRow[],
   productContent?: ProductBlockContent
-): Promise<void> {
-  let templateBlocks: {
-    type: string
-    sort_order: number
-    enabled: boolean
-    title: string | null
-    default_content: Json
-  }[] = []
+): AssembledBlock[] {
+  let blocks: TemplateBlockRow[] = templateBlocks
 
-  if (templateId) {
-    const { data } = await supabase
-      .from('template_block')
-      .select('type, sort_order, enabled, title, default_content')
-      .eq('template_id', templateId)
-      .order('sort_order')
-    templateBlocks = data || []
-  }
-
-  if (templateBlocks.length === 0) {
-    templateBlocks = DEFAULT_BLOCK_ORDER.map((type, idx) => ({
+  if (blocks.length === 0) {
+    blocks = DEFAULT_BLOCK_ORDER.map((type, idx) => ({
       type,
       sort_order: idx,
       enabled: true,
@@ -150,7 +153,7 @@ export async function createBlocksFromTemplate(
     }))
   } else if (productContent) {
     // Merge product content into template defaults for product-derived blocks
-    templateBlocks = templateBlocks.map(b => {
+    blocks = blocks.map(b => {
       const type = b.type as BlockType
       if (!PRODUCT_DERIVED_BLOCKS.includes(type)) return b
       const pc = fallbackContent(type, productContent)
@@ -168,15 +171,37 @@ export async function createBlocksFromTemplate(
     })
   }
 
+  return blocks.map(b => ({
+    type: b.type,
+    sort_order: b.sort_order,
+    enabled: b.enabled,
+    title: b.title ?? BLOCK_LABELS[b.type as BlockType] ?? b.type,
+    content_json: b.default_content,
+  }))
+}
+
+export async function createBlocksFromTemplate(
+  supabase: SupabaseClient,
+  proposalId: string,
+  templateId: string | null,
+  productContent?: ProductBlockContent
+): Promise<void> {
+  let templateBlocks: TemplateBlockRow[] = []
+
+  if (templateId) {
+    const { data } = await supabase
+      .from('template_block')
+      .select('type, sort_order, enabled, title, default_content')
+      .eq('template_id', templateId)
+      .order('sort_order')
+    templateBlocks = (data || []) as TemplateBlockRow[]
+  }
+
+  const blocks = assembleBlocks(templateBlocks, productContent)
+  if (blocks.length === 0) return
+
   const { error } = await supabase.from('proposal_block').insert(
-    templateBlocks.map(b => ({
-      proposal_id: proposalId,
-      type: b.type,
-      sort_order: b.sort_order,
-      enabled: b.enabled,
-      title: b.title ?? BLOCK_LABELS[b.type as BlockType] ?? b.type,
-      content_json: b.default_content,
-    }))
+    blocks.map(b => ({ proposal_id: proposalId, ...b }))
   )
   if (error) throw new Error(`createBlocksFromTemplate: ${error.message} (${error.code})`)
 }

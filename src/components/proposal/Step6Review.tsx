@@ -5,6 +5,9 @@ import type { ProposalFormData } from './ProposalForm'
 import { calculateLineItem, calculateProposalTotals } from '@/lib/pricing'
 import { PRICING_TYPE_LABELS } from '@/types/engine'
 import { createClient } from '@/lib/supabase/client'
+import { buildPreviewDocument } from '@/lib/preview-document'
+import { buildProposalBody } from '@/lib/pdf-template'
+import type { PdfProposal } from '@/lib/pdf-template'
 
 interface Template {
   id: string
@@ -26,6 +29,9 @@ const sectionClass = 'bg-app-surface border border-app-border rounded-xl p-5'
 
 export default function Step6Review({ data, setValue }: Props) {
   const [templates, setTemplates] = useState<Template[]>([])
+  const [previewDoc, setPreviewDoc] = useState<PdfProposal | null>(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
+  const [previewError, setPreviewError] = useState<string | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -35,6 +41,33 @@ export default function Step6Review({ data, setValue }: Props) {
       .order('name')
       .then(({ data }) => setTemplates((data as Template[]) || []))
   }, [])
+
+  const productsKey = (data.product_ids || []).join('|')
+  const pricingKey = JSON.stringify(data.product_pricing)
+  const pagamentoKey = (data.forma_pagamento || []).join('|')
+
+  useEffect(() => {
+    let cancelled = false
+    async function load() {
+      setPreviewLoading(true)
+      setPreviewError(null)
+      try {
+        const doc = await buildPreviewDocument(supabase, data)
+        if (!cancelled) setPreviewDoc(doc)
+      } catch (err) {
+        console.error(err)
+        if (!cancelled) {
+          setPreviewDoc(null)
+          setPreviewError('Não foi possível gerar a prévia do documento.')
+        }
+      } finally {
+        if (!cancelled) setPreviewLoading(false)
+      }
+    }
+    load()
+    return () => { cancelled = true }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.template_id, productsKey, pricingKey, data.desconto_pct, data.validade_dias, pagamentoKey, data.prazo_implantacao, data.commercial_conditions])
 
   const catalogProducts = data.catalog_products || []
   const selectedProducts = catalogProducts.filter(p => (data.product_ids || []).includes(p.id))
@@ -178,6 +211,33 @@ export default function Step6Review({ data, setValue }: Props) {
             ))}
           </select>
         </div>
+      </div>
+
+      {/* Prévia real do documento */}
+      <div className={sectionClass}>
+        <div className="flex items-center justify-between gap-4">
+          <h3 className="text-[11px] font-semibold text-app-muted uppercase tracking-widest">Prévia do documento</h3>
+          {previewLoading && (
+            <span className="text-[11px] text-app-muted animate-pulse">Gerando prévia...</span>
+          )}
+        </div>
+        <p className="text-xs text-app-muted mt-0.5 mb-4">Render real do documento — exatamente o que o cliente verá ao abrir a proposta.</p>
+
+        {previewError ? (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">
+            <p className="text-sm text-red-400">{previewError}</p>
+          </div>
+        ) : previewDoc ? (
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-app-border">
+            <div className="max-h-[600px] overflow-y-auto">
+              <div dangerouslySetInnerHTML={{ __html: buildProposalBody(previewDoc) }} />
+            </div>
+          </div>
+        ) : (
+          <div className="bg-app-surface2 border border-dashed border-app-border rounded-xl py-10 text-center">
+            <p className="text-xs text-app-muted">Sem conteúdo ainda.</p>
+          </div>
+        )}
       </div>
 
     </div>
