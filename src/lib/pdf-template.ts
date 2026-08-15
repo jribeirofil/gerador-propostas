@@ -252,8 +252,7 @@ export function buildProposalBody(proposal: PdfProposal): string {
   const coverBgUrl = proposal.cover_image_url || null
 
   return `
-  <div style="position:relative;background:#161B20;padding:56px 40px;min-height:500px;display:flex;flex-direction:column;justify-content:space-between;${coverBgUrl ? `background-image:url('${coverBgUrl}');background-size:contain;background-position:center;background-repeat:no-repeat;` : ''}">
-    ${coverBgUrl ? '<div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.25);"></div>' : ''}
+  <div style="position:relative;background:${coverBgUrl ? '#ffffff' : '#161B20'};padding:56px 40px;min-height:500px;display:flex;flex-direction:column;justify-content:space-between;${coverBgUrl ? `background-image:url('${coverBgUrl}');background-size:contain;background-position:center;background-repeat:no-repeat;` : ''}">
     <div style="display:flex;align-items:center;gap:8px;position:relative;">
       <div style="width:10px;height:10px;border-radius:50%;background:${primary};"></div>
       <span style="color:white;font-weight:600;font-size:16px;letter-spacing:0.3px;">${companyName}</span>
