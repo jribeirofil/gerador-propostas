@@ -42,12 +42,26 @@ export async function loadProposalDocument(
     db.from('proposal_block').select('*').eq('proposal_id', proposal.id).eq('enabled', true).order('sort_order'),
     db.from('company_settings').select('company_name, primary_color, secondary_color, pdf_footer_text, pdf_default_conditions, company_about, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
     templateId
-      ? db.from('proposal_template').select('cover_image_url, cover_video_url').eq('id', templateId).eq('organization_id', orgId).maybeSingle()
+      ? db.from('proposal_template').select('cover_image_url, cover_video_url, default_font, base_font_size, heading_size, heading_color, heading_bold, text_color, text_line_height, background_color, accent_color, cover_text_color, custom_css').eq('id', templateId).eq('organization_id', orgId).maybeSingle()
       : Promise.resolve({ data: null, error: null }),
   ])
 
   const settings = (settingsRes.data || null) as PdfCompanySettings | null
-  const templateAssets = templateRes.data as { cover_image_url?: string | null; cover_video_url?: string | null } | null
+  const templateAssets = templateRes.data as {
+    cover_image_url?: string | null
+    cover_video_url?: string | null
+    default_font?: string | null
+    base_font_size?: number | null
+    heading_size?: number | null
+    heading_color?: string | null
+    heading_bold?: boolean
+    text_color?: string | null
+    text_line_height?: string | null
+    background_color?: string | null
+    accent_color?: string | null
+    cover_text_color?: string | null
+    custom_css?: string | null
+  } | null
 
   const doc: PdfProposal = {
     diagnosis: proposal.diagnosis ?? null,
@@ -63,6 +77,17 @@ export async function loadProposalDocument(
     client: (proposal.client as PdfClient | null) || null,
     cover_image_url: templateAssets?.cover_image_url || null,
     cover_video_url: templateAssets?.cover_video_url || null,
+    default_font: templateAssets?.default_font || null,
+    base_font_size: templateAssets?.base_font_size || null,
+    heading_size: templateAssets?.heading_size || null,
+    heading_color: templateAssets?.heading_color || null,
+    heading_bold: templateAssets?.heading_bold,
+    text_color: templateAssets?.text_color || null,
+    text_line_height: templateAssets?.text_line_height || null,
+    background_color: templateAssets?.background_color || null,
+    accent_color: templateAssets?.accent_color || null,
+    cover_text_color: templateAssets?.cover_text_color || null,
+    custom_css: templateAssets?.custom_css || null,
     items: (itemsRes.data || []).map(item => ({
       snapshot: item.snapshot,
       quantity: item.quantity,
