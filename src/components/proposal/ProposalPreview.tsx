@@ -77,6 +77,7 @@ interface Props {
   textLineHeight?: string | null
   backgroundColor?: string | null
   accentColor?: string | null
+  coverTextColor?: string | null
   customCss?: string | null
 }
 
@@ -98,6 +99,7 @@ export default function ProposalPreview({
   textLineHeight,
   backgroundColor,
   accentColor,
+  coverTextColor,
   customCss,
 }: Props) {
   // Converter dados para formato PdfProposal
@@ -146,6 +148,7 @@ export default function ProposalPreview({
     text_line_height: textLineHeight,
     background_color: backgroundColor,
     accent_color: accentColor,
+    cover_text_color: coverTextColor,
     custom_css: customCss,
   }
 

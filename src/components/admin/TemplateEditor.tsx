@@ -270,6 +270,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
   const [textLineHeight, setTextLineHeight] = useState(template.text_line_height || '1.6')
   const [backgroundColor, setBackgroundColor] = useState(template.background_color || '')
   const [accentColor, setAccentColor] = useState(template.accent_color || '')
+  const [coverTextColor, setCoverTextColor] = useState(template.cover_text_color || '#ffffff')
   const [customCss, setCustomCss] = useState(template.custom_css || '')
   const [showAdvancedCss, setShowAdvancedCss] = useState(false)
 
@@ -401,6 +402,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
         text_line_height: textLineHeight || null,
         background_color: backgroundColor || null,
         accent_color: accentColor || null,
+        cover_text_color: coverTextColor || null,
         custom_css: customCss || null,
       }),
     })
@@ -607,6 +609,27 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
                   <X size={11} /> Remover vídeo
                 </button>
               )}
+            </div>
+          </div>
+
+          {/* Cor do texto da capa */}
+          <div className="space-y-3 pt-6 pb-6 border-t border-app-border">
+            <p className="text-xs font-medium text-app-muted uppercase tracking-wider">Capa - Cor do texto</p>
+            <p className="text-xs text-app-muted mb-2">Define a cor do nome da empresa e títulos sobre a imagem de capa</p>
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={coverTextColor || '#ffffff'}
+                onChange={e => setCoverTextColor(e.target.value)}
+                className="w-12 h-10 rounded border border-app-border cursor-pointer"
+              />
+              <input
+                type="text"
+                value={coverTextColor}
+                onChange={e => setCoverTextColor(e.target.value)}
+                className="flex-1 bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text font-mono focus:outline-none focus:border-brand-green-deep transition-colors"
+                placeholder="#ffffff"
+              />
             </div>
           </div>
 

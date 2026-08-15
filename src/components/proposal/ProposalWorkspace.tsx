@@ -145,6 +145,7 @@ interface Props {
   textLineHeight?: string | null
   backgroundColor?: string | null
   accentColor?: string | null
+  coverTextColor?: string | null
   customCss?: string | null
   analyticsSummary?: AnalyticsSummary | null
   analyticsTimeline?: Array<{ label: string; date: string }>
@@ -190,6 +191,7 @@ export default function ProposalWorkspace({
   textLineHeight,
   backgroundColor,
   accentColor,
+  coverTextColor,
   customCss,
   analyticsSummary,
   analyticsTimeline = [],
@@ -714,6 +716,7 @@ export default function ProposalWorkspace({
                 textLineHeight={textLineHeight}
                 backgroundColor={backgroundColor}
                 accentColor={accentColor}
+                coverTextColor={coverTextColor}
                 customCss={customCss}
               />
             </div>

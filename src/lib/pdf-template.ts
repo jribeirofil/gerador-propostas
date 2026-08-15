@@ -63,6 +63,7 @@ export interface PdfProposal {
   text_line_height?: string | null
   background_color?: string | null
   accent_color?: string | null
+  cover_text_color?: string | null
   custom_css?: string | null
   client: PdfClient | null
   items: PdfProposalProduct[]
@@ -158,6 +159,7 @@ export function buildProposalBody(proposal: PdfProposal): string {
   const textColor = proposal.text_color || '#1a1a1a'
   const textLineHeight = proposal.text_line_height || '1.6'
   const backgroundColor = proposal.background_color || '#ffffff'
+  const coverTextColor = proposal.cover_text_color || '#ffffff'
   const customCss = proposal.custom_css || ''
   const client = proposal.client || { empresa: 'Cliente', contato: '—' }
   const items = proposal.items || []
@@ -284,18 +286,21 @@ export function buildProposalBody(proposal: PdfProposal): string {
       color: ${headingColor};
       font-weight: ${headingBold ? 'bold' : 'normal'};
     }
+    .cover-section h1, .cover-section p, .cover-section span {
+      color: ${coverTextColor} !important;
+    }
     ${customCss}
   </style>
-  <div class="proposal-body" style="position:relative;background:${coverBgUrl ? '#ffffff' : '#161B20'};padding:56px 40px;min-height:500px;display:flex;flex-direction:column;justify-content:space-between;${coverBgUrl ? `background-image:url('${coverBgUrl}');background-size:contain;background-position:center;background-repeat:no-repeat;` : ''}">
+  <div class="proposal-body cover-section" style="position:relative;background:${coverBgUrl ? '#ffffff' : '#161B20'};padding:56px 40px;min-height:500px;display:flex;flex-direction:column;justify-content:space-between;${coverBgUrl ? `background-image:url('${coverBgUrl}');background-size:contain;background-position:center;background-repeat:no-repeat;` : ''}">
     <div style="display:flex;align-items:center;gap:8px;position:relative;">
       <div style="width:10px;height:10px;border-radius:50%;background:${primary};"></div>
-      <span style="color:white;font-weight:600;font-size:16px;letter-spacing:0.3px;">${companyName}</span>
+      <span style="font-weight:600;font-size:16px;letter-spacing:0.3px;">${companyName}</span>
     </div>
     <div style="margin-top:32px;position:relative;">
       <div style="width:56px;height:3px;border-radius:2px;background:linear-gradient(to right, ${primary} ${secondary ? '55%, ' + secondary : '100%' });margin-bottom:20px;"></div>
-      <p style="color:#8A9099;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Proposta Comercial</p>
-      <h1 style="color:white;font-size:28px;font-weight:700;margin-bottom:6px;">${client.empresa}</h1>
-      <p style="color:#B9BFC7;font-size:13px;">${today}</p>
+      <p style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Proposta Comercial</p>
+      <h1 style="font-size:28px;font-weight:700;margin-bottom:6px;">${client.empresa}</h1>
+      <p style="font-size:13px;">${today}</p>
       ${coverContactsHtml}
     </div>
   </div>

@@ -59,6 +59,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     text_line_height,
     background_color,
     accent_color,
+    cover_text_color,
     custom_css,
   } = body as {
     name?: string
@@ -76,6 +77,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     text_line_height?: string | null
     background_color?: string | null
     accent_color?: string | null
+    cover_text_color?: string | null
     custom_css?: string | null
   }
 
@@ -130,6 +132,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       ...(text_line_height !== undefined ? { text_line_height: text_line_height || null } : {}),
       ...(background_color !== undefined ? { background_color: background_color || null } : {}),
       ...(accent_color !== undefined ? { accent_color: accent_color || null } : {}),
+      ...(cover_text_color !== undefined ? { cover_text_color: cover_text_color || null } : {}),
       ...(custom_css !== undefined ? { custom_css: custom_css || null } : {}),
     })
     .eq('id', params.id)

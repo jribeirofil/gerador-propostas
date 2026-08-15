@@ -98,7 +98,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   if (templateIdToUse) {
     const { data } = await db
       .from('proposal_template')
-      .select('cover_image_url, cover_video_url, default_font, base_font_size, heading_size, heading_color, heading_bold, text_color, text_line_height, background_color, accent_color, custom_css')
+      .select('cover_image_url, cover_video_url, default_font, base_font_size, heading_size, heading_color, heading_bold, text_color, text_line_height, background_color, accent_color, cover_text_color, custom_css')
       .eq('id', templateIdToUse)
       .eq('organization_id', orgId)
       .maybeSingle()
@@ -115,6 +115,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   const textLineHeight = templateCover?.text_line_height || null
   const backgroundColor = templateCover?.background_color || null
   const accentColor = templateCover?.accent_color || null
+  const coverTextColor = templateCover?.cover_text_color || null
   const customCss = templateCover?.custom_css || null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const catalogProducts = (catalogRes.data || []).map((p: any) => ({
@@ -194,6 +195,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       textLineHeight={textLineHeight}
       backgroundColor={backgroundColor}
       accentColor={accentColor}
+      coverTextColor={coverTextColor}
       customCss={customCss}
       analyticsSummary={analyticsSummary}
       analyticsTimeline={analyticsTimeline}

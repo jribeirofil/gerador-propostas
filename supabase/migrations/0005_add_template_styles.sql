@@ -9,6 +9,7 @@ ADD COLUMN IF NOT EXISTS text_color text,
 ADD COLUMN IF NOT EXISTS text_line_height text,
 ADD COLUMN IF NOT EXISTS background_color text,
 ADD COLUMN IF NOT EXISTS accent_color text,
+ADD COLUMN IF NOT EXISTS cover_text_color text,
 ADD COLUMN IF NOT EXISTS custom_css text;
 
 -- Defaults for existing templates
