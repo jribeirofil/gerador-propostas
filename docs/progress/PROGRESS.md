@@ -9,6 +9,12 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 > `database.types.ts` regenerado do schema vivo, clients tipados, `tsc`+`build` limpos (Fase 6).
 > E2E manual concluído: org nova por cadastro nasce isolada (dashboard/catálogo/branding vazios)
 > e a org raiz segue íntegra (propostas, PDF e link público com a marca FineAndYou).
+>
+> **Prévia real (15/08):** passo Resumo renderiza o documento antes de gerar (`buildProposalBody` + blocos
+> `assembleBlocks`, `22b92bf`). Correção de reatividade: `template_id` não era watcheado e `setValue` em campo
+> não-registrado não re-renderizava o form (filtro do subscriber raiz do RHF) — `Step6Review` agora consome
+> `useWatch({ control })` e a prévia atualiza em tempo real em qualquer mudança de valor (`9b2f6e9`). Validado
+> E2E manual bidirecional (Automático/Canal ↔ Teste).
 
 > **Evidência de demanda (14/08):** cliente-alvo rejeitou o concorrente porque "gerava um layout lá e só";
 > quer o layout da empresa (informações + conteúdo institucional + valor de investimento ao final).
@@ -50,7 +56,7 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
   - [x] Label dinâmico "Sobre a [empresa]" (preview web, documento e PDF)
   - [x] Contatos da empresa (site/e-mail/whatsapp) na capa, rodapé e PDF
   - [x] Fallbacks do PDF neutralizados (cenário não assume vertical saúde mental)
-  - [x] Campo `company_about` em `company_settings` + leitura no documento (settings vence, bloco `sobre` é fallback legado) *(código pronto; SQL pendente — `add-model-content.sql`)*
+  - [x] Campo `company_about` em `company_settings` + leitura no documento (settings vence, bloco `sobre` é fallback legado) *(SQL aplicado e verificado em 15/08)*
   - [ ] Template padrão curado no banco (seed) *(depende de A1 — migration)*
 
 ### Modelo de conteúdo da proposta (implementação 14/08)
@@ -63,8 +69,8 @@ Decisão e referência: [`docs/DECISOES-MODELO-DE-CONTEUDO.md`](../DECISOES-MODE
 - [x] **Condições comerciais**: hierarquia proposta → produto → empresa; pré-selecionadas no passo Condições (`commercial_conditions`)
 - [x] **Etapa Diagnóstico removida do fluxo** (wizard: Cliente → Produtos → Preços → Condições → Resumo)
 - [x] **"Sobre a empresa"** agora é config da organização (`company_about`), não bloco
-- [ ] **Prévia real no passo Resumo** (render do documento antes de gerar — próxima iteração, junto do renderer único F1)
-- [ ] SQL `add-model-content.sql` aplicado no Supabase (3 colunas: `company_settings.company_about`, `product.commercial_conditions`, `proposal.commercial_conditions`)
+- [x] **Prévia real no passo Resumo** (render do documento antes de gerar — `22b92bf`; reativa a mudanças de valores via `useWatch` — `9b2f6e9`)
+- [x] SQL `add-model-content.sql` aplicado no Supabase (3 colunas: `company_settings.company_about`, `product.commercial_conditions`, `proposal.commercial_conditions` — verificado via API em 15/08)
 
 ### Checklist pré-cobrança (antes de features novas)
 
