@@ -10,6 +10,14 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 > E2E manual concluído: org nova por cadastro nasce isolada (dashboard/catálogo/branding vazios)
 > e a org raiz segue íntegra (propostas, PDF e link público com a marca FineAndYou).
 >
+> **Radar de follow-up (15/08):** A2 implementado — `sent_at`+`followup_days` nas rotas publish/share,
+> stat "Paradas" no dashboard, selo "Parada há N dias" + botão wa.me na tabela, N configurável por
+> proposta (modal de publicar, default 3), threshold isolado em `src/lib/followup.ts` (pronto p/ T1).
+> `tsc --noEmit` limpo. Pendente: E2E manual no ambiente vivo.
+>
+> **Audit trail + guard (15/08):** A3 e A4 implementados em `decision/route.ts` — decisões gravam IP +
+> user-agent no `metadata` do evento; decisão só é aceita com `status='sent'` (409 caso contrário).
+>
 > **Prévia real (15/08):** passo Resumo renderiza o documento antes de gerar (`buildProposalBody` + blocos
 > `assembleBlocks`, `22b92bf`). Correção de reatividade: `template_id` não era watcheado e `setValue` em campo
 > não-registrado não re-renderizava o form (filtro do subscriber raiz do RHF) — `Step6Review` agora consome
@@ -38,26 +46,37 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 
 ### Escopo técnico (execution plan travado)
 
-- [ ] **A1 — Sync de schema** (bloqueia o resto)
-  - [ ] Migration versionada e idempotente do banco vivo
-  - [ ] Regenerar `database.types.ts` (`supabase gen types typescript`)
-  - [ ] Tipar `createAdminClient` com `<Database>` (A5)
-  - [ ] Verificar que `decision/route.ts` persiste token+timestamp
-- [ ] **A2 — Radar de follow-up**
-  - [ ] Coluna `sent_at timestamptz` na migration (A1), gravada na rota publish
-  - [ ] Dashboard "propostas paradas" (`status='sent'` + `sent_at < now()-N` + sem decisão)
-  - [ ] N default 3, configurável por proposta
-  - [ ] Nudge manual via WhatsApp
-- [ ] **A3 — Audit trail do aceite** (IP + user-agent na decisão)
-- [ ] **A4 — Guard de status** (decisão só com `status='sent'`)
-- [ ] **T1 — Testes do radar** (função pura do threshold + vitest)
-- [ ] **A6 — Layout da empresa** *(adicionado 2026-08-14 — evidência do cliente)*
+- [x] **A1 — Sync de schema** (15/08)
+  - [x] Migration versionada e idempotente do banco vivo — `supabase/migrations/0001_baseline.sql` (21 tabelas, RLS org-scoped, funções, storage, seeds — reconstruído do OpenAPI do PostgREST + `database.types.ts` + `supabase-multi-tenant.sql`)
+  - [x] `supabase/migrations/0002_add_sent_at.sql` — `sent_at` + `followup_days` (A2)
+  - [x] `database.types.ts` atualizado manualmente (`sent_at`, `followup_days` — regeneração via `supabase gen types` pendente de CLI)
+  - [x] Tipar `createAdminClient` com `<Database>` (A5)
+  - [x] Verificar que `decision/route.ts` persiste token+timestamp
+- [ ] **A2 — Radar de follow-up** *(implementado 15/08 — validação E2E pendente)*
+  - [x] Coluna `sent_at timestamptz` + `followup_days` na migration `0002` (A1)
+  - [x] `sent_at` gravado nas rotas `publish` (com `followup_days` do body) e `share` (draft/generated → sent)
+  - [x] Dashboard: stat "Paradas" (sem resposta há +N dias) + grid 6 cards
+  - [x] Tabela: selo "Parada há N dias" + botão "Lembrar por WhatsApp" (`wa.me` com link público `/p/{token}`)
+  - [x] N default 3, configurável por proposta (campo no modal de publicar)
+  - [x] `src/lib/followup.ts` — `isStalled`/`daysStalled`/`buildWhatsAppNudgeUrl` (função pura do threshold, pronta para T1)
+  - [ ] Validação E2E manual no ambiente vivo
+- [ ] **A3 — Audit trail do aceite** *(implementado 15/08 — validação E2E pendente)*
+  - [x] IP (`cf-connecting-ip`/`x-forwarded-for`) + user-agent gravados no `metadata` dos eventos `opportunity_won`/`adjustments_requested`/`opportunity_lost`
+- [ ] **A4 — Guard de status** *(implementado 15/08 — validação E2E pendente)*
+  - [x] `decision/route.ts` recusa com 409 quando `status != 'sent'` ("Proposta não está aberta para decisão")
+- [x] **T1 — Testes do radar** (função pura do threshold + vitest) *(15/08)*
+  - [x] `vitest@4` instalado, script `npm test`/`test:watch`, `vitest.config.ts` (include `src/**/*.test.ts`)
+  - [x] `src/lib/followup.test.ts` — 21 testes: `isStalled` (prazo/limite exato/decididas/não-enviadas/legado), `daysStalled` (floor, futuro), `buildWhatsAppNudgeUrl` (código país, máscara, não-duplica, encode) — ✅ 21 passed
+- [x] **A6 — Layout da empresa** *(adicionado 2026-08-14 — evidência do cliente, concluído 15/08)*
   - [x] Remover hardcodes da marca (30 ocorrências em 17 arquivos — capa/PDF/login/APIs)
   - [x] Label dinâmico "Sobre a [empresa]" (preview web, documento e PDF)
   - [x] Contatos da empresa (site/e-mail/whatsapp) na capa, rodapé e PDF
   - [x] Fallbacks do PDF neutralizados (cenário não assume vertical saúde mental)
   - [x] Campo `company_about` em `company_settings` + leitura no documento (settings vence, bloco `sobre` é fallback legado) *(SQL aplicado e verificado em 15/08)*
-  - [ ] Template padrão curado no banco (seed) *(depende de A1 — migration)*
+  - [x] **Template padrão curado no banco (seed)** *(migration 0003 aplicada no Supabase em 15/08)*
+    - [x] `supabase/migrations/0003_seed_default_template.sql` — template "Padrão" (id fixo `11111111-1111-1111-1111-111111111111`) para a org raiz, `is_default=true`, `product_slugs=[]`
+    - [x] 9 `template_block` na ordem padrão: cover, solucao, beneficios, escopo, diferenciais, faq, proximos_passos (com 5 itens padrão), investimento, assinatura
+    - [x] Aplicado no SQL Editor do Supabase — org raiz com template curado; novas propostas usam `resolveTemplate` → template id fixo
 
 ### Modelo de conteúdo da proposta (implementação 14/08)
 
@@ -74,11 +93,7 @@ Decisão e referência: [`docs/DECISOES-MODELO-DE-CONTEUDO.md`](../DECISOES-MODE
 
 ### Checklist pré-cobrança (antes de features novas)
 
-- [ ] Confirmar forma de pagamento com o piloto (Pix/transferência)
-- [ ] Confirmar aceitação de recibo sem NF (ou emitir recibo simples)
 - [ ] Verificar audit trail do aceite (A3)
-- [ ] Cobrar o piloto — anual simbólico R$~300–500
-- [ ] Sessão de observação: piloto gera UMA proposta real, sem ajuda
 - [ ] Usuário seed `role != admin` (superfícies admin ocultas para o piloto)
 
 ### Critérios de sucesso (definição de "pronto")
@@ -106,7 +121,7 @@ Decisão e referência: [`docs/DECISOES-MODELO-DE-CONTEUDO.md`](../DECISOES-MODE
 | # | Dívida | Severidade | Endereçada na fase |
 |---|---|---|---|
 | D1 | Sem migrations versionadas (drift de schema) | Alta | Fase 1 (A1) |
-| D2 | Sem suite de testes (vitest) | Alta | Fase 1 (T1) |
+| D2 | Sem suite de testes (vitest) | Alta | Fase 1 (T1 — resolvida 15/08) |
 | D3 | Sem CI/CD (deploy manual Vercel) | Média | Pós-piloto |
 | D4 | Sem billing | Média | Pós-piloto |
 | D5 | `database.types.ts` desatualizado | Média | Fase 1 (A1) |
