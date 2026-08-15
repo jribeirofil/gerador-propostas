@@ -850,10 +850,6 @@ export default function ProposalPreview({
         switch (type) {
           case 'cover':
             return <BlockCover key={block.id} proposal={proposal} companyName={companyName} coverBgUrl={coverBgUrl} coverVideoUrl={coverVideoUrl} primaryColor={primaryColor} secondaryColor={secondaryColor} companyContact={companyContact} variant={variant} />
-          case 'cenario':
-            return <BlockCenario key={block.id} block={block} proposal={proposal} primaryColor={primaryColor} variant={variant} />
-          case 'objetivos':
-            return <BlockObjetivos key={block.id} block={block} proposal={proposal} primaryColor={primaryColor} variant={variant} />
           case 'solucao':
             return <BlockSolucao key={block.id} block={block} proposal={proposal} primaryColor={primaryColor} variant={variant} />
           case 'beneficios':
@@ -870,8 +866,6 @@ export default function ProposalPreview({
             return <BlockSobre key={block.id} block={block} companyName={companyName} primaryColor={primaryColor} variant={variant} />
           case 'investimento':
             return <BlockInvestimento key={block.id} block={block} proposal={proposal} primaryColor={primaryColor} variant={variant} />
-          case 'assinatura':
-            return <BlockAssinatura key={block.id} block={block} signerData={signerData} primaryColor={primaryColor} variant={variant} />
           default:
             return null
         }
