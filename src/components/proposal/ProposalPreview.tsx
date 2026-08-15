@@ -68,6 +68,9 @@ interface Props {
   coverBgUrl?: string | null
   coverVideoUrl?: string | null
   companyContact?: CompanyContact
+  defaultFont?: string | null
+  baseFontSize?: number | null
+  customCss?: string | null
 }
 
 export default function ProposalPreview({
@@ -79,6 +82,9 @@ export default function ProposalPreview({
   coverBgUrl,
   coverVideoUrl,
   companyContact,
+  defaultFont,
+  baseFontSize,
+  customCss,
 }: Props) {
   // Converter dados para formato PdfProposal
   const pdfProposal = {
@@ -117,6 +123,9 @@ export default function ProposalPreview({
       company_phone: companyContact?.phone,
       company_whatsapp: companyContact?.whatsapp,
     },
+    default_font: defaultFont,
+    base_font_size: baseFontSize,
+    custom_css: customCss,
   }
 
   const html = buildProposalBody(pdfProposal as any)

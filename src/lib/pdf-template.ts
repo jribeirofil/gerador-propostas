@@ -54,6 +54,9 @@ export interface PdfProposal {
   created_at?: string
   cover_image_url?: string | null
   cover_video_url?: string | null
+  default_font?: string | null
+  base_font_size?: number | null
+  custom_css?: string | null
   client: PdfClient | null
   items: PdfProposalProduct[]
   blocks?: PdfBlock[]
@@ -140,6 +143,9 @@ function darken(hex: string, percent: number): string {
 // Corpo do documento (sem <html>/<head>) — usado tanto no PDF quanto na
 // página pública, garantindo que os dois tenham EXATAMENTE o mesmo layout.
 export function buildProposalBody(proposal: PdfProposal): string {
+  const defaultFont = proposal.default_font || 'Inter'
+  const baseFontSize = proposal.base_font_size || 13
+  const customCss = proposal.custom_css || ''
   const client = proposal.client || { empresa: 'Cliente', contato: '—' }
   const items = proposal.items || []
   const blocks = proposal.blocks
@@ -252,7 +258,11 @@ export function buildProposalBody(proposal: PdfProposal): string {
   const coverBgUrl = proposal.cover_image_url || null
 
   return `
-  <div style="position:relative;background:${coverBgUrl ? '#ffffff' : '#161B20'};padding:56px 40px;min-height:500px;display:flex;flex-direction:column;justify-content:space-between;${coverBgUrl ? `background-image:url('${coverBgUrl}');background-size:contain;background-position:center;background-repeat:no-repeat;` : ''}">
+  <style>
+    .proposal-body { font-family: '${defaultFont}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: ${baseFontSize}px; }
+    ${customCss}
+  </style>
+  <div class="proposal-body" style="position:relative;background:${coverBgUrl ? '#ffffff' : '#161B20'};padding:56px 40px;min-height:500px;display:flex;flex-direction:column;justify-content:space-between;${coverBgUrl ? `background-image:url('${coverBgUrl}');background-size:contain;background-position:center;background-repeat:no-repeat;` : ''}">
     <div style="display:flex;align-items:center;gap:8px;position:relative;">
       <div style="width:10px;height:10px;border-radius:50%;background:${primary};"></div>
       <span style="color:white;font-weight:600;font-size:16px;letter-spacing:0.3px;">${companyName}</span>

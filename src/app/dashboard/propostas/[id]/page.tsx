@@ -98,7 +98,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   if (templateIdToUse) {
     const { data } = await db
       .from('proposal_template')
-      .select('cover_image_url, cover_video_url')
+      .select('cover_image_url, cover_video_url, default_font, base_font_size, custom_css')
       .eq('id', templateIdToUse)
       .eq('organization_id', orgId)
       .maybeSingle()
@@ -106,6 +106,9 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   }
   const coverBgUrl = templateCover?.cover_image_url || null
   const coverVideoUrl = templateCover?.cover_video_url || null
+  const defaultFont = templateCover?.default_font || null
+  const baseFontSize = templateCover?.base_font_size || null
+  const customCss = templateCover?.custom_css || null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const catalogProducts = (catalogRes.data || []).map((p: any) => ({
     ...p,
@@ -175,6 +178,9 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
         phone: settings?.company_phone,
         whatsapp: settings?.company_whatsapp,
       }}
+      defaultFont={defaultFont}
+      baseFontSize={baseFontSize}
+      customCss={customCss}
       analyticsSummary={analyticsSummary}
       analyticsTimeline={analyticsTimeline}
       catalogProducts={catalogProducts}

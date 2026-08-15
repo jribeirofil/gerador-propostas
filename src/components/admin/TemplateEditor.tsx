@@ -260,6 +260,11 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
   const [coverVideoUrl, setCoverVideoUrl] = useState(template.cover_video_url || '')
   const [uploadingVideo, setUploadingVideo] = useState(false)
 
+  // Styles state
+  const [defaultFont, setDefaultFont] = useState(template.default_font || 'Inter')
+  const [baseFontSize, setBaseFontSize] = useState(template.base_font_size || 13)
+  const [customCss, setCustomCss] = useState(template.custom_css || '')
+
   const isOnlyTemplate = totalTemplates <= 1
   // Needs confirmation when setting as default and another template currently holds it
   const willReplaceDefault = isDefault && !template.is_default && totalTemplates > 1
@@ -374,7 +379,15 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
     const res = await fetch(`/api/templates/${template.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name.trim(), description: description.trim() || null, is_default: isDefault, product_slugs: productSlugs }),
+      body: JSON.stringify({
+        name: name.trim(),
+        description: description.trim() || null,
+        is_default: isDefault,
+        product_slugs: productSlugs,
+        default_font: defaultFont || null,
+        base_font_size: baseFontSize || null,
+        custom_css: customCss || null,
+      }),
     })
     setGeneralSaving(false)
     if (res.ok) {
@@ -582,7 +595,52 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
             </div>
           </div>
 
-          <div className="flex items-center gap-3 pt-2">
+          {/* Estilos customizados */}
+          <div className="space-y-4 pt-6">
+            <p className="text-xs font-medium text-app-muted">Estilos customizados</p>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-app-muted mb-1.5">Fonte padrão</label>
+                <select
+                  value={defaultFont}
+                  onChange={e => setDefaultFont(e.target.value)}
+                  className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
+                >
+                  <option value="Inter">Inter</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Courier">Courier</option>
+                  <option value="Verdana">Verdana</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-app-muted mb-1.5">Tamanho base (px)</label>
+                <input
+                  type="number"
+                  value={baseFontSize}
+                  onChange={e => setBaseFontSize(parseInt(e.target.value) || 13)}
+                  className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
+                  min="10"
+                  max="20"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-app-muted mb-1.5">CSS customizado (avançado)</label>
+              <textarea
+                value={customCss}
+                onChange={e => setCustomCss(e.target.value)}
+                rows={4}
+                className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text font-mono focus:outline-none focus:border-brand-green-deep transition-colors resize-y"
+                placeholder="Ex: .proposal-body h1 { font-weight: bold; }"
+              />
+              <p className="text-xs text-app-muted mt-1">Sobrescreve os estilos padrão. Use seletores CSS.</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 pt-4">
             <button
               type="button"
               onClick={saveGeneral}

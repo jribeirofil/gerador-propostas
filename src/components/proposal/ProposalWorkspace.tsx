@@ -136,6 +136,9 @@ interface Props {
     phone?: string | null
     whatsapp?: string | null
   }
+  defaultFont?: string | null
+  baseFontSize?: number | null
+  customCss?: string | null
   analyticsSummary?: AnalyticsSummary | null
   analyticsTimeline?: Array<{ label: string; date: string }>
   catalogProducts?: CatalogProduct[]
@@ -171,6 +174,9 @@ export default function ProposalWorkspace({
   coverBgUrl,
   coverVideoUrl,
   companyContact,
+  defaultFont,
+  baseFontSize,
+  customCss,
   analyticsSummary,
   analyticsTimeline = [],
   catalogProducts = [],
@@ -685,6 +691,9 @@ export default function ProposalWorkspace({
                 coverBgUrl={coverBgUrl}
                 coverVideoUrl={coverVideoUrl}
                 companyContact={companyContact}
+                defaultFont={defaultFont}
+                baseFontSize={baseFontSize}
+                customCss={customCss}
               />
             </div>
           </div>

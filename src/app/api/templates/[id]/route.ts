@@ -43,13 +43,16 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!(await requireAdmin(user, db))) return NextResponse.json({ error: 'Acesso negado.' }, { status: 403 })
 
   const body = await req.json()
-  const { name, description, is_default, product_slugs, cover_image_url, cover_video_url } = body as {
+  const { name, description, is_default, product_slugs, cover_image_url, cover_video_url, default_font, base_font_size, custom_css } = body as {
     name?: string
     description?: string
     is_default?: boolean
     product_slugs?: string[]
     cover_image_url?: string | null
     cover_video_url?: string | null
+    default_font?: string | null
+    base_font_size?: number | null
+    custom_css?: string | null
   }
 
   // Guard: cannot unset the only default without assigning another first
@@ -94,6 +97,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       ...(product_slugs !== undefined ? { product_slugs } : {}),
       ...(cover_image_url !== undefined ? { cover_image_url: cover_image_url || null } : {}),
       ...(cover_video_url !== undefined ? { cover_video_url: cover_video_url || null } : {}),
+      ...(default_font !== undefined ? { default_font: default_font || null } : {}),
+      ...(base_font_size !== undefined ? { base_font_size: base_font_size || null } : {}),
+      ...(custom_css !== undefined ? { custom_css: custom_css || null } : {}),
     })
     .eq('id', params.id)
     .eq('organization_id', orgId)
