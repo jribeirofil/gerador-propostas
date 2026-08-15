@@ -263,7 +263,15 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
   // Styles state
   const [defaultFont, setDefaultFont] = useState(template.default_font || 'Inter')
   const [baseFontSize, setBaseFontSize] = useState(template.base_font_size || 13)
+  const [headingSize, setHeadingSize] = useState(template.heading_size || 28)
+  const [headingColor, setHeadingColor] = useState(template.heading_color || '')
+  const [headingBold, setHeadingBold] = useState(template.heading_bold !== false)
+  const [textColor, setTextColor] = useState(template.text_color || '')
+  const [textLineHeight, setTextLineHeight] = useState(template.text_line_height || '1.6')
+  const [backgroundColor, setBackgroundColor] = useState(template.background_color || '')
+  const [accentColor, setAccentColor] = useState(template.accent_color || '')
   const [customCss, setCustomCss] = useState(template.custom_css || '')
+  const [showAdvancedCss, setShowAdvancedCss] = useState(false)
 
   const isOnlyTemplate = totalTemplates <= 1
   // Needs confirmation when setting as default and another template currently holds it
@@ -386,6 +394,13 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
         product_slugs: productSlugs,
         default_font: defaultFont || null,
         base_font_size: baseFontSize || null,
+        heading_size: headingSize || null,
+        heading_color: headingColor || null,
+        heading_bold: headingBold,
+        text_color: textColor || null,
+        text_line_height: textLineHeight || null,
+        background_color: backgroundColor || null,
+        accent_color: accentColor || null,
         custom_css: customCss || null,
       }),
     })
@@ -596,47 +611,186 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
           </div>
 
           {/* Estilos customizados */}
-          <div className="space-y-4 pt-6">
-            <p className="text-xs font-medium text-app-muted">Estilos customizados</p>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-medium text-app-muted mb-1.5">Fonte padrão</label>
-                <select
-                  value={defaultFont}
-                  onChange={e => setDefaultFont(e.target.value)}
-                  className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
-                >
-                  <option value="Inter">Inter</option>
-                  <option value="Arial">Arial</option>
-                  <option value="Georgia">Georgia</option>
-                  <option value="Courier">Courier</option>
-                  <option value="Verdana">Verdana</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-app-muted mb-1.5">Tamanho base (px)</label>
-                <input
-                  type="number"
-                  value={baseFontSize}
-                  onChange={e => setBaseFontSize(parseInt(e.target.value) || 13)}
-                  className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
-                  min="10"
-                  max="20"
-                />
-              </div>
-            </div>
-
+          <div className="space-y-5 pt-6 border-t border-app-border">
             <div>
-              <label className="block text-xs font-medium text-app-muted mb-1.5">CSS customizado (avançado)</label>
-              <textarea
-                value={customCss}
-                onChange={e => setCustomCss(e.target.value)}
-                rows={4}
-                className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text font-mono focus:outline-none focus:border-brand-green-deep transition-colors resize-y"
-                placeholder="Ex: .proposal-body h1 { font-weight: bold; }"
-              />
-              <p className="text-xs text-app-muted mt-1">Sobrescreve os estilos padrão. Use seletores CSS.</p>
+              <h3 className="text-sm font-semibold text-app-text mb-4">Estilos</h3>
+
+              {/* Tipografia */}
+              <div className="mb-5">
+                <p className="text-xs font-medium text-app-muted mb-3 uppercase tracking-wider">Tipografia</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-app-muted mb-1.5">Fonte</label>
+                    <select
+                      value={defaultFont}
+                      onChange={e => setDefaultFont(e.target.value)}
+                      className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
+                    >
+                      <option value="Inter">Inter</option>
+                      <option value="Arial">Arial</option>
+                      <option value="Georgia">Georgia</option>
+                      <option value="Courier">Courier</option>
+                      <option value="Verdana">Verdana</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-app-muted mb-1.5">Tamanho texto (px)</label>
+                    <input
+                      type="number"
+                      value={baseFontSize}
+                      onChange={e => setBaseFontSize(parseInt(e.target.value) || 13)}
+                      className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
+                      min="10"
+                      max="20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-app-muted mb-1.5">Altura de linha</label>
+                    <select
+                      value={textLineHeight}
+                      onChange={e => setTextLineHeight(e.target.value)}
+                      className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
+                    >
+                      <option value="1.4">Compacta (1.4)</option>
+                      <option value="1.6">Normal (1.6)</option>
+                      <option value="1.8">Espaçosa (1.8)</option>
+                      <option value="2">Muito espaçosa (2)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Títulos */}
+              <div className="mb-5">
+                <p className="text-xs font-medium text-app-muted mb-3 uppercase tracking-wider">Títulos</p>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-app-muted mb-1.5">Tamanho (px)</label>
+                    <input
+                      type="number"
+                      value={headingSize}
+                      onChange={e => setHeadingSize(parseInt(e.target.value) || 28)}
+                      className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
+                      min="16"
+                      max="48"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-app-muted mb-1.5">Cor</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={headingColor || '#000000'}
+                        onChange={e => setHeadingColor(e.target.value)}
+                        className="w-10 h-10 rounded border border-app-border cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={headingColor}
+                        onChange={e => setHeadingColor(e.target.value)}
+                        className="flex-1 bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text font-mono focus:outline-none focus:border-brand-green-deep transition-colors"
+                        placeholder="hex color"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-app-muted mb-1.5">Negrito</label>
+                    <label className="flex items-center gap-2 h-10 px-3 bg-app-surface border border-app-border rounded cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={headingBold}
+                        onChange={e => setHeadingBold(e.target.checked)}
+                        className="w-4 h-4 rounded accent-brand-green"
+                      />
+                      <span className="text-sm text-app-text">Ativado</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cores */}
+              <div className="mb-5">
+                <p className="text-xs font-medium text-app-muted mb-3 uppercase tracking-wider">Cores</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-app-muted mb-1.5">Texto</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={textColor || '#1a1a1a'}
+                        onChange={e => setTextColor(e.target.value)}
+                        className="w-10 h-10 rounded border border-app-border cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={textColor}
+                        onChange={e => setTextColor(e.target.value)}
+                        className="flex-1 bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text font-mono focus:outline-none focus:border-brand-green-deep transition-colors"
+                        placeholder="hex color"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-app-muted mb-1.5">Fundo</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={backgroundColor || '#ffffff'}
+                        onChange={e => setBackgroundColor(e.target.value)}
+                        className="w-10 h-10 rounded border border-app-border cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={backgroundColor}
+                        onChange={e => setBackgroundColor(e.target.value)}
+                        className="flex-1 bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text font-mono focus:outline-none focus:border-brand-green-deep transition-colors"
+                        placeholder="hex color"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-app-muted mb-1.5">Destaque</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={accentColor || '#1FE97C'}
+                        onChange={e => setAccentColor(e.target.value)}
+                        className="w-10 h-10 rounded border border-app-border cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={accentColor}
+                        onChange={e => setAccentColor(e.target.value)}
+                        className="flex-1 bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text font-mono focus:outline-none focus:border-brand-green-deep transition-colors"
+                        placeholder="hex color"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CSS Avançado */}
+              <div className="border-t border-app-border pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedCss(!showAdvancedCss)}
+                  className="text-sm text-brand-green hover:text-brand-green-deep transition-colors"
+                >
+                  {showAdvancedCss ? '✕ CSS (avançado)' : '+ CSS (avançado)'}
+                </button>
+                {showAdvancedCss && (
+                  <div className="mt-3">
+                    <textarea
+                      value={customCss}
+                      onChange={e => setCustomCss(e.target.value)}
+                      rows={4}
+                      className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text font-mono focus:outline-none focus:border-brand-green-deep transition-colors resize-y"
+                      placeholder="Ex: .proposal-body h1 { letter-spacing: 2px; }"
+                    />
+                    <p className="text-xs text-app-muted mt-2">Sobrescreve os estilos acima. Use seletores CSS.</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

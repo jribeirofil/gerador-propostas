@@ -138,6 +138,13 @@ interface Props {
   }
   defaultFont?: string | null
   baseFontSize?: number | null
+  headingSize?: number | null
+  headingColor?: string | null
+  headingBold?: boolean
+  textColor?: string | null
+  textLineHeight?: string | null
+  backgroundColor?: string | null
+  accentColor?: string | null
   customCss?: string | null
   analyticsSummary?: AnalyticsSummary | null
   analyticsTimeline?: Array<{ label: string; date: string }>
@@ -176,6 +183,13 @@ export default function ProposalWorkspace({
   companyContact,
   defaultFont,
   baseFontSize,
+  headingSize,
+  headingColor,
+  headingBold,
+  textColor,
+  textLineHeight,
+  backgroundColor,
+  accentColor,
   customCss,
   analyticsSummary,
   analyticsTimeline = [],
@@ -693,6 +707,13 @@ export default function ProposalWorkspace({
                 companyContact={companyContact}
                 defaultFont={defaultFont}
                 baseFontSize={baseFontSize}
+                headingSize={headingSize}
+                headingColor={headingColor}
+                headingBold={headingBold}
+                textColor={textColor}
+                textLineHeight={textLineHeight}
+                backgroundColor={backgroundColor}
+                accentColor={accentColor}
                 customCss={customCss}
               />
             </div>

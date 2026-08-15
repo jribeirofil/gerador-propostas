@@ -43,7 +43,24 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!(await requireAdmin(user, db))) return NextResponse.json({ error: 'Acesso negado.' }, { status: 403 })
 
   const body = await req.json()
-  const { name, description, is_default, product_slugs, cover_image_url, cover_video_url, default_font, base_font_size, custom_css } = body as {
+  const {
+    name,
+    description,
+    is_default,
+    product_slugs,
+    cover_image_url,
+    cover_video_url,
+    default_font,
+    base_font_size,
+    heading_size,
+    heading_color,
+    heading_bold,
+    text_color,
+    text_line_height,
+    background_color,
+    accent_color,
+    custom_css,
+  } = body as {
     name?: string
     description?: string
     is_default?: boolean
@@ -52,6 +69,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     cover_video_url?: string | null
     default_font?: string | null
     base_font_size?: number | null
+    heading_size?: number | null
+    heading_color?: string | null
+    heading_bold?: boolean
+    text_color?: string | null
+    text_line_height?: string | null
+    background_color?: string | null
+    accent_color?: string | null
     custom_css?: string | null
   }
 
@@ -99,6 +123,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       ...(cover_video_url !== undefined ? { cover_video_url: cover_video_url || null } : {}),
       ...(default_font !== undefined ? { default_font: default_font || null } : {}),
       ...(base_font_size !== undefined ? { base_font_size: base_font_size || null } : {}),
+      ...(heading_size !== undefined ? { heading_size: heading_size || null } : {}),
+      ...(heading_color !== undefined ? { heading_color: heading_color || null } : {}),
+      ...(heading_bold !== undefined ? { heading_bold } : {}),
+      ...(text_color !== undefined ? { text_color: text_color || null } : {}),
+      ...(text_line_height !== undefined ? { text_line_height: text_line_height || null } : {}),
+      ...(background_color !== undefined ? { background_color: background_color || null } : {}),
+      ...(accent_color !== undefined ? { accent_color: accent_color || null } : {}),
       ...(custom_css !== undefined ? { custom_css: custom_css || null } : {}),
     })
     .eq('id', params.id)

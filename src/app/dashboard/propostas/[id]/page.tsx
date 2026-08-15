@@ -98,7 +98,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   if (templateIdToUse) {
     const { data } = await db
       .from('proposal_template')
-      .select('cover_image_url, cover_video_url, default_font, base_font_size, custom_css')
+      .select('cover_image_url, cover_video_url, default_font, base_font_size, heading_size, heading_color, heading_bold, text_color, text_line_height, background_color, accent_color, custom_css')
       .eq('id', templateIdToUse)
       .eq('organization_id', orgId)
       .maybeSingle()
@@ -108,6 +108,13 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   const coverVideoUrl = templateCover?.cover_video_url || null
   const defaultFont = templateCover?.default_font || null
   const baseFontSize = templateCover?.base_font_size || null
+  const headingSize = templateCover?.heading_size || null
+  const headingColor = templateCover?.heading_color || null
+  const headingBold = templateCover?.heading_bold
+  const textColor = templateCover?.text_color || null
+  const textLineHeight = templateCover?.text_line_height || null
+  const backgroundColor = templateCover?.background_color || null
+  const accentColor = templateCover?.accent_color || null
   const customCss = templateCover?.custom_css || null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const catalogProducts = (catalogRes.data || []).map((p: any) => ({
@@ -180,6 +187,13 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       }}
       defaultFont={defaultFont}
       baseFontSize={baseFontSize}
+      headingSize={headingSize}
+      headingColor={headingColor}
+      headingBold={headingBold}
+      textColor={textColor}
+      textLineHeight={textLineHeight}
+      backgroundColor={backgroundColor}
+      accentColor={accentColor}
       customCss={customCss}
       analyticsSummary={analyticsSummary}
       analyticsTimeline={analyticsTimeline}

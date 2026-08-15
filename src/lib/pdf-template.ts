@@ -56,6 +56,13 @@ export interface PdfProposal {
   cover_video_url?: string | null
   default_font?: string | null
   base_font_size?: number | null
+  heading_size?: number | null
+  heading_color?: string | null
+  heading_bold?: boolean
+  text_color?: string | null
+  text_line_height?: string | null
+  background_color?: string | null
+  accent_color?: string | null
   custom_css?: string | null
   client: PdfClient | null
   items: PdfProposalProduct[]
@@ -145,6 +152,12 @@ function darken(hex: string, percent: number): string {
 export function buildProposalBody(proposal: PdfProposal): string {
   const defaultFont = proposal.default_font || 'Inter'
   const baseFontSize = proposal.base_font_size || 13
+  const headingSize = proposal.heading_size || 28
+  const headingColor = proposal.heading_color || '#000000'
+  const headingBold = proposal.heading_bold !== false
+  const textColor = proposal.text_color || '#1a1a1a'
+  const textLineHeight = proposal.text_line_height || '1.6'
+  const backgroundColor = proposal.background_color || '#ffffff'
   const customCss = proposal.custom_css || ''
   const client = proposal.client || { empresa: 'Cliente', contato: '—' }
   const items = proposal.items || []
@@ -259,7 +272,18 @@ export function buildProposalBody(proposal: PdfProposal): string {
 
   return `
   <style>
-    .proposal-body { font-family: '${defaultFont}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: ${baseFontSize}px; }
+    .proposal-body {
+      font-family: '${defaultFont}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: ${baseFontSize}px;
+      color: ${textColor};
+      background-color: ${backgroundColor};
+      line-height: ${textLineHeight};
+    }
+    .proposal-body h1, .proposal-body h2, .proposal-body h3 {
+      font-size: ${headingSize}px;
+      color: ${headingColor};
+      font-weight: ${headingBold ? 'bold' : 'normal'};
+    }
     ${customCss}
   </style>
   <div class="proposal-body" style="position:relative;background:${coverBgUrl ? '#ffffff' : '#161B20'};padding:56px 40px;min-height:500px;display:flex;flex-direction:column;justify-content:space-between;${coverBgUrl ? `background-image:url('${coverBgUrl}');background-size:contain;background-position:center;background-repeat:no-repeat;` : ''}">

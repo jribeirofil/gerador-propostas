@@ -70,6 +70,13 @@ interface Props {
   companyContact?: CompanyContact
   defaultFont?: string | null
   baseFontSize?: number | null
+  headingSize?: number | null
+  headingColor?: string | null
+  headingBold?: boolean
+  textColor?: string | null
+  textLineHeight?: string | null
+  backgroundColor?: string | null
+  accentColor?: string | null
   customCss?: string | null
 }
 
@@ -84,6 +91,13 @@ export default function ProposalPreview({
   companyContact,
   defaultFont,
   baseFontSize,
+  headingSize,
+  headingColor,
+  headingBold,
+  textColor,
+  textLineHeight,
+  backgroundColor,
+  accentColor,
   customCss,
 }: Props) {
   // Converter dados para formato PdfProposal
@@ -125,6 +139,13 @@ export default function ProposalPreview({
     },
     default_font: defaultFont,
     base_font_size: baseFontSize,
+    heading_size: headingSize,
+    heading_color: headingColor,
+    heading_bold: headingBold,
+    text_color: textColor,
+    text_line_height: textLineHeight,
+    background_color: backgroundColor,
+    accent_color: accentColor,
     custom_css: customCss,
   }
 
