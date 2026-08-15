@@ -4,10 +4,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Search, X, ChevronLeft, ChevronRight, ChevronDown, Check, ArrowUp, ArrowDown, ArrowUpDown, Pencil, Archive, Copy, Building2 } from 'lucide-react'
+import { Search, X, ChevronLeft, ChevronRight, ChevronDown, Check, ArrowUp, ArrowDown, ArrowUpDown, Pencil, Archive, Copy, Building2, MessageCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/components/ui/Toast'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
+import { isStalled, daysStalled, buildWhatsAppNudgeUrl } from '@/lib/followup'
 
 interface ProposalRow {
   id: string
@@ -22,12 +23,16 @@ interface ProposalRow {
   total_monthly: number | null
   total_setup: number | null
   validade_dias: number | null
+  sent_at: string | null
+  followup_days: number | null
+  public_token: string | null
   updated_at: string | null
   created_at: string | null
   client: {
     empresa: string
     contato: string
     colaboradores: number | null
+    whatsapp: string | null
   } | null
 }
 
@@ -204,6 +209,13 @@ function fmtCurrency(value?: number | null): string {
 function fmtDate(iso: string | null | undefined): string {
   if (!iso) return '—'
   return format(new Date(iso), 'dd/MM/yy', { locale: ptBR })
+}
+
+function buildNudgeMessage(p: ProposalRow): string {
+  const url = `${window.location.origin}/p/${p.public_token}`
+  const nome = p.client?.contato?.trim() ? `, ${p.client.contato.trim()}` : ''
+  const empresa = p.client?.empresa?.trim() || 'a sua empresa'
+  return `Olá${nome}! Tudo bem? Só um lembrete de que a proposta da ${empresa} segue aberta. O link para revisão é ${url}. Fico à disposição para qualquer dúvida!`
 }
 
 export default function ProposalTable({ proposals: initial, currentUserId }: Props) {
@@ -451,6 +463,8 @@ export default function ProposalTable({ proposals: initial, currentUserId }: Pro
                 const version        = p.version ?? 1
                 const opp            = getOppResult(p)
                 const expired        = isExpired(p)
+                const stalled        = isStalled(p)
+                const stalledDays    = stalled ? daysStalled(p) : 0
                 const archived       = p.is_archived === true || ['archived', 'arquivada'].includes(p.status)
                 const pendingReview  = p.has_pending_review === true
 
@@ -502,6 +516,11 @@ export default function ProposalTable({ proposals: initial, currentUserId }: Pro
                       {expired && (
                         <p className="text-[11px] text-red-400 font-medium mt-0.5">Expirada</p>
                       )}
+                      {stalled && (
+                        <p className="text-[11px] text-amber-400 font-medium mt-0.5">
+                          Parada há {stalledDays} {stalledDays === 1 ? 'dia' : 'dias'}
+                        </p>
+                      )}
                     </td>
 
                     {/* Mensal */}
@@ -526,6 +545,13 @@ export default function ProposalTable({ proposals: initial, currentUserId }: Pro
                       onClick={e => e.stopPropagation()}
                     >
                       <div className="flex items-center justify-end gap-0.5">
+                        {stalled && p.client?.whatsapp && p.public_token && (
+                          <ActionBtn
+                            title="Lembrar por WhatsApp"
+                            icon={MessageCircle}
+                            onClick={() => window.open(buildWhatsAppNudgeUrl(p.client!.whatsapp!, buildNudgeMessage(p)), '_blank')}
+                          />
+                        )}
                         <ActionBtn
                           title="Editar"
                           icon={Pencil}

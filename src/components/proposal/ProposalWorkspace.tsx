@@ -184,6 +184,7 @@ export default function ProposalWorkspace({
   const [shareLoading, setShareLoading] = useState(false)
   const [publishOpen, setPublishOpen] = useState(false)
   const [publishing, setPublishing] = useState(false)
+  const [followupDays, setFollowupDays] = useState<number>((proposal.followup_days as number | null) ?? 3)
   const { showToast } = useToast()
   const menuRef = useRef<HTMLDivElement>(null)
   const versionRef = useRef<HTMLDivElement>(null)
@@ -346,7 +347,11 @@ export default function ProposalWorkspace({
   async function handlePublish() {
     setPublishing(true)
     try {
-      const res = await fetch(`/api/proposals/${proposal.id}/publish`, { method: 'POST' })
+      const res = await fetch(`/api/proposals/${proposal.id}/publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ followup_days: followupDays }),
+      })
       const { token, version, error } = await res.json()
       if (error) throw new Error(error)
       setPublishOpen(false)
@@ -1246,6 +1251,19 @@ export default function ProposalWorkspace({
                 <p className="text-xl font-bold text-brand-green-deep">v{(proposal.version as number) + 1}</p>
               </div>
             </div>
+            <label className="block mb-5">
+              <span className="text-[10px] font-semibold text-app-muted uppercase tracking-wider">
+                Dias para lembrar o cliente (follow-up)
+              </span>
+              <input
+                type="number"
+                min={1}
+                max={365}
+                value={followupDays}
+                onChange={e => setFollowupDays(Math.max(1, Math.min(365, Number(e.target.value) || 3)))}
+                className="mt-1.5 w-full bg-app-bg border border-app-border rounded-xl px-3.5 py-2.5 text-sm text-app-text focus:outline-none focus:border-brand-green-deep transition-colors"
+              />
+            </label>
             <div className="flex gap-3">
               <button
                 type="button"

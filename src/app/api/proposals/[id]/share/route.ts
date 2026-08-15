@@ -43,7 +43,7 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
   if (['draft', 'generated'].includes(proposal.status as string)) {
     await db
       .from('proposal')
-      .update({ status: 'sent' })
+      .update({ status: 'sent', sent_at: new Date().toISOString() })
       .eq('id', params.id)
       .eq('organization_id', orgId)
 

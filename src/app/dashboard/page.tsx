@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { FileText } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { isStalled } from '@/lib/followup'
 import ProposalTable from '@/components/proposal/ProposalTable'
 import PageHeader from '@/components/ui/PageHeader'
 
@@ -12,7 +13,7 @@ export default async function DashboardPage() {
 
   const { data: raw } = await supabase
     .from('proposal')
-    .select('id, title, code, status, opportunity_status, is_archived, has_pending_review, version, version_group, total_monthly, total_setup, validade_dias, updated_at, created_at, client:clients(empresa, contato, colaboradores)')
+    .select('id, title, code, status, opportunity_status, is_archived, has_pending_review, version, version_group, total_monthly, total_setup, validade_dias, sent_at, followup_days, public_token, updated_at, created_at, client:clients(empresa, contato, colaboradores, whatsapp)')
     .order('version_group', { ascending: true })
     .order('version', { ascending: false })
 
@@ -35,6 +36,7 @@ export default async function DashboardPage() {
   const rascunhos  = active.filter(p => ['draft', 'generated'].includes(p.status as string)).length
   const ganhas     = active.filter(p => p.opportunity_status === 'won').length
   const perdidas   = active.filter(p => p.opportunity_status === 'lost').length
+  const paradas    = active.filter(p => isStalled(p)).length
   const emAberto   = active.filter(p =>
     !['draft', 'generated'].includes(p.status as string) &&
     !['won', 'lost'].includes((p.opportunity_status as string) ?? '')
@@ -45,6 +47,7 @@ export default async function DashboardPage() {
   const stats = [
     { label: 'Rascunhos',  value: rascunhos,        desc: 'Nunca enviadas',       color: '#94A3B8' },
     { label: 'Em aberto',  value: emAberto,          desc: 'Aguardando resposta',  color: '#3B82F6' },
+    { label: 'Paradas',    value: paradas,           desc: 'Sem resposta há +N dias', color: '#F59E0B' },
     { label: 'Ganhas',     value: ganhas,            desc: 'Negócios fechados',    color: '#6B7280' },
     { label: 'Perdidas',   value: perdidas,          desc: 'Oportunidades perdidas', color: '#EF4444' },
     { label: 'Conversão',  value: `${txConversao}%`, desc: 'Ganhas / decididas',   color: '#8B5CF6' },
@@ -61,7 +64,7 @@ export default async function DashboardPage() {
       />
 
       {/* Stats */}
-      <div className="grid grid-cols-5 gap-4 mb-10">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4 mb-10">
         {stats.map(s => (
           <div
             key={s.label}

@@ -32,8 +32,6 @@ export interface PdfCompanySettings {
   company_email?: string | null
   company_phone?: string | null
   company_whatsapp?: string | null
-  cover_bg_url?: string | null
-  cover_video_url?: string | null
 }
 
 export interface PdfBlock {
@@ -54,7 +52,7 @@ export interface PdfProposal {
   forma_pagamento?: string | null
   prazo_implantacao?: string | null
   created_at?: string
-  cover_bg_url?: string | null
+  cover_image_url?: string | null
   cover_video_url?: string | null
   client: PdfClient | null
   items: PdfProposalProduct[]

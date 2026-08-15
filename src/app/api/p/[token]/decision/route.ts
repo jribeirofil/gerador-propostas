@@ -22,6 +22,16 @@ function isValidEmail(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) && v.length <= MAX_EMAIL
 }
 
+function getAuditInfo(req: NextRequest): { ip: string | null; user_agent: string | null } {
+  const cf = req.headers.get('cf-connecting-ip')
+  const xff = req.headers.get('x-forwarded-for')
+  const ip = cf || xff?.split(',')[0]?.trim() || null
+  return {
+    ip,
+    user_agent: req.headers.get('user-agent'),
+  }
+}
+
 export async function POST(req: NextRequest, { params }: { params: { token: string } }) {
   try {
     const body = await req.json()
@@ -65,11 +75,19 @@ export async function POST(req: NextRequest, { params }: { params: { token: stri
 
     const orgId = proposal.organization_id
 
+    // A4 — Guard de status: decisão só é válida para proposta efetivamente enviada
+    if ((proposal.status as string) !== 'sent') {
+      return NextResponse.json({ error: 'Proposta não está aberta para decisão' }, { status: 409 })
+    }
+
     // Bloqueia re-decisão para oportunidades já fechadas (exceto ajustes)
     const oppStatus = proposal.opportunity_status as string | null
     if (type !== 'adjustments' && (oppStatus === 'won' || oppStatus === 'lost')) {
       return NextResponse.json({ error: 'Decisão já registrada' }, { status: 409 })
     }
+
+    // A3 — Audit trail: origem técnica de cada decisão
+    const audit = getAuditInfo(req)
 
     if (type === 'approved') {
       await db.from('proposal').update({ opportunity_status: 'won' }).eq('id', proposal.id).eq('organization_id', orgId)
@@ -81,6 +99,8 @@ export async function POST(req: NextRequest, { params }: { params: { token: stri
           email,
           ...(cargo   ? { cargo }   : {}),
           ...(comment ? { comment } : {}),
+          ...(audit.ip ? { ip: audit.ip } : {}),
+          user_agent: audit.user_agent || '',
         },
       })
     } else if (type === 'adjustments') {
@@ -93,6 +113,8 @@ export async function POST(req: NextRequest, { params }: { params: { token: stri
           email,
           ...(cargo   ? { cargo }   : {}),
           comment: comment || '',
+          ...(audit.ip ? { ip: audit.ip } : {}),
+          user_agent: audit.user_agent || '',
         },
       })
     } else if (type === 'declined') {
@@ -107,6 +129,8 @@ export async function POST(req: NextRequest, { params }: { params: { token: stri
         metadata: {
           reason: reason || '',
           ...(comment ? { comment } : {}),
+          ...(audit.ip ? { ip: audit.ip } : {}),
+          user_agent: audit.user_agent || '',
         },
       })
     }

@@ -232,21 +232,39 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelClass}>Cor principal</label>
-            <input
-              value={primaryColor}
-              onChange={e => setPrimaryColor(e.target.value)}
-              className={inputClass}
-              placeholder="#1FE97C"
-            />
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={primaryColor || '#1FE97C'}
+                onChange={e => setPrimaryColor(e.target.value)}
+                className="w-12 h-10 rounded border border-app-border cursor-pointer"
+              />
+              <input
+                type="text"
+                value={primaryColor}
+                onChange={e => setPrimaryColor(e.target.value)}
+                className={`${inputClass} flex-1`}
+                placeholder="#1FE97C"
+              />
+            </div>
           </div>
           <div>
             <label className={labelClass}>Cor secundária</label>
-            <input
-              value={secondaryColor}
-              onChange={e => setSecondaryColor(e.target.value)}
-              className={inputClass}
-              placeholder="#00B765"
-            />
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={secondaryColor || '#00B765'}
+                onChange={e => setSecondaryColor(e.target.value)}
+                className="w-12 h-10 rounded border border-app-border cursor-pointer"
+              />
+              <input
+                type="text"
+                value={secondaryColor}
+                onChange={e => setSecondaryColor(e.target.value)}
+                className={`${inputClass} flex-1`}
+                placeholder="#00B765"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -32,7 +32,7 @@ export default async function PreviewPage({ params }: { params: { id: string } }
       .eq('proposal_id', params.id)
       .order('sort_order'),
     db.from('profiles').select('full_name, job_title, phone').eq('id', user.id).single(),
-    db.from('company_settings').select('company_name, logo_url, primary_color, secondary_color, company_site, company_email, company_phone, company_whatsapp, cover_bg_url, cover_video_url').eq('organization_id', orgId).limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, logo_url, primary_color, secondary_color, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
   ])
 
   if (!proposalRes.data) notFound()
@@ -53,7 +53,7 @@ export default async function PreviewPage({ params }: { params: { id: string } }
   const profile = profileRes.data
   const settings = settingsRes.data
 
-  // Capa: template tem prioridade sobre company_settings (mesma regra do PDF/página pública)
+  // Capa vem do template
   let templateCover = null
   if (proposal.template_id) {
     const { data } = await db
@@ -64,8 +64,8 @@ export default async function PreviewPage({ params }: { params: { id: string } }
       .maybeSingle()
     templateCover = data
   }
-  const coverBgUrl = templateCover?.cover_image_url || settings?.cover_bg_url || null
-  const coverVideoUrl = templateCover?.cover_video_url || settings?.cover_video_url || null
+  const coverBgUrl = templateCover?.cover_image_url || null
+  const coverVideoUrl = templateCover?.cover_video_url || null
 
   const signerData = {
     name: profile?.full_name || user.email || '',

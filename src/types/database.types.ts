@@ -677,6 +677,8 @@ export type Database = {
           vigencia_contrato: string | null
           organization_id: string
           commercial_conditions: string | null
+          sent_at: string | null
+          followup_days: number
         }
         Insert: {
           id?: string
@@ -711,6 +713,8 @@ export type Database = {
           vigencia_contrato?: string | null
           organization_id?: string
           commercial_conditions?: string | null
+          sent_at?: string | null
+          followup_days?: number
         }
         Update: {
           id?: string
@@ -745,6 +749,8 @@ export type Database = {
           vigencia_contrato?: string | null
           organization_id?: string
           commercial_conditions?: string | null
+          sent_at?: string | null
+          followup_days?: number
         }
         Relationships: [
           {

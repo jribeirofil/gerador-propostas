@@ -34,7 +34,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       .eq('proposal_id', params.id)
       .order('created_at', { ascending: false }),
     db.from('profiles').select('full_name, job_title, phone').eq('id', user.id).single(),
-    db.from('company_settings').select('company_name, logo_url, primary_color, secondary_color, company_site, company_email, company_phone, company_whatsapp, cover_bg_url, cover_video_url').eq('organization_id', orgId).limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, logo_url, primary_color, secondary_color, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
     db
       .from('proposal_analytics')
       .select('event_type, session_id, created_at')
@@ -83,7 +83,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   const profile = profileRes.data
   const settings = settingsRes.data
 
-  // Capa: template tem prioridade sobre company_settings (mesma regra do PDF/página pública)
+  // Capa vem do template
   let templateCover = null
   if (proposal.template_id) {
     const { data } = await db
@@ -94,8 +94,8 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       .maybeSingle()
     templateCover = data
   }
-  const coverBgUrl = templateCover?.cover_image_url || settings?.cover_bg_url || null
-  const coverVideoUrl = templateCover?.cover_video_url || settings?.cover_video_url || null
+  const coverBgUrl = templateCover?.cover_image_url || null
+  const coverVideoUrl = templateCover?.cover_video_url || null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const catalogProducts = (catalogRes.data || []).map((p: any) => ({
     ...p,

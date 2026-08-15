@@ -27,7 +27,7 @@ export async function loadProposalDocument(
   const [itemsRes, blocksRes, settingsRes, templateRes] = await Promise.all([
     db.from('proposal_product').select('*').eq('proposal_id', proposal.id).order('sort_order'),
     db.from('proposal_block').select('*').eq('proposal_id', proposal.id).eq('enabled', true).order('sort_order'),
-    db.from('company_settings').select('company_name, primary_color, secondary_color, pdf_footer_text, pdf_default_conditions, company_about, company_site, company_email, company_phone, company_whatsapp, cover_bg_url, cover_video_url').eq('organization_id', orgId).limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, primary_color, secondary_color, pdf_footer_text, pdf_default_conditions, company_about, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
     proposal.template_id
       ? db.from('proposal_template').select('cover_image_url, cover_video_url').eq('id', proposal.template_id).eq('organization_id', orgId).maybeSingle()
       : Promise.resolve({ data: null, error: null }),
@@ -48,8 +48,8 @@ export async function loadProposalDocument(
     forma_pagamento: proposal.forma_pagamento ?? null,
     prazo_implantacao: proposal.prazo_implantacao ?? null,
     client: (proposal.client as PdfClient | null) || null,
-    cover_bg_url: templateAssets?.cover_image_url || settings?.cover_bg_url || null,
-    cover_video_url: templateAssets?.cover_video_url || settings?.cover_video_url || null,
+    cover_image_url: templateAssets?.cover_image_url || null,
+    cover_video_url: templateAssets?.cover_video_url || null,
     items: (itemsRes.data || []).map(item => ({
       snapshot: item.snapshot,
       quantity: item.quantity,

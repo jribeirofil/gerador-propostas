@@ -57,7 +57,7 @@ export async function buildPreviewDocument(
     supabase
       .from('company_settings')
       .select(
-        'company_name, primary_color, secondary_color, pdf_footer_text, pdf_default_conditions, company_about, company_site, company_email, company_phone, company_whatsapp, cover_bg_url, cover_video_url'
+        'company_name, primary_color, secondary_color, pdf_footer_text, pdf_default_conditions, company_about, company_site, company_email, company_phone, company_whatsapp'
       )
       .limit(1)
       .maybeSingle(),
@@ -109,8 +109,8 @@ export async function buildPreviewDocument(
     forma_pagamento: (data.forma_pagamento || []).join(', ') || null,
     prazo_implantacao: data.prazo_implantacao || null,
     created_at: new Date().toISOString(),
-    cover_bg_url: templateAssets?.cover_image_url || settings?.cover_bg_url || null,
-    cover_video_url: templateAssets?.cover_video_url || settings?.cover_video_url || null,
+    cover_image_url: templateAssets?.cover_image_url || null,
+    cover_video_url: templateAssets?.cover_video_url || null,
     items,
     blocks,
     settings,

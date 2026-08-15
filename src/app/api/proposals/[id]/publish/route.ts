@@ -4,7 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getOrgIdForUser } from '@/lib/org'
 import crypto from 'crypto'
 
-export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
@@ -28,6 +28,16 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
   const newVersion = (proposal.version as number) + 1
   const token = (proposal.public_token as string | null) ?? crypto.randomBytes(18).toString('base64url')
 
+  let followupDays = 3
+  try {
+    const body = await req.json()
+    if (typeof body.followup_days === 'number' && body.followup_days > 0) {
+      followupDays = Math.min(Math.floor(body.followup_days), 365)
+    }
+  } catch {
+    // body ausente ou inválido — usa o default
+  }
+
   const { error: updateError } = await db
     .from('proposal')
     .update({
@@ -35,6 +45,8 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
       status: 'sent',
       public_token: token,
       has_pending_review: false,
+      sent_at: new Date().toISOString(),
+      followup_days: followupDays,
     })
     .eq('id', params.id)
     .eq('organization_id', orgId)
