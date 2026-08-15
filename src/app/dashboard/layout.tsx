@@ -11,10 +11,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/login')
   }
 
-  const [{ data: profile }, { data: settings }] = await Promise.all([
-    supabase.from('profiles').select('full_name, role').eq('id', user.id).single(),
-    supabase.from('company_settings').select('logo_url, company_name').limit(1).maybeSingle(),
-  ])
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('full_name, role, organization_id')
+    .eq('id', user.id)
+    .single()
+
+  const orgId = profile?.organization_id ?? null
+  const { data: settings } = orgId
+    ? await supabase.from('company_settings').select('logo_url, company_name').eq('organization_id', orgId).limit(1).maybeSingle()
+    : await supabase.from('company_settings').select('logo_url, company_name').is('organization_id', null).limit(1).maybeSingle()
 
   return (
     <ToastProvider>

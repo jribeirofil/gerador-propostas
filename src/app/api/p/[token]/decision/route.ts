@@ -63,7 +63,7 @@ export async function POST(req: NextRequest, { params }: { params: { token: stri
       return NextResponse.json({ error: 'Proposta não encontrada' }, { status: 404 })
     }
 
-    const orgId = proposal.organization_id as string | null
+    const orgId = proposal.organization_id
 
     // Bloqueia re-decisão para oportunidades já fechadas (exceto ajustes)
     const oppStatus = proposal.opportunity_status as string | null

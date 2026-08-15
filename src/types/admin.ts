@@ -81,6 +81,7 @@ export interface AdminProduct {
   calculation_type: CalculationType | null
   billing_frequency: BillingFrequency | null
   default_price_table_id: string | null
+  commercial_conditions?: string | null
   created_at?: string
   updated_at?: string
 }
@@ -162,6 +163,8 @@ export interface CompanySettings {
   primary_color: string
   secondary_color: string | null
   ai_tone: string | null
+  company_about: string | null
+  organization_id: string | null
   updated_at: string | null
 }
 

@@ -7,9 +7,10 @@ interface Props {
   clientName: string
   pdfUrl: string
   backUrl?: string
+  primaryColor?: string
 }
 
-export default function WebPreviewHeader({ companyName, clientName, pdfUrl, backUrl }: Props) {
+export default function WebPreviewHeader({ companyName, clientName, pdfUrl, backUrl, primaryColor = '#1FE97C' }: Props) {
   const [loading, setLoading] = useState(false)
 
   async function handleDownloadPdf() {
@@ -32,7 +33,7 @@ export default function WebPreviewHeader({ companyName, clientName, pdfUrl, back
 
   const brand = (
     <div className="flex items-center gap-2">
-      <div className="w-2 h-2 rounded-full bg-[#1FE97C]" />
+      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: primaryColor }} />
       <span className="text-sm font-semibold text-gray-900">{companyName}</span>
     </div>
   )

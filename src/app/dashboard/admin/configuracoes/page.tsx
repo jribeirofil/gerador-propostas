@@ -9,11 +9,18 @@ import type { CompanySettings } from '@/types/admin'
 import PageHeader from '@/components/ui/PageHeader'
 
 export default async function ConfiguracoesPage() {
-  await requireAdmin()
+  const { profile } = await requireAdmin()
 
   const supabase = createClient()
+  const orgId = profile?.organization_id ?? null
+
+  // SEMPRE filtrar por organização — sem isso o form lê/grava a linha de outra org
+  const settingsQuery = orgId
+    ? supabase.from('company_settings').select('*').eq('organization_id', orgId).limit(1).maybeSingle()
+    : supabase.from('company_settings').select('*').is('organization_id', null).limit(1).maybeSingle()
+
   const [{ data: settings }, rdConnected] = await Promise.all([
-    supabase.from('company_settings').select('*').limit(1).maybeSingle(),
+    settingsQuery,
     isRDConnected(),
   ])
 
@@ -26,7 +33,7 @@ export default async function ConfiguracoesPage() {
         subtitle="Dados da empresa, branding e padrões do PDF."
       />
 
-      <CompanySettingsForm settings={settings as CompanySettings | null} />
+      <CompanySettingsForm settings={settings as CompanySettings | null} organizationId={profile?.organization_id ?? null} />
 
       <div className="mt-10">
         <h2 className="font-sora font-semibold text-sm text-app-muted uppercase tracking-wider mb-4">Integrações</h2>

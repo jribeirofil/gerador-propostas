@@ -12,6 +12,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   if (!user) redirect('/login')
 
   const orgId = await getSessionOrgId()
+  if (!orgId) notFound()
 
   const db = createAdminClient()
 
@@ -33,7 +34,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       .eq('proposal_id', params.id)
       .order('created_at', { ascending: false }),
     db.from('profiles').select('full_name, job_title, phone').eq('id', user.id).single(),
-    db.from('company_settings').select('company_name, logo_url, primary_color, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
+    db.from('company_settings').select('company_name, logo_url, primary_color, secondary_color, company_site, company_email, company_phone, company_whatsapp, cover_bg_url, cover_video_url').eq('organization_id', orgId).limit(1).maybeSingle(),
     db
       .from('proposal_analytics')
       .select('event_type, session_id, created_at')
@@ -70,15 +71,31 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   }
 
   // Fetch all versions in the same version_group for the Histórico tab
-  const { data: versionHistory } = await db
+  let versionQuery = db
     .from('proposal')
     .select('id, version, status, created_at, title')
-    .eq('version_group', proposal.version_group)
     .eq('organization_id', orgId)
-    .order('version', { ascending: false })
+  versionQuery = proposal.version_group
+    ? versionQuery.eq('version_group', proposal.version_group)
+    : versionQuery.is('version_group', null)
+  const { data: versionHistory } = await versionQuery.order('version', { ascending: false })
 
   const profile = profileRes.data
   const settings = settingsRes.data
+
+  // Capa: template tem prioridade sobre company_settings (mesma regra do PDF/página pública)
+  let templateCover = null
+  if (proposal.template_id) {
+    const { data } = await db
+      .from('proposal_template')
+      .select('cover_image_url, cover_video_url')
+      .eq('id', proposal.template_id)
+      .eq('organization_id', orgId)
+      .maybeSingle()
+    templateCover = data
+  }
+  const coverBgUrl = templateCover?.cover_image_url || settings?.cover_bg_url || null
+  const coverVideoUrl = templateCover?.cover_video_url || settings?.cover_video_url || null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const catalogProducts = (catalogRes.data || []).map((p: any) => ({
     ...p,
@@ -122,11 +139,11 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   } : null
 
   const analyticsTimeline = [
-    ...(openedRows.length > 0 ? [{ label: 'Proposta visualizada pelo cliente', date: openedRows[0].created_at }] : []),
-    ...pdfRows.map(r => ({ label: 'Cliente baixou o PDF', date: r.created_at })),
+    ...(openedRows.length > 0 ? [{ label: 'Proposta visualizada pelo cliente', date: openedRows[0].created_at ?? '' }] : []),
+    ...pdfRows.map(r => ({ label: 'Cliente baixou o PDF', date: r.created_at ?? '' })),
     ...(openedRows.length > 1 ? [{
       label: `Última interação do cliente${totalViews > 1 ? ` · ${totalViews} visualizações` : ''}`,
-      date: openedRows[openedRows.length - 1].created_at,
+      date: openedRows[openedRows.length - 1].created_at ?? '',
     }] : []),
   ]
 
@@ -139,6 +156,9 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       signerData={signerData}
       companyName={settings?.company_name || 'Sua empresa'}
       primaryColor={settings?.primary_color || '#1FE97C'}
+      secondaryColor={settings?.secondary_color || null}
+      coverBgUrl={coverBgUrl}
+      coverVideoUrl={coverVideoUrl}
       companyContact={{
         site: settings?.company_site,
         email: settings?.company_email,

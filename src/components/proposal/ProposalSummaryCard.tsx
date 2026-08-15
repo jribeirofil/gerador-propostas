@@ -79,7 +79,7 @@ export default function ProposalSummaryCard({ watch }: Props) {
             {totals.total_monthly > 0 && (
               <div className="flex justify-between items-baseline">
                 <span className="text-xs text-app-muted">Total mensal</span>
-                <span className="text-base font-bold text-brand-green">{fmt(totals.total_monthly)}</span>
+                <span className="text-base font-bold text-brand-green-deep">{fmt(totals.total_monthly)}</span>
               </div>
             )}
 

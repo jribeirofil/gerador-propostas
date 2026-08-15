@@ -7,6 +7,7 @@
 ```
 docs/
 ├── README.md          <- você está aqui
+├── DECISOES-MODELO-DE-CONTEUDO.md   <- onde o texto mora (Empresa/Produto/Template/Proposta)
 ├── prds/              <- PRDs, um por fase
 │   ├── PRD-00-fase-0-fundacao.md
 │   └── PRD-01-fase-1-motor-de-fechamento.md

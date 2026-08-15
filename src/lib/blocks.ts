@@ -40,32 +40,14 @@ export const SECTION_ORIGINS: Record<BlockType, SectionOrigin> = {
   assinatura:      'usuario',
 }
 
-export const ORIGIN_LABELS: Record<SectionOrigin, string> = {
-  proposta: 'Proposta',
-  variavel: 'Variável',
-  manual:   'Manual',
-  produto:  'Produto',
-  empresa:  'Empresa',
-  usuario:  'Usuário',
-}
-
-export const ORIGIN_CLASSES: Record<SectionOrigin, string> = {
-  proposta: 'bg-blue-500/10 text-blue-500',
-  variavel: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-  manual:   'bg-app-surface2 text-app-muted border border-app-border',
-  produto:  'bg-purple-500/10 text-purple-500',
-  empresa:  'bg-orange-500/10 text-orange-500',
-  usuario:  'bg-teal-500/10 text-teal-600 dark:text-teal-400',
-}
-
-export const LIBRARY_BLOCK_TYPES: BlockType[] = ['cenario', 'objetivos', 'proximos_passos', 'sobre', 'diferenciais', 'faq']
-export const AI_BLOCK_TYPES: BlockType[] = ['cenario', 'objetivos', 'diferenciais', 'proximos_passos', 'sobre']
+export const LIBRARY_BLOCK_TYPES: BlockType[] = ['diferenciais', 'faq', 'proximos_passos']
+export const AI_BLOCK_TYPES: BlockType[] = ['diferenciais', 'proximos_passos']
 export const PRODUCT_DERIVED_BLOCKS: BlockType[] = ['beneficios', 'escopo', 'diferenciais', 'faq']
 export const AUTO_RENDER_BLOCKS: BlockType[] = ['cover', 'solucao', 'investimento', 'assinatura']
 
 export const DEFAULT_BLOCK_ORDER: BlockType[] = [
-  'cover', 'cenario', 'objetivos', 'solucao', 'beneficios', 'escopo',
-  'diferenciais', 'faq', 'proximos_passos', 'sobre', 'investimento', 'assinatura',
+  'cover', 'solucao', 'beneficios', 'escopo',
+  'diferenciais', 'faq', 'proximos_passos', 'investimento', 'assinatura',
 ]
 
 export interface ProposalBlock {
@@ -92,20 +74,8 @@ export interface ProductBlockContent {
 
 function fallbackContent(type: BlockType, productContent?: ProductBlockContent): Json {
   switch (type) {
-    case 'cenario':
-    case 'objetivos':
-    case 'sobre':
-      return { text: '' } as unknown as Json
     case 'proximos_passos':
-      return {
-        items: [
-          'Validação da proposta com os decisores',
-          'Reunião de alinhamento técnico e comercial',
-          'Aceite e assinatura do contrato',
-          'Implantação e onboarding',
-          'Acompanhamento contínuo',
-        ],
-      } as unknown as Json
+      return { items: [] } as unknown as Json
     case 'beneficios':
       return { items: productContent?.beneficios || [] } as unknown as Json
     case 'escopo':

@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/components/ui/Toast'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 import {
-  BLOCK_LABELS, LIBRARY_BLOCK_TYPES, SECTION_ORIGINS, ORIGIN_LABELS, ORIGIN_CLASSES, type BlockType,
+  BLOCK_LABELS, LIBRARY_BLOCK_TYPES, type BlockType,
 } from '@/lib/blocks'
 import type { Json } from '@/types/database.types'
 
@@ -38,17 +38,6 @@ interface Props {
 }
 
 type MainTab = 'templates' | 'blocos' | 'midias'
-
-// ─── Content source legend ────────────────────────────────────────────────────
-
-const ORIGINS_LEGEND = [
-  { key: 'proposta',  label: 'Proposta',  cls: 'bg-blue-500/10 text-blue-500' },
-  { key: 'variavel',  label: 'Variável',  cls: 'bg-amber-500/10 text-amber-600' },
-  { key: 'manual',    label: 'Manual',    cls: 'bg-app-surface2 text-app-muted border border-app-border' },
-  { key: 'produto',   label: 'Produto',   cls: 'bg-purple-500/10 text-purple-500' },
-  { key: 'empresa',   label: 'Empresa',   cls: 'bg-orange-500/10 text-orange-500' },
-  { key: 'usuario',   label: 'Usuário',   cls: 'bg-teal-500/10 text-teal-600' },
-] as const
 
 // ─── Templates tab ────────────────────────────────────────────────────────────
 
@@ -141,22 +130,6 @@ function TemplatesTab({ templates }: { templates: TemplateItem[] }) {
           ))}
         </div>
       )}
-
-      {/* Origin legend */}
-      <div className="mt-8 pt-6 border-t border-app-border">
-        <p className="text-[11px] font-semibold text-app-muted uppercase tracking-widest mb-3">Origens de conteúdo por seção</p>
-        <div className="flex flex-wrap gap-2">
-          {ORIGINS_LEGEND.map(o => (
-            <span key={o.key} className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${o.cls}`}>
-              {o.label}
-            </span>
-          ))}
-        </div>
-        <p className="text-[11px] text-app-muted mt-3">
-          Cada seção de um template recebe conteúdo de uma origem diferente.
-          Edite um template para ver e configurar as origens de cada seção.
-        </p>
-      </div>
     </div>
   )
 }
@@ -314,7 +287,6 @@ function BlocosTab({ initialItems, userId }: { initialItems: LibraryItem[]; user
   const { showToast } = useToast()
 
   const typeItems = items.filter(it => it.type === activeType)
-  const origin = SECTION_ORIGINS[activeType]
 
   async function handleDelete() {
     if (!deleteTarget) return
@@ -360,14 +332,9 @@ function BlocosTab({ initialItems, userId }: { initialItems: LibraryItem[]; user
 
       {/* Right: items */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between mb-4">
             <h3 className="font-medium text-sm text-app-text">{BLOCK_LABELS[activeType]}</h3>
-            <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${ORIGIN_CLASSES[origin]}`}>
-              {ORIGIN_LABELS[origin]}
-            </span>
-          </div>
-          <NewBlockForm
+            <NewBlockForm
             type={activeType}
             userId={userId}
             onCreated={item => setItems(p => [...p, item])}

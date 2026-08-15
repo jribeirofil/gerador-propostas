@@ -7,9 +7,9 @@
 /* ── Design tokens ──────────────────────────────────────────────── */
 :root {
   /* Brand */
-  --brand-green:      #1FE97C;
-  --brand-green-deep: #00B765;
-  --brand-mint:       #D7F9DE;
+  --brand-green:      #E7EAEE;
+  --brand-green-deep: #6B7280;
+  --brand-mint:       #F1F5F9;
 
   /* Light mode surfaces */
   --bg:          #FFFFFF;
@@ -30,13 +30,13 @@
   --overlay-border: rgba(0,0,0,0.08);
 
   /* Interactive hover (rows, clickable items) — shared design token */
-  --row-hover: #F0F8F4;
+  --row-hover: #F1F5F9;
 
   /* Sidebar light */
   --sidebar-bg:     #FFFFFF;
   --sidebar-border: #E4E8EE;
-  --sidebar-active: #F0F8F4;
-  --sidebar-active-text: #00B765;
+  --sidebar-active: #F1F5F9;
+  --sidebar-active-text: #1F2937;
   --sidebar-text:   #374151;
   --sidebar-muted:  #9CA3AF;
 }
@@ -61,13 +61,13 @@
   --overlay-border: rgba(255,255,255,0.10);
 
   /* Interactive hover dark */
-  --row-hover: rgba(31,233,124,0.08);
+  --row-hover: rgba(231,234,238,0.06);
 
   /* Sidebar dark */
   --sidebar-bg:     #161B20;
   --sidebar-border: #2A3038;
-  --sidebar-active: rgba(31,233,124,0.08);
-  --sidebar-active-text: #1FE97C;
+  --sidebar-active: rgba(231,234,238,0.08);
+  --sidebar-active-text: #E7EAEE;
   --sidebar-text:   #C8D4E0;
   --sidebar-muted:  #50565C;
 }

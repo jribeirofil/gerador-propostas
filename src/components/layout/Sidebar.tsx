@@ -193,7 +193,7 @@ export default function Sidebar({ userName, userRole, userId, logoUrl, companyNa
           <div className="flex justify-center w-full">
             <Link href="/dashboard" title="Início">
               {logoUrl ? (
-                <Logo src={logoUrl} height={40} maxWidth={40} />
+                <Logo src={logoUrl} srcDark={logoUrl} height={40} maxWidth={40} />
               ) : (
                 <span
                   className="font-sora font-black text-base leading-none flex items-center justify-center w-10 h-10 rounded-lg"
@@ -208,7 +208,7 @@ export default function Sidebar({ userName, userRole, userId, logoUrl, companyNa
           <div className="flex items-center justify-between w-full">
             <Link href="/dashboard" title="Início">
               {logoUrl ? (
-                <Logo src={logoUrl} height={52} maxWidth={104} />
+                <Logo src={logoUrl} srcDark={logoUrl} height={52} maxWidth={104} />
               ) : (
                 <span
                   className="font-sora font-black text-lg leading-none truncate max-w-[104px]"
@@ -327,7 +327,7 @@ export default function Sidebar({ userName, userRole, userId, logoUrl, companyNa
           }`}
         >
           <div className="w-7 h-7 rounded-lg bg-brand-green/15 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-green/25 transition-colors">
-            <span className="text-[10px] font-semibold text-brand-green">{initials}</span>
+            <span className="text-[10px] font-semibold text-brand-green-deep">{initials}</span>
           </div>
 
           {!isCollapsed && (

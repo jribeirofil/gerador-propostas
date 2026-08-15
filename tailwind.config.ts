@@ -13,10 +13,10 @@ const config: Config = {
         // Brand
         brand: {
           dark:         '#161B20',
-          green:        '#1FE97C',
-          'green-deep': '#00B765',
+          green:        '#E7EAEE',
+          'green-deep': '#6B7280',
           gray:         '#F3F5F8',
-          mint:         '#D7F9DE',
+          mint:         '#F1F5F9',
           muted:        '#50565C',
           border:       '#2A3038',
         },

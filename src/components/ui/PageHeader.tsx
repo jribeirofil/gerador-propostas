@@ -17,7 +17,7 @@ interface Props {
 
 export default function PageHeader({
   icon: Icon,
-  iconBg = '#1FE97C',
+  iconBg = '#6B7280',
   title,
   subtitle,
   action,

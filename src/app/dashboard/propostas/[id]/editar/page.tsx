@@ -31,10 +31,6 @@ export default async function EditProposalPage({ params }: { params: { id: strin
     colaboradores: (client?.colaboradores as number) || undefined,
     segmento: (client?.segmento as string) || '',
 
-    motivacoes: (proposal.diagnosis as string)
-      ? (proposal.diagnosis as string).split(', ').filter(Boolean)
-      : [],
-
     product_ids: products
       .map(p => p.product_id as string)
       .filter(Boolean),
@@ -56,6 +52,7 @@ export default async function EditProposalPage({ params }: { params: { id: strin
     validade_dias: (proposal.validade_dias as number) || 30,
     forma_pagamento: (proposal.forma_pagamento as string) ? (proposal.forma_pagamento as string).split(', ') : [],
     prazo_implantacao: (proposal.prazo_implantacao as string) || '',
+    commercial_conditions: (proposal.commercial_conditions as string) || '',
   }
 
   const empresa = (client?.empresa as string) || 'proposta'

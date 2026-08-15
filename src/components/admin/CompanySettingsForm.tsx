@@ -9,13 +9,14 @@ import type { CompanySettings } from '@/types/admin'
 
 interface Props {
   settings: CompanySettings | null
+  organizationId?: string | null
 }
 
 const inputClass = 'w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors'
 const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
 const sectionClass = 'bg-app-surface border border-app-border rounded-2xl p-6 space-y-4 shadow-sm'
 
-export default function CompanySettingsForm({ settings }: Props) {
+export default function CompanySettingsForm({ settings, organizationId }: Props) {
   const [companyName, setCompanyName] = useState(settings?.company_name || '')
   const [companySite, setCompanySite] = useState(settings?.company_site || '')
   const [companyEmail, setCompanyEmail] = useState(settings?.company_email || '')
@@ -25,6 +26,7 @@ export default function CompanySettingsForm({ settings }: Props) {
   const [primaryColor, setPrimaryColor] = useState(settings?.primary_color || '#1FE97C')
   const [secondaryColor, setSecondaryColor] = useState(settings?.secondary_color || '')
   const [aiTone, setAiTone] = useState(settings?.ai_tone || '')
+  const [companyAbout, setCompanyAbout] = useState(settings?.company_about || '')
 
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
@@ -40,7 +42,8 @@ export default function CompanySettingsForm({ settings }: Props) {
     setUploadError(null)
 
     const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
-    const path = `company/logo.${ext}`
+    const orgId = organizationId ?? settings?.organization_id ?? null
+    const path = orgId ? `${orgId}/company/logo.${ext}` : `company/logo.${ext}`
 
     const { error: uploadErr } = await supabase.storage
       .from('assets')
@@ -80,6 +83,7 @@ export default function CompanySettingsForm({ settings }: Props) {
       primary_color: primaryColor.trim() || '#1FE97C',
       secondary_color: secondaryColor.trim() || null,
       ai_tone: aiTone.trim() || null,
+      company_about: companyAbout.trim() || null,
       updated_at: new Date().toISOString(),
       updated_by: user?.id || null,
     }
@@ -94,7 +98,10 @@ export default function CompanySettingsForm({ settings }: Props) {
     } else {
       const { error } = await supabase
         .from('company_settings')
-        .insert(payload)
+        .insert({
+          ...payload,
+          organization_id: organizationId ?? null,
+        })
       saveError = error
     }
 
@@ -241,6 +248,25 @@ export default function CompanySettingsForm({ settings }: Props) {
               placeholder="#00B765"
             />
           </div>
+        </div>
+      </div>
+
+      <div className={sectionClass}>
+        <h2 className="text-sm font-semibold text-app-text">Documento da proposta</h2>
+        <p className="text-xs text-app-muted -mt-2">Conteúdo que aparece em todas as propostas da organização.</p>
+
+        <div>
+          <label className={labelClass}>Sobre a empresa</label>
+          <textarea
+            value={companyAbout}
+            onChange={e => setCompanyAbout(e.target.value)}
+            rows={4}
+            className={`${inputClass} resize-y leading-relaxed`}
+            placeholder="Texto apresentado na seção 'Sobre a empresa' do documento. Ex: há mais de 10 anos ajudando empresas a cuidar da saúde dos seus colaboradores..."
+          />
+          <p className="text-xs text-app-muted mt-1">
+            Aparece em toda proposta. Deixe vazio para não exibir a seção.
+          </p>
         </div>
       </div>
 

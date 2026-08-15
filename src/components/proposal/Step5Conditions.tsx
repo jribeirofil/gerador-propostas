@@ -1,7 +1,9 @@
 'use client'
+import { useEffect } from 'react'
 import type { UseFormRegister, UseFormWatch, UseFormSetValue } from 'react-hook-form'
 import type { ProposalFormData } from './ProposalForm'
 import Select from '@/components/ui/Select'
+import { createClient } from '@/lib/supabase/client'
 
 interface Props {
   register: UseFormRegister<ProposalFormData>
@@ -21,6 +23,7 @@ const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
 
 export default function Step5Conditions({ register, watch, setValue }: Props) {
   const selected: string[] = watch('forma_pagamento') || []
+  const currentConditions: string = watch('commercial_conditions') || ''
 
   function toggle(option: string) {
     setValue(
@@ -29,11 +32,43 @@ export default function Step5Conditions({ register, watch, setValue }: Props) {
     )
   }
 
+  // Pré-preenche as condições comerciais: condições do produto selecionado (se houver
+  // um único produto com condições) → senão a condição global da organização.
+  useEffect(() => {
+    if (currentConditions.trim()) return
+
+    const catalogProducts = (watch('catalog_products') || []) as {
+      id: string
+      commercial_conditions?: string | null
+    }[]
+    const selectedProducts = catalogProducts.filter(p =>
+      (watch('product_ids') || []).includes(p.id)
+    )
+    const productConditions = selectedProducts
+      .map(p => p.commercial_conditions?.trim())
+      .filter((c): c is string => !!c)
+
+    const fromProduct =
+      productConditions.length === 1 ? productConditions[0] : null
+
+    const supabase = createClient()
+    supabase
+      .from('company_settings')
+      .select('pdf_default_conditions')
+      .maybeSingle()
+      .then(({ data }) => {
+        const global = data?.pdf_default_conditions?.trim() || ''
+        const fallback = fromProduct || global || ''
+        if (fallback) setValue('commercial_conditions', fallback)
+      })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="font-sora font-semibold text-base text-app-text">Condições comerciais</h2>
-        <p className="text-xs text-app-muted mt-0.5">Os valores por produto já foram definidos. Aqui você ajusta condições gerais.</p>
+        <p className="text-xs text-app-muted mt-0.5">Os valores por produto já foram definidos. Aqui você ajusta as condições gerais.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -95,6 +130,18 @@ export default function Step5Conditions({ register, watch, setValue }: Props) {
             )
           })}
         </div>
+      </div>
+
+      {/* Condições comerciais do documento — texto livre, pré-preenchido */}
+      <div>
+        <label className={labelClass}>Condições comerciais do documento</label>
+        <p className="text-[11px] text-app-muted mb-2">Uma condição por linha. Aparecem no documento da proposta.</p>
+        <textarea
+          {...register('commercial_conditions')}
+          rows={5}
+          placeholder={'Benefícios comerciais já aplicados nos valores acima\nSem taxa de setup\nValores sujeitos à quantidade de vidas contratadas'}
+          className={`${inputClass} resize-y leading-relaxed`}
+        />
       </div>
 
       {/* Observações internas */}

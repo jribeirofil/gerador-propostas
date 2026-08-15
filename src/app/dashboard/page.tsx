@@ -45,7 +45,7 @@ export default async function DashboardPage() {
   const stats = [
     { label: 'Rascunhos',  value: rascunhos,        desc: 'Nunca enviadas',       color: '#94A3B8' },
     { label: 'Em aberto',  value: emAberto,          desc: 'Aguardando resposta',  color: '#3B82F6' },
-    { label: 'Ganhas',     value: ganhas,            desc: 'Negócios fechados',    color: '#00B765' },
+    { label: 'Ganhas',     value: ganhas,            desc: 'Negócios fechados',    color: '#6B7280' },
     { label: 'Perdidas',   value: perdidas,          desc: 'Oportunidades perdidas', color: '#EF4444' },
     { label: 'Conversão',  value: `${txConversao}%`, desc: 'Ganhas / decididas',   color: '#8B5CF6' },
   ]
@@ -54,7 +54,7 @@ export default async function DashboardPage() {
     <div className="w-full min-h-full px-8 py-8 bg-app-bg">
       <PageHeader
         icon={FileText}
-        iconBg="#00B765"
+        iconBg="#6B7280"
         title="Propostas"
         subtitle="Gerencie e acompanhe as propostas comerciais."
         action={{ label: 'Nova proposta', href: '/dashboard/nova' }}

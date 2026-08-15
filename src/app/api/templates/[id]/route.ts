@@ -140,6 +140,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     }
   }
 
+  // Detach proposals that reference this template (nullable FK; capa volta a cair no settings)
+  await db.from('proposal').update({ template_id: null }).eq('template_id', params.id)
   await db.from('template_block').delete().eq('template_id', params.id)
   const { error } = await db.from('proposal_template').delete().eq('id', params.id).eq('organization_id', orgId)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

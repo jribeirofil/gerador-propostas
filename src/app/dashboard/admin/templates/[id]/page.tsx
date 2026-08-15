@@ -50,6 +50,7 @@ export default async function TemplateEditorPage({ params }: { params: { id: str
         initialBlocks={blocksRes.data || []}
         allProducts={productsRes.data || []}
         totalTemplates={countRes.count ?? 1}
+        organizationId={orgId}
       />
     </div>
   )

@@ -1,7 +1,6 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Search, Check, X } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
 import { getCategoryClasses, type Category } from '@/types/admin'
 import type { CatalogProduct } from '@/types/engine'
 import type { UseFormWatch, UseFormSetValue } from 'react-hook-form'
@@ -10,58 +9,19 @@ import type { ProposalFormData } from './ProposalForm'
 interface Props {
   watch: UseFormWatch<ProposalFormData>
   setValue: UseFormSetValue<ProposalFormData>
+  products: CatalogProduct[]
+  categories: Category[]
+  loading: boolean
+  error: string | null
 }
 
 type CategoryFilter = 'all' | string
 
-export default function Step3Products({ watch, setValue }: Props) {
-  const [products, setProducts] = useState<CatalogProduct[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+export default function Step3Products({ watch, setValue, products, categories, loading, error }: Props) {
   const [search, setSearch] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all')
 
-  const supabase = createClient()
   const selected: string[] = watch('product_ids') || []
-
-  useEffect(() => {
-    async function load() {
-      setLoading(true)
-      const [{ data, error }, { data: cats }] = await Promise.all([
-        supabase
-          .from('product')
-          .select(`
-            id, name, slug, description, active, sort_order, category,
-            unit_label, calculation_type, billing_frequency, default_price_table_id,
-            benefits:product_benefit(id, title, sort_order, active),
-            scope:product_scope(id, title, sort_order, active),
-            faq:product_faq(id, question, answer, sort_order, active),
-            differentials:product_differential(id, title, sort_order, active)
-          `)
-          .eq('active', true)
-          .order('sort_order', { ascending: true }),
-        supabase.from('category').select('*').order('sort_order', { ascending: true }),
-      ])
-
-      if (error) { setError(error.message || 'Não foi possível carregar o catálogo.'); setLoading(false); return }
-
-      const normalized = (data || []).map(p => ({
-        ...p,
-        benefits: (p.benefits || []).filter((b: { active: boolean }) => b.active),
-        scope: (p.scope || []).filter((s: { active: boolean }) => s.active),
-        faq: (p.faq || []).filter((f: { active: boolean }) => f.active),
-        differentials: (p.differentials || []).filter((d: { active: boolean }) => d.active),
-      })) as CatalogProduct[]
-
-      setProducts(normalized)
-      setCategories((cats || []) as Category[])
-      setValue('catalog_products', normalized)
-      setLoading(false)
-    }
-    load()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   function toggle(id: string) {
     setValue(
@@ -187,7 +147,7 @@ export default function Step3Products({ watch, setValue }: Props) {
               >
                 <span className={`mt-0.5 w-4 h-4 flex-shrink-0 rounded border flex items-center justify-center transition-colors ${
                   isSelected
-                    ? 'bg-brand-green border-brand-green'
+                    ? 'bg-brand-green border-brand-green-deep'
                     : 'border-app-border bg-transparent'
                 }`}>
                   {isSelected && <Check size={10} className="text-brand-dark" strokeWidth={3} />}

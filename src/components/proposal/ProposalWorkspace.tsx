@@ -90,10 +90,10 @@ interface TimelineItem {
 }
 
 function getTimelineIcon(item: TimelineItem): { Icon: LucideIcon; color: string } {
-  if (item.kind === 'analytics') return { Icon: Eye,          color: 'text-brand-green' }
+  if (item.kind === 'analytics') return { Icon: Eye,          color: 'text-brand-green-deep' }
   if (item.kind === 'version')   return { Icon: GitBranch,    color: 'text-blue-400'  }
   switch (item.eventType) {
-    case 'viewed':                return { Icon: Eye,          color: 'text-brand-green'   }
+    case 'viewed':                return { Icon: Eye,          color: 'text-brand-green-deep'   }
     case 'pdf_generated':         return { Icon: Download,     color: 'text-app-muted'   }
     case 'sent':                  return { Icon: Send,         color: 'text-blue-400'    }
     case 'created':               return { Icon: FileText,     color: 'text-app-muted'   }
@@ -127,6 +127,9 @@ interface Props {
   signerData: { name: string; job_title: string; email: string; phone: string }
   companyName: string
   primaryColor: string
+  secondaryColor?: string | null
+  coverBgUrl?: string | null
+  coverVideoUrl?: string | null
   companyContact?: {
     site?: string | null
     email?: string | null
@@ -164,6 +167,9 @@ export default function ProposalWorkspace({
   signerData,
   companyName,
   primaryColor,
+  secondaryColor,
+  coverBgUrl,
+  coverVideoUrl,
   companyContact,
   analyticsSummary,
   analyticsTimeline = [],
@@ -209,9 +215,6 @@ export default function ProposalWorkspace({
     whatsapp:      (_client?.whatsapp     as string) || '',
     colaboradores: (_client?.colaboradores as number) || undefined,
     segmento:      (_client?.segmento     as string) || '',
-    motivacoes: (proposal.diagnosis as string)
-      ? (proposal.diagnosis as string).split(', ').filter(Boolean)
-      : [],
     product_ids: _products.map(p => p.product_id as string).filter(Boolean),
     product_pricing: _products.filter(p => p.product_id).map(p => ({
       product_id:       p.product_id       as string,
@@ -227,6 +230,7 @@ export default function ProposalWorkspace({
     validade_dias:     (proposal.validade_dias    as number) || 30,
     forma_pagamento:   (proposal.forma_pagamento as string) ? (proposal.forma_pagamento as string).split(', ') : [],
     prazo_implantacao: (proposal.prazo_implantacao as string) || '',
+    commercial_conditions: (proposal.commercial_conditions as string) || '',
     vigencia_contrato:  (proposal.vigencia_contrato as string) || '',
     notas_internas:     (proposal.commercial_notes as string) || '',
     catalog_products:   catalogProducts,
@@ -543,7 +547,7 @@ export default function ProposalWorkspace({
             {TABS.map(tab => {
               const tabClass = `px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'border-brand-green text-app-text'
+                  ? 'border-brand-green-deep text-app-text'
                   : 'border-transparent text-app-muted hover:text-app-text'
               }`
               if (tab.href) {
@@ -672,6 +676,9 @@ export default function ProposalWorkspace({
                 signerData={signerData}
                 companyName={companyName}
                 primaryColor={primaryColor}
+                secondaryColor={secondaryColor}
+                coverBgUrl={coverBgUrl}
+                coverVideoUrl={coverVideoUrl}
                 companyContact={companyContact}
               />
             </div>
@@ -756,7 +763,7 @@ export default function ProposalWorkspace({
                               {p.monthly_value > 0 && (
                                 <div>
                                   <span className="text-[10px] font-semibold text-app-muted/60 uppercase tracking-wider block mb-0.5">Mensal</span>
-                                  <span className="text-base font-bold text-brand-green">{fmt(p.monthly_value)}</span>
+                                  <span className="text-base font-bold text-brand-green-deep">{fmt(p.monthly_value)}</span>
                                 </div>
                               )}
                               {p.setup_value > 0 && (
@@ -959,7 +966,7 @@ export default function ProposalWorkspace({
                       {totalMonthly ? (
                         <div>
                           <span className="text-[10px] font-semibold text-app-muted/60 uppercase tracking-wider block mb-1.5">Recorrente mensal</span>
-                          <span className="text-[26px] font-bold text-brand-green leading-none">{fmt(totalMonthly)}</span>
+                          <span className="text-[26px] font-bold text-brand-green-deep leading-none">{fmt(totalMonthly)}</span>
                         </div>
                       ) : null}
                       {totalSetup != null && totalSetup > 0 && (
@@ -1087,7 +1094,7 @@ export default function ProposalWorkspace({
                     <div key={item.id} className="flex items-start gap-5 pl-10 relative py-4">
                       <div className={`absolute left-[9px] top-5 w-2 h-2 rounded-full ${
                         item.kind === 'analytics'
-                          ? 'bg-brand-green/60 border-2 border-brand-green/30'
+                          ? 'bg-brand-green/60 border-2 border-brand-green-deep/30'
                           : 'bg-app-bg border-2 border-app-border'
                       }`} />
                       <div className="flex-1">
@@ -1236,7 +1243,7 @@ export default function ProposalWorkspace({
               </div>
               <div>
                 <p className="text-[10px] font-semibold text-app-muted uppercase tracking-wider mb-1">Nova versão</p>
-                <p className="text-xl font-bold text-brand-green">v{(proposal.version as number) + 1}</p>
+                <p className="text-xl font-bold text-brand-green-deep">v{(proposal.version as number) + 1}</p>
               </div>
             </div>
             <div className="flex gap-3">

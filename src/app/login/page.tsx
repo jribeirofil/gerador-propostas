@@ -12,7 +12,7 @@ function DotGrid() {
       style={{ gridTemplateColumns: 'repeat(10, 1fr)' }}
     >
       {Array.from({ length: 70 }).map((_, i) => (
-        <div key={i} className="w-[5px] h-[5px] rounded-full bg-[#00B765]" />
+        <div key={i} className="w-[5px] h-[5px] rounded-full bg-brand-green-deep" />
       ))}
     </div>
   )
@@ -67,10 +67,10 @@ export default function LoginPage() {
         <div className="mb-8">
           <h1 className="font-sora font-black text-[52px] leading-[1.1] text-[#0F1318]">
             Propostas que<br />
-            <span className="text-[#00B765]">fecham negócios</span><br />
+            <span className="text-brand-green-deep">fecham negócios</span><br />
             de verdade.
           </h1>
-          <div className="w-10 h-[3px] bg-[#00B765] rounded-full mt-6 mb-6" />
+          <div className="w-10 h-[3px] bg-brand-green-deep rounded-full mt-6 mb-6" />
           <p className="text-[#374151] text-[15px] leading-relaxed max-w-[380px]">
             Crie, personalize e envie propostas comerciais
             para seus clientes de forma rápida e profissional.
@@ -90,7 +90,7 @@ export default function LoginPage() {
 
           {/* Logo mobile */}
           <div className="flex items-center gap-2 mb-10 lg:hidden">
-            <div className="w-2 h-2 rounded-full bg-[#1FE97C]" />
+            <div className="w-2 h-2 rounded-full bg-brand-green-deep" />
             <span className="font-sora font-semibold text-lg text-[#0F1318]">Propostas</span>
           </div>
 
@@ -113,7 +113,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="w-full border border-[#E4E8EE] rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] placeholder-[#9CA3AF] focus:outline-none focus:border-[#00B765] transition-colors"
+                  className="w-full border border-[#E4E8EE] rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] placeholder-[#9CA3AF] focus:outline-none focus:border-brand-green-deep transition-colors"
                 />
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Digite sua senha"
-                  className="w-full border border-[#E4E8EE] rounded-lg pl-10 pr-11 py-3 text-sm text-[#0F1318] placeholder-[#9CA3AF] focus:outline-none focus:border-[#00B765] transition-colors"
+                  className="w-full border border-[#E4E8EE] rounded-lg pl-10 pr-11 py-3 text-sm text-[#0F1318] placeholder-[#9CA3AF] focus:outline-none focus:border-brand-green-deep transition-colors"
                 />
                 <button
                   type="button"
@@ -156,7 +156,7 @@ export default function LoginPage() {
 
           <p className="text-xs text-[#9CA3AF] text-center mt-8">
             Ainda não tem conta?{' '}
-            <Link href="/cadastro" className="text-[#00B765] hover:underline font-medium">
+            <Link href="/cadastro" className="text-brand-green-deep hover:underline font-medium">
               Criar conta
             </Link>
           </p>

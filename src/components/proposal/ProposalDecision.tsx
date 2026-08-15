@@ -28,13 +28,46 @@ const DECLINE_REASON_WHITELIST = new Set(DECLINE_REASONS)
 interface Props {
   token: string
   opportunityStatus: string
+  primaryColor?: string
+}
+
+function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace('#', '')
+  if (h.length !== 6) return hex
+  const r = parseInt(h.substring(0, 2), 16)
+  const g = parseInt(h.substring(2, 4), 16)
+  const b = parseInt(h.substring(4, 6), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+function darken(hex: string, percent: number): string {
+  const h = hex.replace('#', '')
+  if (h.length !== 6) return hex
+  const amt = Math.round((percent / 100) * 255)
+  const chan = (value: number) => Math.max(0, value - amt).toString(16).padStart(2, '0')
+  return `#${chan(parseInt(h.substring(0, 2), 16))}${chan(parseInt(h.substring(2, 4), 16))}${chan(parseInt(h.substring(4, 6), 16))}`
+}
+
+function isLight(hex: string): boolean {
+  const h = hex.replace('#', '')
+  if (h.length !== 6) return true
+  const r = parseInt(h.substring(0, 2), 16)
+  const g = parseInt(h.substring(2, 4), 16)
+  const b = parseInt(h.substring(4, 6), 16)
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.55
 }
 
 function isValidEmail(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
 }
 
-export default function ProposalDecision({ token, opportunityStatus }: Props) {
+export default function ProposalDecision({ token, opportunityStatus, primaryColor = '#1FE97C' }: Props) {
+  const brand = primaryColor || '#1FE97C'
+  const brandVars = {
+    '--brand': brand,
+    '--brand-hover': darken(brand, 10),
+    '--brand-text': isLight(brand) ? '#0f1318' : '#ffffff',
+  } as React.CSSProperties
   const alreadyApproved = opportunityStatus === 'won'
   const alreadyDeclined = opportunityStatus === 'lost'
 
@@ -111,30 +144,34 @@ export default function ProposalDecision({ token, opportunityStatus }: Props) {
 
   if (alreadyApproved) {
     return (
-      <DecisionSection>
-        <div className="text-center">
-          <div className="w-10 h-10 rounded-full bg-[#1FE97C]/20 flex items-center justify-center mx-auto mb-4">
-            <span className="text-[#00B765] text-lg">✓</span>
+      <div style={brandVars}>
+        <DecisionSection>
+          <div className="text-center">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: hexToRgba(brand, 0.2) }}>
+              <span className="text-lg" style={{ color: darken(brand, 25) }}>✓</span>
+            </div>
+            <p className="text-gray-900 font-semibold text-lg mb-1">Proposta aprovada</p>
+            <p className="text-gray-500 text-sm">A decisão já foi registrada. Nossa equipe entrará em contato.</p>
           </div>
-          <p className="text-gray-900 font-semibold text-lg mb-1">Proposta aprovada</p>
-          <p className="text-gray-500 text-sm">A decisão já foi registrada. Nossa equipe entrará em contato.</p>
-        </div>
-      </DecisionSection>
+        </DecisionSection>
+      </div>
     )
   }
 
   if (alreadyDeclined) {
     return (
-      <DecisionSection>
-        <div className="text-center">
-          <p className="text-gray-500 text-sm">Decisão registrada. Obrigado pelo retorno.</p>
-        </div>
-      </DecisionSection>
+      <div style={brandVars}>
+        <DecisionSection>
+          <div className="text-center">
+            <p className="text-gray-500 text-sm">Decisão registrada. Obrigado pelo retorno.</p>
+          </div>
+        </DecisionSection>
+      </div>
     )
   }
 
   return (
-    <>
+    <div style={brandVars}>
       <DecisionSection>
         {view === 'idle' && (
           <div className="text-center max-w-lg mx-auto">
@@ -145,7 +182,7 @@ export default function ProposalDecision({ token, opportunityStatus }: Props) {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={() => setView('approve-modal')}
-                className="px-8 py-3 bg-[#1FE97C] text-[#0f1318] text-sm font-semibold rounded-xl hover:bg-[#00C965] transition-colors"
+                className="px-8 py-3 bg-[var(--brand)] text-[var(--brand-text)] text-sm font-semibold rounded-xl hover:bg-[var(--brand-hover)] transition-colors"
               >
                 Aprovar proposta
               </button>
@@ -167,8 +204,8 @@ export default function ProposalDecision({ token, opportunityStatus }: Props) {
 
         {view === 'done-approve' && (
           <div className="text-center max-w-lg mx-auto">
-            <div className="w-10 h-10 rounded-full bg-[#1FE97C]/20 flex items-center justify-center mx-auto mb-4">
-              <span className="text-[#00B765] text-lg">✓</span>
+            <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: hexToRgba(brand, 0.2) }}>
+              <span className="text-lg" style={{ color: darken(brand, 25) }}>✓</span>
             </div>
             <p className="text-gray-900 font-semibold text-lg mb-2">Ótima notícia! Aprovação registrada.</p>
             <p className="text-gray-500 text-sm leading-relaxed">Nossa equipe entrará em contato para os próximos passos.</p>
@@ -254,7 +291,7 @@ export default function ProposalDecision({ token, opportunityStatus }: Props) {
             <button
               onClick={handleApprove}
               disabled={loading || !identValid}
-              className="w-full py-3 bg-[#1FE97C] text-[#0f1318] text-sm font-semibold rounded-xl hover:bg-[#00C965] transition-colors disabled:opacity-40"
+              className="w-full py-3 bg-[var(--brand)] text-[var(--brand-text)] text-sm font-semibold rounded-xl hover:bg-[var(--brand-hover)] transition-colors disabled:opacity-40"
             >
               {loading ? 'Registrando...' : 'Confirmar aprovação'}
             </button>
@@ -394,7 +431,7 @@ export default function ProposalDecision({ token, opportunityStatus }: Props) {
           </div>
         </Modal>
       )}
-    </>
+    </div>
   )
 }
 

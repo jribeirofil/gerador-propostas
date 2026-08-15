@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import StepIndicator from '@/components/ui/StepIndicator'
 import Step1Client from './Step1Client'
-import Step2Diagnostic from './Step2Diagnostic'
 import Step3Products from './Step3Products'
 import Step4Pricing from './Step4Pricing'
 import Step5Conditions from './Step5Conditions'
@@ -16,6 +15,7 @@ import { buildProductSnapshot } from '@/lib/snapshot'
 import { calculateLineItem, calculateProposalTotals } from '@/lib/pricing'
 import { createBlocksFromTemplate, copyBlocksFromProposal, resolveTemplate } from '@/lib/blocks'
 import type { CatalogProduct, ProductPricing } from '@/types/engine'
+import type { Category } from '@/types/admin'
 
 export interface ProposalFormData {
   // Client
@@ -27,10 +27,6 @@ export interface ProposalFormData {
   whatsapp?: string
   colaboradores?: number
   segmento?: string
-
-  // Diagnostic
-  motivacoes?: string[]
-  contexto?: string
 
   // Products
   product_ids: string[]
@@ -44,6 +40,7 @@ export interface ProposalFormData {
   validade_dias: number
   forma_pagamento?: string[]
   prazo_implantacao?: string
+  commercial_conditions?: string
 
   // Contract conditions
   vigencia_contrato?: string
@@ -64,25 +61,23 @@ interface ProposalFormProps {
   initialData?: Partial<ProposalFormData>
   existingClientId?: string
   sourceProposalId?: string
-  sourceVersionGroup?: string
-  sourceVersion?: number
 }
 
-const TOTAL_STEPS = 6
+const TOTAL_STEPS = 5
 
 export default function ProposalForm({
   mode = 'new',
   initialData,
   existingClientId,
   sourceProposalId,
-  sourceVersionGroup,
-  sourceVersion = 1,
 }: ProposalFormProps) {
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
-  const [saveSuccess, setSaveSuccess] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [showDraftModal, setShowDraftModal] = useState(false)
+  const [catalogLoading, setCatalogLoading] = useState(true)
+  const [catalogError, setCatalogError] = useState<string | null>(null)
+  const [catalogCategories, setCatalogCategories] = useState<Category[]>([])
   const draftDataRef = useRef<Record<string, unknown> | null>(null)
   const autosaveReady = useRef(false)
   const router = useRouter()
@@ -121,6 +116,7 @@ export default function ProposalForm({
   )
 
   function applyDraft(parsed: Record<string, unknown>) {
+    const currentCatalog = getValues('catalog_products')
     const { catalog_products: _, _savedAt: __, ...rest } = parsed
     if (rest.product_pricing) {
       rest.product_pricing = (rest.product_pricing as ProductPricing[]).map(p =>
@@ -130,6 +126,7 @@ export default function ProposalForm({
       )
     }
     reset({ ...defaultVals, ...rest } as ProposalFormData)
+    if (currentCatalog?.length) setValue('catalog_products', currentCatalog)
   }
 
   // Restore draft from localStorage on mount
@@ -159,6 +156,50 @@ export default function ProposalForm({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Carrega o catálogo uma única vez no form, para que as etapas de Preços,
+  // Condições e Resumo funcionem mesmo navegando direto pelos títulos (sem
+  // precisar montar a etapa de Produtos antes).
+  useEffect(() => {
+    async function loadCatalog() {
+      setCatalogLoading(true)
+      const [{ data, error }, { data: cats }] = await Promise.all([
+        supabase
+          .from('product')
+          .select(`
+            id, name, slug, description, active, sort_order, category,
+            unit_label, calculation_type, billing_frequency, default_price_table_id, commercial_conditions,
+            benefits:product_benefit(id, title, sort_order, active),
+            scope:product_scope(id, title, sort_order, active),
+            faq:product_faq(id, question, answer, sort_order, active),
+            differentials:product_differential(id, title, sort_order, active)
+          `)
+          .eq('active', true)
+          .order('sort_order', { ascending: true }),
+        supabase.from('category').select('*').order('sort_order', { ascending: true }),
+      ])
+
+      if (error) {
+        setCatalogError(error.message || 'Não foi possível carregar o catálogo.')
+        setCatalogLoading(false)
+        return
+      }
+
+      const normalized = (data || []).map(p => ({
+        ...p,
+        benefits: (p.benefits || []).filter((b: { active: boolean }) => b.active),
+        scope: (p.scope || []).filter((s: { active: boolean }) => s.active),
+        faq: (p.faq || []).filter((f: { active: boolean }) => f.active),
+        differentials: (p.differentials || []).filter((d: { active: boolean }) => d.active),
+      })) as CatalogProduct[]
+
+      setValue('catalog_products', normalized)
+      setCatalogCategories((cats || []) as Category[])
+      setCatalogLoading(false)
+    }
+    loadCatalog()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // Autosave on each step change — skips until draft decision is made
   useEffect(() => {
     if (!autosaveReady.current) return
@@ -177,8 +218,8 @@ export default function ProposalForm({
     setSubmitError(null)
     let valid = true
     if (step === 1) valid = await trigger(['empresa', 'contato'])
-    if (step === 3) valid = (getValues('product_ids') || []).length > 0
-    if (step === 4 && invalidOverrideRef.current) {
+    if (step === 2) valid = (getValues('product_ids') || []).length > 0
+    if (step === 3 && invalidOverrideRef.current) {
       setSubmitError('Preencha o motivo da alteração para todos os valores especiais antes de continuar.')
       return
     }
@@ -238,7 +279,6 @@ export default function ProposalForm({
   function buildProposalFields(data: ProposalFormData, totals: ReturnType<typeof calculateProposalTotals>, lineItems: { calc: ReturnType<typeof calculateLineItem> }[]) {
     return {
       status: 'generated' as const,
-      diagnosis: (data.motivacoes || []).join(', ') || null,
       discount_percent: data.desconto_pct || 0,
       discount_value: totals.general_discount_value,
       total_setup: totals.total_setup,
@@ -247,6 +287,7 @@ export default function ProposalForm({
       validade_dias: data.validade_dias || 30,
       forma_pagamento: (data.forma_pagamento || []).join(', ') || null,
       prazo_implantacao: data.prazo_implantacao || null,
+      commercial_conditions: data.commercial_conditions?.trim() || null,
       vigencia_contrato: data.vigencia_contrato || null,
       commercial_notes: data.notas_internas || null,
       updated_at: new Date().toISOString(),
@@ -368,10 +409,7 @@ export default function ProposalForm({
     })
 
     clearDraft()
-    router.refresh()
-    setLoading(false)
-    setSaveSuccess(true)
-    setTimeout(() => setSaveSuccess(false), 3000)
+    router.push(`/dashboard/propostas/${sourceProposalId}`)
   }
 
   async function submitDuplicate(data: ProposalFormData, userId: string | undefined) {
@@ -468,8 +506,8 @@ export default function ProposalForm({
     }
   }
 
-  const showSummary = step >= 4
-  const showProductSidebar = step === 3
+  const showSummary = step >= 3
+  const showProductSidebar = step === 2
   const hasSidebar = showSummary || showProductSidebar
 
   const selectedIds: string[] = watch('product_ids') || []
@@ -521,11 +559,19 @@ export default function ProposalForm({
         <div className={hasSidebar ? 'flex-1 min-w-0' : ''}>
           <div key={step} className="bg-app-surface border border-app-border rounded-2xl p-6 mb-6 shadow-sm animate-in fade-in duration-300">
             {step === 1 && <Step1Client register={register} errors={errors} setValue={setValue} />}
-            {step === 2 && <Step2Diagnostic setValue={setValue} watch={watch as Parameters<typeof Step2Diagnostic>[0]['watch']} />}
-            {step === 3 && <Step3Products watch={watch} setValue={setValue} />}
-            {step === 4 && <Step4Pricing watch={watch} setValue={setValue} />}
-            {step === 5 && <Step5Conditions register={register} watch={watch} setValue={setValue} />}
-            {step === 6 && <Step6Review data={getValues()} setValue={setValue} />}
+            {step === 2 && (
+              <Step3Products
+                watch={watch}
+                setValue={setValue}
+                products={watch('catalog_products') || []}
+                categories={catalogCategories}
+                loading={catalogLoading}
+                error={catalogError}
+              />
+            )}
+            {step === 3 && <Step4Pricing watch={watch} setValue={setValue} />}
+            {step === 4 && <Step5Conditions register={register} watch={watch} setValue={setValue} />}
+            {step === 5 && <Step6Review data={getValues()} setValue={setValue} />}
           </div>
 
           {submitError && (
@@ -551,10 +597,6 @@ export default function ProposalForm({
               >
                 Continuar
               </button>
-            ) : saveSuccess ? (
-              <span className="px-5 py-2 bg-brand-green/15 text-brand-green-deep rounded-lg text-sm font-semibold">
-                Salvo com sucesso
-              </span>
             ) : (
               <button
                 type="button"
@@ -565,7 +607,7 @@ export default function ProposalForm({
                 {loading
                   ? 'Salvando...'
                   : mode === 'edit'
-                    ? `Gerar v${sourceVersion + 1}`
+                    ? 'Salvar alterações'
                     : 'Gerar proposta'}
               </button>
             )}

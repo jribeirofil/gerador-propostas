@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { ProductSnapshot } from '@/types/engine'
 
-interface PdfClient {
+export interface PdfClient {
   empresa: string
   contato: string
   cargo?: string | null
@@ -11,7 +11,7 @@ interface PdfClient {
   segmento?: string | null
 }
 
-interface PdfProposalProduct {
+export interface PdfProposalProduct {
   snapshot: ProductSnapshot
   quantity: number
   unit_value?: number | null
@@ -21,26 +21,32 @@ interface PdfProposalProduct {
   pricing_type?: string | null
 }
 
-interface PdfCompanySettings {
+export interface PdfCompanySettings {
   company_name: string
+  primary_color?: string | null
+  secondary_color?: string | null
   pdf_footer_text?: string | null
   pdf_default_conditions?: string | null
+  company_about?: string | null
   company_site?: string | null
   company_email?: string | null
   company_phone?: string | null
   company_whatsapp?: string | null
+  cover_bg_url?: string | null
+  cover_video_url?: string | null
 }
 
-interface PdfBlock {
+export interface PdfBlock {
   type: string
   content_json: Record<string, unknown>
   enabled: boolean
   sort_order: number
 }
 
-interface PdfProposal {
+export interface PdfProposal {
   diagnosis?: string | null
   objectives?: string | null
+  commercial_conditions?: string | null
   total_monthly?: number | null
   total_setup?: number | null
   discount_percent?: number | null
@@ -48,7 +54,9 @@ interface PdfProposal {
   forma_pagamento?: string | null
   prazo_implantacao?: string | null
   created_at?: string
-  client: PdfClient
+  cover_bg_url?: string | null
+  cover_video_url?: string | null
+  client: PdfClient | null
   items: PdfProposalProduct[]
   blocks?: PdfBlock[]
   settings?: PdfCompanySettings | null
@@ -113,8 +121,28 @@ function blockContent(blocks: PdfBlock[] | undefined, type: string): Record<stri
   return b ? b.content_json : null
 }
 
-export function buildPdfHtml(proposal: PdfProposal): string {
-  const client = proposal.client
+function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace('#', '')
+  if (h.length !== 6) return hex
+  const r = parseInt(h.substring(0, 2), 16)
+  const g = parseInt(h.substring(2, 4), 16)
+  const b = parseInt(h.substring(4, 6), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+// Escurece a cor de marca até ficar legível como texto sobre fundo claro.
+function darken(hex: string, percent: number): string {
+  const h = hex.replace('#', '')
+  if (h.length !== 6) return hex
+  const amt = Math.round((percent / 100) * 255)
+  const chan = (value: number) => Math.max(0, value - amt).toString(16).padStart(2, '0')
+  return `#${chan(parseInt(h.substring(0, 2), 16))}${chan(parseInt(h.substring(2, 4), 16))}${chan(parseInt(h.substring(4, 6), 16))}`
+}
+
+// Corpo do documento (sem <html>/<head>) — usado tanto no PDF quanto na
+// página pública, garantindo que os dois tenham EXATAMENTE o mesmo layout.
+export function buildProposalBody(proposal: PdfProposal): string {
+  const client = proposal.client || { empresa: 'Cliente', contato: '—' }
   const items = proposal.items || []
   const blocks = proposal.blocks
   const today = proposal.created_at
@@ -122,6 +150,15 @@ export function buildPdfHtml(proposal: PdfProposal): string {
     : format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
 
   const companyName = proposal.settings?.company_name || 'Sua empresa'
+  const primary = proposal.settings?.primary_color || '#1FE97C'
+  const secondary = proposal.settings?.secondary_color || null
+  const brandDeep = darken(primary, 42)
+  const brandMuted = darken(primary, 25)
+  const brandTint = hexToRgba(primary, 0.10)
+  const brandTintBorder = hexToRgba(primary, 0.35)
+  const secDeep = secondary ? darken(secondary, 42) : brandDeep
+  const secMuted = secondary ? darken(secondary, 25) : brandMuted
+
   const footerText = proposal.settings?.pdf_footer_text || ''
   const coverContacts = [
     proposal.settings?.company_site,
@@ -130,28 +167,20 @@ export function buildPdfHtml(proposal: PdfProposal): string {
     proposal.settings?.company_whatsapp,
   ].filter(Boolean).join(' · ')
   const coverContactsHtml = coverContacts
-    ? `<p style="color:#50565C;font-size:12px;margin-top:16px;font-style:italic;">${coverContacts}</p>`
+    ? `<p style="color:#B9BFC7;font-size:12px;margin-top:16px;font-style:italic;">${coverContacts}</p>`
     : ''
 
-  // Override text content from blocks if available
-  const cenarioBlock = blockContent(blocks, 'cenario')
-  const cenarioText = (cenarioBlock?.text as string) || null
-  const objetivosBlock = blockContent(blocks, 'objetivos')
-  const objetivosText = (objetivosBlock?.text as string) || null
   const sobreBlock = blockContent(blocks, 'sobre')
-  const sobreText = (sobreBlock?.text as string) || null
+  const sobreText =
+    proposal.settings?.company_about?.trim() ||
+    ((sobreBlock?.text as string) || '').trim() ||
+    null
   const proximosBlock = blockContent(blocks, 'proximos_passos')
   const proximosItems = (proximosBlock?.items as string[]) || null
 
-  const defaultStaticConditions = [
-    'Benefícios comerciais já aplicados nos valores acima',
-    'Sem taxa de setup',
-    `Atendimento especializado ${companyName}`,
-    'Valores sujeitos à quantidade de vidas contratadas',
-  ]
-  const staticConditions = proposal.settings?.pdf_default_conditions
-    ? proposal.settings.pdf_default_conditions.split('\n').map(s => s.trim()).filter(Boolean)
-    : defaultStaticConditions
+  // Condições: as negociadas na proposta (passo Condições) vencem; senão a global da organização.
+  const commercialConditions = proposal.commercial_conditions?.trim() || proposal.settings?.pdf_default_conditions || ''
+  const staticConditions = commercialConditions.split('\n').map(s => s.trim()).filter(Boolean)
 
   const conditionLi = (text: string) =>
     `<li style="font-size:12px;color:#444;padding:5px 0;">✓ ${text}</li>`
@@ -222,33 +251,20 @@ export function buildPdfHtml(proposal: PdfProposal): string {
           <th style="padding:8px 12px;text-align:right;color:#999;font-weight:500;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;">Investimento</th>
         </tr>`
 
-  return `
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', -apple-system, sans-serif; color: #1a1a1a; background: white; }
-    .section-title {
-      font-size: 10px; font-weight: 700; color: #00B765; text-transform: uppercase;
-      letter-spacing: 1px; padding-bottom: 6px; border-bottom: 1.5px solid #D7F9DE;
-      margin-bottom: 12px;
-    }
-    table { border-collapse: collapse; }
-  </style>
-</head>
-<body>
+  const coverBgUrl = proposal.cover_bg_url || null
 
-  <div style="background:#161B20;padding:48px 40px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;">
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div style="width:10px;height:10px;border-radius:50%;background:#1FE97C;"></div>
+  return `
+  <div style="position:relative;background:#161B20;padding:56px 40px;min-height:380px;display:flex;flex-direction:column;justify-content:space-between;${coverBgUrl ? `background-image:url('${coverBgUrl}');background-size:cover;background-position:center;` : ''}">
+    ${coverBgUrl ? '<div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.25);"></div>' : ''}
+    <div style="display:flex;align-items:center;gap:8px;position:relative;">
+      <div style="width:10px;height:10px;border-radius:50%;background:${primary};"></div>
       <span style="color:white;font-weight:600;font-size:16px;letter-spacing:0.3px;">${companyName}</span>
     </div>
-    <div style="margin-top:32px">
-      <p style="color:#50565C;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Proposta Comercial</p>
+    <div style="margin-top:32px;position:relative;">
+      <div style="width:56px;height:3px;border-radius:2px;background:linear-gradient(to right, ${primary} ${secondary ? '55%, ' + secondary : '100%' });margin-bottom:20px;"></div>
+      <p style="color:#8A9099;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Proposta Comercial</p>
       <h1 style="color:white;font-size:28px;font-weight:700;margin-bottom:6px;">${client.empresa}</h1>
-      <p style="color:#8A9099;font-size:13px;">${today}</p>
+      <p style="color:#B9BFC7;font-size:13px;">${today}</p>
       ${coverContactsHtml}
     </div>
   </div>
@@ -263,20 +279,7 @@ export function buildPdfHtml(proposal: PdfProposal): string {
     </div>
 
     <div style="margin-bottom:28px;">
-      <div class="section-title">Contexto</div>
-      <p style="font-size:12px;color:#444;line-height:1.7">
-        ${cenarioText
-          ? cenarioText.replace(/\n/g, '<br>')
-          : `Com base no cenário apresentado${proposal.diagnosis ? ` — <strong>${proposal.diagnosis.toLowerCase()}</strong> —` : ','}
-        entendemos que a empresa busca uma solução prática e profissional para as necessidades apresentadas.
-        ${proposal.objectives ? `<br><br>${proposal.objectives}` : ''}`
-        }
-        ${objetivosText && !cenarioText ? `<br><br>${objetivosText.replace(/\n/g, '<br>')}` : ''}
-      </p>
-    </div>
-
-    <div style="margin-bottom:28px;">
-      <div class="section-title">Solução recomendada</div>
+      <div style="font-size:10px;font-weight:700;color:${brandDeep};text-transform:uppercase;letter-spacing:1px;padding-bottom:6px;border-bottom:1.5px solid ${brandTintBorder};margin-bottom:12px;">Solução recomendada</div>
       ${productsHtml || '<p style="font-size:12px;color:#888">Sem produtos selecionados.</p>'}
     </div>
 
@@ -291,7 +294,7 @@ export function buildPdfHtml(proposal: PdfProposal): string {
       <div style="display:flex;justify-content:flex-end;margin-top:10px;">
         <table style="font-size:12px;min-width:260px;">
           <tr><td style="padding:3px 12px;color:#888;text-align:right;">Valor de Referência</td><td style="padding:3px 0;color:#444;text-align:right;width:110px;">${formatCurrency(recurringGross)}</td></tr>
-          ${recurringBenefit > 0 ? `<tr><td style="padding:3px 12px;color:#00B765;text-align:right;font-weight:600;">Benefício concedido</td><td style="padding:3px 0;color:#00B765;text-align:right;font-weight:600;">− ${formatCurrency(recurringBenefit)}</td></tr>` : ''}
+          ${recurringBenefit > 0 ? `<tr><td style="padding:3px 12px;color:${secDeep};text-align:right;font-weight:600;">Benefício concedido</td><td style="padding:3px 0;color:${secDeep};text-align:right;font-weight:600;">− ${formatCurrency(recurringBenefit)}</td></tr>` : ''}
         </table>
       </div>
     </div>
@@ -308,67 +311,62 @@ export function buildPdfHtml(proposal: PdfProposal): string {
       <div style="display:flex;justify-content:flex-end;margin-top:10px;">
         <table style="font-size:12px;min-width:260px;">
           <tr><td style="padding:3px 12px;color:#888;text-align:right;">Valor de Referência</td><td style="padding:3px 0;color:#444;text-align:right;width:110px;">${formatCurrency(oneTimeGross)}</td></tr>
-          ${oneTimeBenefit > 0 ? `<tr><td style="padding:3px 12px;color:#00B765;text-align:right;font-weight:600;">Benefício concedido</td><td style="padding:3px 0;color:#00B765;text-align:right;font-weight:600;">− ${formatCurrency(oneTimeBenefit)}</td></tr>` : ''}
+          ${oneTimeBenefit > 0 ? `<tr><td style="padding:3px 12px;color:${secDeep};text-align:right;font-weight:600;">Benefício concedido</td><td style="padding:3px 0;color:${secDeep};text-align:right;font-weight:600;">− ${formatCurrency(oneTimeBenefit)}</td></tr>` : ''}
         </table>
       </div>
     </div>
     ` : ''}
 
-    <div style="background:#EAFBF1;border-radius:16px;padding:28px 32px;margin-bottom:24px;">
+    <div style="background:${brandTint};border-radius:16px;padding:28px 32px;margin-bottom:24px;">
       <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;">
         <div>
-          <p style="font-size:10px;color:#5a8a6e;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px;">Valor de Referência</p>
-          <p style="font-size:16px;color:#3d6b52;font-weight:500;">${formatCurrency(totalGross)}</p>
+          <p style="font-size:10px;color:${brandMuted};text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px;">Valor de Referência</p>
+          <p style="font-size:16px;color:${brandDeep};font-weight:500;">${formatCurrency(totalGross)}</p>
         </div>
         ${totalBenefit > 0 ? `
         <div>
-          <p style="font-size:10px;color:#5a8a6e;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px;">Benefício Total</p>
-          <p style="font-size:16px;color:#3d6b52;font-weight:500;">${formatCurrency(totalBenefit)}</p>
+          <p style="font-size:10px;color:${secMuted};text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px;">Benefício Total</p>
+          <p style="font-size:16px;color:${secDeep};font-weight:500;">${formatCurrency(totalBenefit)}</p>
         </div>
         ` : ''}
         <div>
-          <p style="font-size:10px;color:#5a8a6e;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px;">Investimento Mensal</p>
-          <p style="font-size:22px;color:#00803F;font-weight:700;">${formatCurrencyAlwaysShow(recurringNet)}</p>
+          <p style="font-size:10px;color:${brandMuted};text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px;">Investimento Mensal</p>
+          <p style="font-size:22px;color:${brandDeep};font-weight:700;">${formatCurrencyAlwaysShow(recurringNet)}</p>
         </div>
         ${oneTimeNet > 0 ? `
         <div>
-          <p style="font-size:10px;color:#5a8a6e;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px;">Investimento Único</p>
-          <p style="font-size:22px;color:#00803F;font-weight:700;">${formatCurrencyAlwaysShow(oneTimeNet)}</p>
+          <p style="font-size:10px;color:${brandMuted};text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px;">Investimento Único</p>
+          <p style="font-size:22px;color:${brandDeep};font-weight:700;">${formatCurrencyAlwaysShow(oneTimeNet)}</p>
         </div>
         ` : ''}
       </div>
       ${totalBenefit > 0 ? `
-      <div style="margin-top:18px;padding-top:18px;border-top:1px solid rgba(0,128,63,0.15);display:flex;align-items:center;gap:8px;">
+      <div style="margin-top:18px;padding-top:18px;border-top:1px solid ${brandTintBorder};display:flex;align-items:center;gap:8px;">
         <span style="font-size:14px;">✓</span>
-        <p style="font-size:12px;color:#3d6b52;">Esta proposta contempla <strong style="color:#00803F;">${formatCurrency(totalBenefit)}</strong> em benefícios comerciais em relação ao valor de referência das soluções.</p>
+        <p style="font-size:12px;color:${secMuted};">Esta proposta contempla <strong style="color:${secDeep};">${formatCurrency(totalBenefit)}</strong> em benefícios comerciais em relação ao valor de referência das soluções.</p>
       </div>
       ` : ''}
     </div>
 
     <div style="margin-bottom:28px;">
-      <div class="section-title">Condições comerciais</div>
+      <div style="font-size:10px;font-weight:700;color:${brandDeep};text-transform:uppercase;letter-spacing:1px;padding-bottom:6px;border-bottom:1.5px solid ${brandTintBorder};margin-bottom:12px;">Condições comerciais</div>
       <ul style="list-style:none;padding:0;margin:0;">
         ${conditionsHtml}
       </ul>
     </div>
 
+    ${proximosItems && proximosItems.length > 0 ? `
     <div style="margin-bottom:28px;">
-      <div class="section-title">Próximos passos</div>
+      <div style="font-size:10px;font-weight:700;color:${brandDeep};text-transform:uppercase;letter-spacing:1px;padding-bottom:6px;border-bottom:1.5px solid ${brandTintBorder};margin-bottom:12px;">Próximos passos</div>
       <ol style="font-size:12px;color:#444;line-height:2;padding-left:18px;">
-        ${proximosItems
-          ? proximosItems.map(item => `<li>${item}</li>`).join('\n        ')
-          : `<li>Validação desta proposta com os decisores</li>
-        <li>Reunião de alinhamento técnico e comercial</li>
-        <li>Aceite e assinatura digital do contrato</li>
-        <li>Implantação em ${proposal.prazo_implantacao || '24–48 horas'}</li>
-        <li>Acompanhamento contínuo</li>`
-        }
+        ${proximosItems.map(item => `<li>${item}</li>`).join('\n        ')}
       </ol>
     </div>
+    ` : ''}
 
     ${sobreText ? `
     <div style="margin-bottom:28px;">
-      <div class="section-title">Sobre a ${companyName}</div>
+      <div style="font-size:10px;font-weight:700;color:${brandDeep};text-transform:uppercase;letter-spacing:1px;padding-bottom:6px;border-bottom:1.5px solid ${brandTintBorder};margin-bottom:12px;">Sobre a ${companyName}</div>
       <p style="font-size:12px;color:#444;line-height:1.7">
         ${sobreText.replace(/\n/g, '<br>')}
       </p>
@@ -378,12 +376,27 @@ export function buildPdfHtml(proposal: PdfProposal): string {
 
   <div style="background:#f9fafb;padding:16px 40px;border-top:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">
     <div style="display:flex;align-items:center;gap:6px;">
-      <div style="width:7px;height:7px;border-radius:50%;background:#1FE97C;"></div>
+      <div style="width:7px;height:7px;border-radius:50%;background:${primary};"></div>
       <span style="font-size:11px;font-weight:600;color:#161B20;">${companyName}</span>
     </div>
     <div style="font-size:10px;color:#aaa;">${footerText}</div>
   </div>
+  `
+}
 
+export function buildPdfHtml(proposal: PdfProposal): string {
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: #1a1a1a; background: white; }
+    table { border-collapse: collapse; }
+  </style>
+</head>
+<body>
+${buildProposalBody(proposal)}
 </body>
 </html>
   `

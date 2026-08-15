@@ -13,6 +13,7 @@ export default async function BlocosPage({ params }: { params: { id: string } })
   if (!user) redirect('/login')
 
   const orgId = await getSessionOrgId()
+  if (!orgId) notFound()
 
   const db = createAdminClient()
 

@@ -24,6 +24,7 @@ export default function ProductForm({ product, categories = [] }: Props) {
   const [name, setName] = useState(product?.name || '')
   const [category, setCategory] = useState<string>(product?.category || '')
   const [description, setDescription] = useState(product?.description || '')
+  const [commercialConditions, setCommercialConditions] = useState(product?.commercial_conditions || '')
   const [active, setActive] = useState(product?.active ?? true)
   const [calculationType, setCalculationType] = useState<CalculationType | ''>(product?.calculation_type || '')
   const [billingFrequency, setBillingFrequency] = useState<BillingFrequency | ''>(product?.billing_frequency || '')
@@ -67,6 +68,7 @@ export default function ProductForm({ product, categories = [] }: Props) {
       name: name.trim(),
       category: category || null,
       description: description.trim() || null,
+      commercial_conditions: commercialConditions.trim() || null,
       active,
       unit_label: unitLabel.trim() || 'unidades',
       calculation_type: calculationType || null,
@@ -147,6 +149,19 @@ export default function ProductForm({ product, categories = [] }: Props) {
           className={`${inputClass} resize-y min-h-24`}
           placeholder="Descrição que aparece na proposta comercial"
         />
+      </div>
+
+      <div>
+        <label className={labelClass}>Condições comerciais do produto</label>
+        <textarea
+          value={commercialConditions}
+          onChange={e => setCommercialConditions(e.target.value)}
+          className={`${inputClass} resize-y min-h-24`}
+          placeholder={'Uma condição por linha.\nEx: Sem taxa de setup\nValores sujeitos à quantidade de vidas contratadas'}
+        />
+        <p className="text-xs text-app-muted mt-1">
+          Pré-selecionadas ao criar uma proposta com este produto. O vendedor pode ajustar por proposta.
+        </p>
       </div>
 
       <div>

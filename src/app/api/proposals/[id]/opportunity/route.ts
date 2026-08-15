@@ -38,7 +38,11 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ error: 'Proposta não encontrada' }, { status: 404 })
   }
 
-  const patch: Record<string, string | null> = { opportunity_status: status }
+  const patch: {
+    opportunity_status: string
+    lost_reason?: string | null
+    lost_comment?: string | null
+  } = { opportunity_status: status }
   if (status === 'lost') {
     patch.lost_reason = lost_reason ?? null
     patch.lost_comment = lost_comment || null

@@ -13,7 +13,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import {
-  BLOCK_LABELS, REQUIRED_BLOCKS, DEFAULT_BLOCK_ORDER, SECTION_ORIGINS, ORIGIN_LABELS, ORIGIN_CLASSES, type BlockType,
+  BLOCK_LABELS, REQUIRED_BLOCKS, DEFAULT_BLOCK_ORDER, type BlockType,
 } from '@/lib/blocks'
 import type { Json } from '@/types/database.types'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
@@ -23,14 +23,11 @@ type EditorTab = 'geral' | 'estrutura' | 'conteudo'
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 type AiOp = 'improve' | 'rewrite' | 'expand'
 
-const CONTENT_TYPES: BlockType[] = ['cenario', 'objetivos', 'proximos_passos', 'sobre']
+const CONTENT_TYPES: BlockType[] = ['proximos_passos']
 const LIST_TYPES: BlockType[] = ['proximos_passos']
 
 const CONTENT_HINTS: Partial<Record<BlockType, string>> = {
-  cenario:         'Descreva o contexto e desafio padrão para propostas deste template.',
-  objetivos:       'Quais resultados a solução costuma entregar?',
   proximos_passos: 'Um passo por linha. Esses são os passos padrão após a aprovação.',
-  sobre:           'Texto de apresentação da empresa para o cliente.',
 }
 
 interface StructureBlock {
@@ -64,6 +61,7 @@ interface Props {
   template: TemplateData
   initialBlocks: Array<{ type: string; sort_order: number; enabled: boolean; default_content: Json }>
   allProducts: ProductOption[]
+  organizationId?: string | null
   totalTemplates: number
 }
 
@@ -104,16 +102,6 @@ function SortableBlockItem({
       <span className={`flex-1 text-sm ${block.enabled ? 'text-app-text' : 'text-app-muted'}`}>
         {BLOCK_LABELS[block.type]}
       </span>
-
-      {/* Origin badge */}
-      {(() => {
-        const origin = SECTION_ORIGINS[block.type]
-        return (
-          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${ORIGIN_CLASSES[origin]}`}>
-            {ORIGIN_LABELS[origin]}
-          </span>
-        )
-      })()}
 
       {/* Required badge or toggle */}
       {isRequired ? (
@@ -251,7 +239,7 @@ function ContentCard({
 }
 
 // --- Main TemplateEditor ---
-export default function TemplateEditor({ template, initialBlocks, allProducts, totalTemplates }: Props) {
+export default function TemplateEditor({ template, initialBlocks, allProducts, totalTemplates, organizationId }: Props) {
   const router = useRouter()
   const { showToast } = useToast()
   const supabase = createClient()
@@ -278,12 +266,14 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
 
   // Estrutura tab state
   const buildStructure = (src: typeof initialBlocks): StructureBlock[] => {
-    const fromSource = src.map(b => ({
-      type: b.type as BlockType,
-      sort_order: b.sort_order,
-      enabled: b.enabled,
-    }))
-    // Ensure all 12 block types are present
+    const fromSource = src
+      .filter(b => DEFAULT_BLOCK_ORDER.includes(b.type as BlockType))
+      .map(b => ({
+        type: b.type as BlockType,
+        sort_order: b.sort_order,
+        enabled: b.enabled,
+      }))
+    // Ensure all structure block types are present
     const existing = new Set(fromSource.map(b => b.type))
     const missing = DEFAULT_BLOCK_ORDER.filter(t => !existing.has(t)).map((t, i) => ({
       type: t,
@@ -341,7 +331,8 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
   async function handleCoverImageUpload(file: File) {
     setUploadingImage(true)
     const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
-    const path = `templates/${template.id}/cover-image.${ext}`
+    const prefix = organizationId ? `${organizationId}/` : ''
+    const path = `${prefix}templates/${template.id}/cover-image.${ext}`
     const { error } = await supabase.storage.from('assets').upload(path, file, { upsert: true, contentType: file.type })
     if (error) { showToast('Erro ao enviar imagem.', 'error'); setUploadingImage(false); return }
     const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path)
@@ -355,7 +346,8 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
   async function handleCoverVideoUpload(file: File) {
     setUploadingVideo(true)
     const ext = file.name.split('.').pop()?.toLowerCase() || 'mp4'
-    const path = `templates/${template.id}/cover-video.${ext}`
+    const prefix = organizationId ? `${organizationId}/` : ''
+    const path = `${prefix}templates/${template.id}/cover-video.${ext}`
     const { error } = await supabase.storage.from('assets').upload(path, file, { upsert: true, contentType: file.type })
     if (error) { showToast('Erro ao enviar vídeo.', 'error'); setUploadingVideo(false); return }
     const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path)
@@ -441,7 +433,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               activeTab === tab.id
-                ? 'border-brand-green text-app-text'
+                ? 'border-brand-green-deep text-app-text'
                 : 'border-transparent text-app-muted hover:text-app-text'
             }`}
           >

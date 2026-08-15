@@ -99,20 +99,6 @@ export const PRODUCTS: Product[] = [
   },
 ]
 
-export const MOTIVACOES_SUGERIDAS = [
-  'Adequação à NR-1',
-  'Mapeamento de riscos psicossociais',
-  'Plano de ação pós-mapeamento',
-  'Canal de denúncias',
-  'Saúde mental dos colaboradores',
-  'Benefício de bem-estar',
-  'Redução de afastamentos',
-  'Retenção e clima organizacional',
-]
-
-/** @deprecated use MOTIVACOES_SUGERIDAS */
-export const DORES_SUGERIDAS = MOTIVACOES_SUGERIDAS
-
 export const SEGMENTOS = [
   'Indústria / Manufatura',
   'Logística / Transporte',

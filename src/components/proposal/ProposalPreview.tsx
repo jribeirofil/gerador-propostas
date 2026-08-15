@@ -70,6 +70,7 @@ interface Props {
   signerData: SignerData
   companyName: string
   primaryColor: string
+  secondaryColor?: string | null
   coverBgUrl?: string | null
   coverVideoUrl?: string | null
   companyContact?: CompanyContact
@@ -137,12 +138,13 @@ function WebLabel({ text, color }: { text: string; color: string }) {
 
 // ─── BlockCover (shared — already premium) ────────────────────────────────────
 
-function BlockCover({ proposal, companyName, coverBgUrl, coverVideoUrl, primaryColor, companyContact, variant = 'document' }: {
+function BlockCover({ proposal, companyName, coverBgUrl, coverVideoUrl, primaryColor, secondaryColor, companyContact, variant = 'document' }: {
   proposal: Proposal
   companyName: string
   coverBgUrl?: string | null
   coverVideoUrl?: string | null
   primaryColor: string
+  secondaryColor?: string | null
   companyContact?: CompanyContact
   variant?: Variant
 }) {
@@ -195,7 +197,11 @@ function BlockCover({ proposal, companyName, coverBgUrl, coverVideoUrl, primaryC
           }`}>
             {client?.empresa}
           </h1>
-          <div className="h-px w-24 my-8" style={{ backgroundColor: primaryColor }} />
+          <div className="h-px w-24 my-8" style={{
+            background: secondaryColor
+              ? `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`
+              : primaryColor,
+          }} />
           <div className="flex flex-wrap items-center gap-6 text-sm text-[#8A9099]">
             {client?.contato && <span>{client.contato}{client.cargo ? ` · ${client.cargo}` : ''}</span>}
             <span>{date}</span>
@@ -247,7 +253,7 @@ function BlockCenario({ block, proposal, primaryColor, variant = 'document' }: {
 
   return (
     <section className="px-16 py-20 border-b border-gray-100">
-      <p className="text-[10px] font-semibold text-[#1FE97C] uppercase tracking-[3px] mb-8">
+      <p className="text-[10px] font-semibold text-[var(--brand)] uppercase tracking-[3px] mb-8">
         {block.title || BLOCK_LABELS['cenario']}
       </p>
       <p className="text-gray-700 font-light leading-relaxed max-w-2xl text-lg">{text}</p>
@@ -280,7 +286,7 @@ function BlockObjetivos({ block, proposal, primaryColor, variant = 'document' }:
 
   return (
     <section className="px-16 py-20 bg-gray-50 border-b border-gray-100">
-      <p className="text-[10px] font-semibold text-[#1FE97C] uppercase tracking-[3px] mb-8">
+      <p className="text-[10px] font-semibold text-[var(--brand)] uppercase tracking-[3px] mb-8">
         {block.title || BLOCK_LABELS['objetivos']}
       </p>
       <p className="text-gray-800 font-light leading-relaxed max-w-2xl text-2xl">{text}</p>
@@ -325,13 +331,13 @@ function BlockSolucao({ block, proposal, primaryColor, variant = 'document' }: {
 
   return (
     <section className="px-16 py-20 border-b border-gray-100">
-      <p className="text-[10px] font-semibold text-[#1FE97C] uppercase tracking-[3px] mb-10">
+      <p className="text-[10px] font-semibold text-[var(--brand)] uppercase tracking-[3px] mb-10">
         {block.title || BLOCK_LABELS['solucao']}
       </p>
       <div className="grid grid-cols-1 gap-6 max-w-3xl">
         {products.map((p, i) => (
           <div key={i} className="flex gap-6">
-            <div className="w-1 bg-[#1FE97C] rounded-full flex-shrink-0 self-stretch" />
+            <div className="w-1 bg-[var(--brand)] rounded-full flex-shrink-0 self-stretch" />
             <div>
               <h3 className="text-gray-900 font-semibold text-lg mb-2">{p.snapshot.name}</h3>
               {p.snapshot.description && (
@@ -381,14 +387,14 @@ function BlockList({ block, fallbackItems, primaryColor, variant = 'document', w
 
   return (
     <section className="px-16 py-20 border-b border-gray-100">
-      <p className="text-[10px] font-semibold text-[#1FE97C] uppercase tracking-[3px] mb-10">
+      <p className="text-[10px] font-semibold text-[var(--brand)] uppercase tracking-[3px] mb-10">
         {block.title || BLOCK_LABELS[block.type as BlockType]}
       </p>
       <ul className="space-y-4 max-w-2xl">
         {items.map((item, i) => (
           <li key={i} className="flex items-start gap-4">
-            <span className="w-5 h-5 rounded-full border border-[#1FE97C] flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#1FE97C]" />
+            <span className="w-5 h-5 rounded-full border border-[var(--brand)] flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--brand)]" />
             </span>
             <span className="text-gray-700 leading-relaxed">{item}</span>
           </li>
@@ -427,7 +433,7 @@ function BlockFaq({ block, primaryColor, variant = 'document' }: {
 
   return (
     <section className="px-16 py-20 bg-gray-50 border-b border-gray-100">
-      <p className="text-[10px] font-semibold text-[#1FE97C] uppercase tracking-[3px] mb-10">
+      <p className="text-[10px] font-semibold text-[var(--brand)] uppercase tracking-[3px] mb-10">
         {block.title || BLOCK_LABELS['faq']}
       </p>
       <div className="space-y-8 max-w-2xl">
@@ -480,13 +486,13 @@ function BlockProxPassos({ block, primaryColor, variant = 'document' }: {
 
   return (
     <section className="px-16 py-20 border-b border-gray-100">
-      <p className="text-[10px] font-semibold text-[#1FE97C] uppercase tracking-[3px] mb-10">
+      <p className="text-[10px] font-semibold text-[var(--brand)] uppercase tracking-[3px] mb-10">
         {block.title || BLOCK_LABELS['proximos_passos']}
       </p>
       <ol className="space-y-5 max-w-2xl">
         {items.map((item, i) => (
           <li key={i} className="flex items-start gap-5">
-            <span className="text-[#1FE97C] font-light text-2xl leading-none w-7 flex-shrink-0">
+            <span className="text-[var(--brand)] font-light text-2xl leading-none w-7 flex-shrink-0">
               {String(i + 1).padStart(2, '0')}
             </span>
             <span className="text-gray-700 leading-relaxed pt-1">{item}</span>
@@ -528,7 +534,7 @@ function BlockSobre({ block, companyName, primaryColor, variant = 'document' }: 
 
   return (
     <section className="px-16 py-20 bg-[#0f1318] border-b border-white/5">
-      <p className="text-[10px] font-semibold text-[#1FE97C] uppercase tracking-[3px] mb-8">
+      <p className="text-[10px] font-semibold text-[var(--brand)] uppercase tracking-[3px] mb-8">
         {label}
       </p>
       <p className="text-[#8A9099] font-light leading-relaxed max-w-2xl text-lg">{text}</p>
@@ -763,7 +769,7 @@ function BlockInvestimento({ block, proposal, primaryColor, variant = 'document'
 
   return (
     <section className="px-16 py-20 border-b border-gray-100">
-      <p className="text-[10px] font-semibold text-[#1FE97C] uppercase tracking-[3px] mb-8">
+      <p className="text-[10px] font-semibold text-[var(--brand)] uppercase tracking-[3px] mb-8">
         {block.title || BLOCK_LABELS['investimento']}
       </p>
       {investimentoContent}
@@ -803,7 +809,7 @@ function BlockAssinatura({ block, signerData, primaryColor, variant = 'document'
 
   return (
     <section className="px-16 py-24">
-      <p className="text-[10px] font-semibold text-[#1FE97C] uppercase tracking-[3px] mb-16">
+      <p className="text-[10px] font-semibold text-[var(--brand)] uppercase tracking-[3px] mb-16">
         {block.title || BLOCK_LABELS['assinatura']}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-20 max-w-2xl">
@@ -827,7 +833,7 @@ function BlockAssinatura({ block, signerData, primaryColor, variant = 'document'
 // ─── Main renderer ─────────────────────────────────────────────────────────────
 
 export default function ProposalPreview({
-  proposal, blocks, signerData, companyName, primaryColor, coverBgUrl, coverVideoUrl, companyContact, variant = 'document',
+  proposal, blocks, signerData, companyName, primaryColor, secondaryColor, coverBgUrl, coverVideoUrl, companyContact, variant = 'document',
 }: Props) {
   const activeBlocks = blocks.filter(b => b.enabled).sort((a, b) => a.sort_order - b.sort_order)
   const products = proposal.products || []
@@ -837,13 +843,13 @@ export default function ProposalPreview({
   const allDifferentials = products.flatMap(p => p.snapshot.differentials || [])
 
   return (
-    <div className="font-sans text-gray-900 antialiased">
+    <div className="font-sans text-gray-900 antialiased" style={{ ["--brand" as string]: primaryColor }}>
       {activeBlocks.map(block => {
         const type = block.type as BlockType
 
         switch (type) {
           case 'cover':
-            return <BlockCover key={block.id} proposal={proposal} companyName={companyName} coverBgUrl={coverBgUrl} coverVideoUrl={coverVideoUrl} primaryColor={primaryColor} companyContact={companyContact} variant={variant} />
+            return <BlockCover key={block.id} proposal={proposal} companyName={companyName} coverBgUrl={coverBgUrl} coverVideoUrl={coverVideoUrl} primaryColor={primaryColor} secondaryColor={secondaryColor} companyContact={companyContact} variant={variant} />
           case 'cenario':
             return <BlockCenario key={block.id} block={block} proposal={proposal} primaryColor={primaryColor} variant={variant} />
           case 'objetivos':

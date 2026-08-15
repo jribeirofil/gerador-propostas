@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { buildPdfHtml } from '@/lib/pdf-template'
+import { loadProposalDocument } from '@/lib/proposal-document'
 
 export async function GET(_req: NextRequest, { params }: { params: { token: string } }) {
   const db = createAdminClient()
@@ -15,37 +16,8 @@ export async function GET(_req: NextRequest, { params }: { params: { token: stri
     return NextResponse.json({ error: 'Proposta não encontrada' }, { status: 404 })
   }
 
-  const orgId = proposal.organization_id as string | null
-
-  const [itemsRes, blocksRes, settingsRes] = await Promise.all([
-    db.from('proposal_product').select('*').eq('proposal_id', proposal.id).order('sort_order'),
-    db.from('proposal_block').select('*').eq('proposal_id', proposal.id).eq('enabled', true).order('sort_order'),
-    db.from('company_settings').select('company_name, pdf_footer_text, pdf_default_conditions, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
-  ])
-
-  const html = buildPdfHtml({
-    diagnosis: proposal.diagnosis,
-    objectives: proposal.objectives,
-    total_monthly: proposal.total_monthly,
-    total_setup: proposal.total_setup,
-    discount_percent: proposal.discount_percent,
-    created_at: proposal.created_at,
-    validade_dias: proposal.validade_dias,
-    forma_pagamento: proposal.forma_pagamento,
-    prazo_implantacao: proposal.prazo_implantacao,
-    client: proposal.client,
-    items: (itemsRes.data || []).map(item => ({
-      snapshot: item.snapshot,
-      quantity: item.quantity,
-      unit_value: item.unit_value,
-      monthly_value: item.monthly_value,
-      setup_value: item.setup_value,
-      discount_percent: item.discount_percent,
-      pricing_type: item.pricing_type,
-    })),
-    blocks: blocksRes.data || [],
-    settings: settingsRes.data || null,
-  })
+  const { doc } = await loadProposalDocument(db, proposal)
+  const html = buildPdfHtml(doc)
 
   // Track pdf_downloaded (fire-and-forget)
   const ip = _req.headers.get('x-forwarded-for')?.split(',')[0].trim()

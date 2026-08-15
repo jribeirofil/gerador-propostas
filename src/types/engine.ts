@@ -35,6 +35,7 @@ export interface CatalogProduct {
   calculation_type: string | null
   billing_frequency: string | null
   default_price_table_id: string | null
+  commercial_conditions?: string | null
   benefits: CatalogBenefit[]
   scope: CatalogScope[]
   faq: CatalogFaq[]

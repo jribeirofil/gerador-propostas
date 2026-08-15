@@ -1,6 +1,6 @@
 'use client'
 
-const STEPS = ['Cliente', 'Diagnóstico', 'Produtos', 'Preços', 'Condições', 'Resumo']
+const STEPS = ['Cliente', 'Produtos', 'Preços', 'Condições', 'Resumo']
 
 interface Props {
   current: number

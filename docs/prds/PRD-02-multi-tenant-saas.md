@@ -1,9 +1,9 @@
 # PRD-02 — Multi-tenant SaaS (branding/isolamento por organização)
 
-- **Status:** PLANEJADO (análise técnica de impacto + sequenciamento aprovados, 2026-08-14)
+- **Status:** EXECUTADO (Fases 0–6 implementadas; validação e2e manual pendente) — sequenciamento aprovado em 2026-08-14
 - **Fonte:** decisão do dono (cada cliente usa textos, cores, logos, produtos e clientes próprios; base sólida para muitos clientes) + PROGRESS.md "Decisões em aberto"
 - **Depende de:** [PRD-01](PRD-01-fase-1-motor-de-fechamento.md) (Fase 1 roda single-org; A6 *layout da empresa* depende do isolamento por org — coordenar landing de A6 com Fase 2+ deste PRD)
-- **Última atualização:** 2026-08-14
+- **Última atualização:** 2026-08-15
 
 ---
 
@@ -146,6 +146,8 @@ Prefixar paths do bucket `assets` com org: `CompanySettingsForm` (`{org}/company
 
 **Arquivos:** `CompanySettingsForm.tsx`, `TemplateEditor.tsx`, helper client de org. **Testes:** upload de logo/cover em org B cai em path de B. **Rollback:** git revert.
 
+**Status (2026-08-15): ✅ executada.** `supabase-multi-tenant-fase5.sql` aplicado e verificado via `pg_policies` (4 policies `assets_org_*` ativas). Policies legadas permissivas (`assets_insert`/`assets_update`/`assets_select`) removidas — sem elas o OR combinaria e anularia o isolamento. Paths org-prefixados confirmados no bucket (`<org>/company`, `<org>/templates`); dados legados permanecem na raiz.
+
 ### Fase 6 — Cleanup e validação end-to-end
 
 - Atualizar `database.types.ts` (tabela `organization`, colunas `organization_id`, e drifts conhecidos R9). Alinhar com A1/A5 do PRD-01 (tipar `createAdminClient`).
@@ -154,6 +156,8 @@ Prefixar paths do bucket `assets` com org: `CompanySettingsForm` (`{org}/company
 - Atualizar `docs/progress/PROGRESS.md` (marcar decisão multi-tenant; fechar Fase 2) e `docs/prds/PRD-02` (status).
 
 **Arquivos:** `database.types.ts`, `PROGRESS.md`. **Validação:** build limpo + roteiro manual. **Rollback:** git revert.
+
+**Status (2026-08-15): ✅ parcial.** `database.types.ts` regenerado via `scripts/gen-types.mjs` (dump OpenAPI vivo), `createAdminClient` tipado com `<Database>` (R9/A5), `npx tsc --noEmit` e `npm run build` limpos. **⏳ Pendente:** teste e2e manual (org raiz × org nova) e roteiro de validação visual.
 
 ---
 
