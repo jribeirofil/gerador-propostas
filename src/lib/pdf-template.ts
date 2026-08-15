@@ -372,13 +372,16 @@ export function buildProposalBody(proposal: PdfProposal): string {
 
   </div>
 
-  <div style="background:#f9fafb;padding:16px 40px;border-top:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">
-    <div style="display:flex;align-items:center;gap:6px;">
-      <div style="width:7px;height:7px;border-radius:50%;background:${primary};"></div>
-      <span style="font-size:11px;font-weight:600;color:#161B20;">${companyName}</span>
+  <footer style="background:#f9fafb;padding:20px 40px;border-top:1px solid #eee;">
+    <div style="display:flex;flex-wrap:wrap;gap:12px 24px;font-size:12px;color:#666;margin-bottom:12px;">
+      <span style="font-weight:600;color:#161B20;">${companyName}</span>
+      ${proposal.settings?.company_site ? `<span>${proposal.settings.company_site}</span>` : ''}
+      ${proposal.settings?.company_email ? `<span>${proposal.settings.company_email}</span>` : ''}
+      ${proposal.settings?.company_phone ? `<span>${proposal.settings.company_phone}</span>` : ''}
+      ${proposal.settings?.company_whatsapp ? `<span>${proposal.settings.company_whatsapp}</span>` : ''}
     </div>
-    <div style="font-size:10px;color:#aaa;">${footerText}</div>
-  </div>
+    ${footerText ? `<div style="font-size:10px;color:#999;border-top:1px solid #ddd;padding-top:12px;margin-top:12px;">${footerText}</div>` : ''}
+  </footer>
   `
 }
 
