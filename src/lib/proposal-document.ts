@@ -24,12 +24,25 @@ export async function loadProposalDocument(
 ): Promise<{ doc: PdfProposal; settings: PdfCompanySettings | null }> {
   const orgId = proposal.organization_id as string | null
 
+  // Se proposta não tem template, busca o template padrão
+  let templateId = proposal.template_id
+  if (!templateId) {
+    const { data: defaultTemplate } = await db
+      .from('proposal_template')
+      .select('id')
+      .eq('is_default', true)
+      .eq('organization_id', orgId)
+      .limit(1)
+      .maybeSingle()
+    templateId = defaultTemplate?.id
+  }
+
   const [itemsRes, blocksRes, settingsRes, templateRes] = await Promise.all([
     db.from('proposal_product').select('*').eq('proposal_id', proposal.id).order('sort_order'),
     db.from('proposal_block').select('*').eq('proposal_id', proposal.id).eq('enabled', true).order('sort_order'),
     db.from('company_settings').select('company_name, primary_color, secondary_color, pdf_footer_text, pdf_default_conditions, company_about, company_site, company_email, company_phone, company_whatsapp').eq('organization_id', orgId).limit(1).maybeSingle(),
-    proposal.template_id
-      ? db.from('proposal_template').select('cover_image_url, cover_video_url').eq('id', proposal.template_id).eq('organization_id', orgId).maybeSingle()
+    templateId
+      ? db.from('proposal_template').select('cover_image_url, cover_video_url').eq('id', templateId).eq('organization_id', orgId).maybeSingle()
       : Promise.resolve({ data: null, error: null }),
   ])
 

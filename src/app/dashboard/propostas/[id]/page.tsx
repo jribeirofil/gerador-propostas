@@ -83,13 +83,23 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   const profile = profileRes.data
   const settings = settingsRes.data
 
-  // Capa vem do template
+  // Capa vem do template (fallback para template padrão se proposta antiga não tem template_id)
   let templateCover = null
-  if (proposal.template_id) {
+  const templateIdToUse = proposal.template_id ||
+    (await db
+      .from('proposal_template')
+      .select('id')
+      .eq('is_default', true)
+      .eq('organization_id', orgId)
+      .limit(1)
+      .maybeSingle()
+    ).data?.id
+
+  if (templateIdToUse) {
     const { data } = await db
       .from('proposal_template')
       .select('cover_image_url, cover_video_url')
-      .eq('id', proposal.template_id)
+      .eq('id', templateIdToUse)
       .eq('organization_id', orgId)
       .maybeSingle()
     templateCover = data
