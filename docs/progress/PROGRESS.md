@@ -39,7 +39,7 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 | Fase | Nome | PRD | Status | Nota |
 |---|---|---|---|---|
 | 0 | Fundação (initial commit) | [PRD-00](../prds/PRD-00-fase-0-fundacao.md) | ✅ Concluída | Baseline: estado atual consolidado em 1 commit |
-| 1 | Motor de Fechamento | [PRD-01](../prds/PRD-01-fase-1-motor-de-fechamento.md) | 🚧 Planejada — não iniciada | Primeira venda + radar de follow-up |
+| 1 | Motor de Fechamento | [PRD-01](../prds/PRD-01-fase-1-motor-de-fechamento.md) | ✅ Concluída (A1-A6, T1 + e2e manual) | Sync schema, radar follow-up, auditoria, guard status, layout empresa, testes |
 | 2 | Multi-tenant SaaS | [PRD-02](../prds/PRD-02-multi-tenant-saas.md) | ✅ Concluída (Fases 0–6 + e2e manual) | Branding/isolamento por organização; storage org-scoped; types regenerados |
 
 ## Fase 1 — Motor de Fechamento (execução)
