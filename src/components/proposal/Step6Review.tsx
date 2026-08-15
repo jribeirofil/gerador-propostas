@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
-import type { UseFormSetValue } from 'react-hook-form'
+import { useWatch } from 'react-hook-form'
+import type { Control, UseFormSetValue } from 'react-hook-form'
 import type { ProposalFormData } from './ProposalForm'
 import { calculateLineItem, calculateProposalTotals } from '@/lib/pricing'
 import { PRICING_TYPE_LABELS } from '@/types/engine'
@@ -17,6 +18,7 @@ interface Template {
 
 interface Props {
   data: ProposalFormData
+  control: Control<ProposalFormData>
   setValue: UseFormSetValue<ProposalFormData>
 }
 
@@ -27,7 +29,8 @@ function fmt(value: number): string {
 const labelClass = 'block text-xs font-medium text-app-muted mb-1.5'
 const sectionClass = 'bg-app-surface border border-app-border rounded-xl p-5'
 
-export default function Step6Review({ data, setValue }: Props) {
+export default function Step6Review({ data: initialData, control, setValue }: Props) {
+  const data = { ...initialData, ...((useWatch({ control }) || {}) as ProposalFormData) } as ProposalFormData
   const [templates, setTemplates] = useState<Template[]>([])
   const [previewDoc, setPreviewDoc] = useState<PdfProposal | null>(null)
   const [previewLoading, setPreviewLoading] = useState(false)

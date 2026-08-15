@@ -100,6 +100,7 @@ export default function ProposalForm({
   const {
     register,
     handleSubmit,
+    control,
     watch,
     setValue,
     getValues,
@@ -571,7 +572,7 @@ export default function ProposalForm({
             )}
             {step === 3 && <Step4Pricing watch={watch} setValue={setValue} />}
             {step === 4 && <Step5Conditions register={register} watch={watch} setValue={setValue} />}
-            {step === 5 && <Step6Review data={getValues()} setValue={setValue} />}
+            {step === 5 && <Step6Review data={getValues()} control={control} setValue={setValue} />}
           </div>
 
           {submitError && (
