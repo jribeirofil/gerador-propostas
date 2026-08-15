@@ -1,6 +1,6 @@
 # PRD-02 — Multi-tenant SaaS (branding/isolamento por organização)
 
-- **Status:** EXECUTADO (Fases 0–6 implementadas; validação e2e manual pendente) — sequenciamento aprovado em 2026-08-14
+- **Status:** EXECUTADO E VALIDADO (Fases 0–6; e2e manual concluído 2026-08-15)
 - **Fonte:** decisão do dono (cada cliente usa textos, cores, logos, produtos e clientes próprios; base sólida para muitos clientes) + PROGRESS.md "Decisões em aberto"
 - **Depende de:** [PRD-01](PRD-01-fase-1-motor-de-fechamento.md) (Fase 1 roda single-org; A6 *layout da empresa* depende do isolamento por org — coordenar landing de A6 com Fase 2+ deste PRD)
 - **Última atualização:** 2026-08-15
@@ -157,7 +157,7 @@ Prefixar paths do bucket `assets` com org: `CompanySettingsForm` (`{org}/company
 
 **Arquivos:** `database.types.ts`, `PROGRESS.md`. **Validação:** build limpo + roteiro manual. **Rollback:** git revert.
 
-**Status (2026-08-15): ✅ parcial.** `database.types.ts` regenerado via `scripts/gen-types.mjs` (dump OpenAPI vivo), `createAdminClient` tipado com `<Database>` (R9/A5), `npx tsc --noEmit` e `npm run build` limpos. **⏳ Pendente:** teste e2e manual (org raiz × org nova) e roteiro de validação visual.
+**Status (2026-08-15): ✅ concluída.** `database.types.ts` regenerado via `scripts/gen-types.mjs` (dump OpenAPI vivo), `createAdminClient` tipado com `<Database>` (R9/A5), `npx tsc --noEmit` e `npm run build` limpos. **✅ E2E manual (15/08):** org raiz (`FineAndYou` — 18 propostas) × org nova criada por cadastro (`Org E2E Teste`): dashboard da nova nasce vazio (0 propostas/produtos), branding e `company_settings` isolados (sem logo/conteúdo/IA da raiz), catálogo vazio; raiz segue funcional (login, configurações, link público e PDF renderizam a marca FineAndYou); console sem erros. Dados de teste removidos após a validação.
 
 ---
 

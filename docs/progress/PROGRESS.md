@@ -4,10 +4,11 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 
 Última atualização: **2026-08-15**
 
-> **Multi-tenant (15/08):** PRD-02 executado — Fases 0–6 implementadas. Storage org-isolado
+> **Multi-tenant (15/08):** PRD-02 executado e validado — Fases 0–6 implementadas. Storage org-isolado
 > (Fase 5: SQL aplicado, policies `assets_org_*` ativas, legadas permissivas removidas).
 > `database.types.ts` regenerado do schema vivo, clients tipados, `tsc`+`build` limpos (Fase 6).
-> Falta apenas o teste e2e manual org raiz × org nova.
+> E2E manual concluído: org nova por cadastro nasce isolada (dashboard/catálogo/branding vazios)
+> e a org raiz segue íntegra (propostas, PDF e link público com a marca FineAndYou).
 
 > **Evidência de demanda (14/08):** cliente-alvo rejeitou o concorrente porque "gerava um layout lá e só";
 > quer o layout da empresa (informações + conteúdo institucional + valor de investimento ao final).
@@ -25,7 +26,7 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 |---|---|---|---|---|
 | 0 | Fundação (initial commit) | [PRD-00](../prds/PRD-00-fase-0-fundacao.md) | ✅ Concluída | Baseline: estado atual consolidado em 1 commit |
 | 1 | Motor de Fechamento | [PRD-01](../prds/PRD-01-fase-1-motor-de-fechamento.md) | 🚧 Planejada — não iniciada | Primeira venda + radar de follow-up |
-| 2 | Multi-tenant SaaS | [PRD-02](../prds/PRD-02-multi-tenant-saas.md) | ✅ Executada (Fases 0–6) — falta e2e manual | Branding/isolamento por organização; storage org-scoped; types regenerados |
+| 2 | Multi-tenant SaaS | [PRD-02](../prds/PRD-02-multi-tenant-saas.md) | ✅ Concluída (Fases 0–6 + e2e manual) | Branding/isolamento por organização; storage org-scoped; types regenerados |
 
 ## Fase 1 — Motor de Fechamento (execução)
 
