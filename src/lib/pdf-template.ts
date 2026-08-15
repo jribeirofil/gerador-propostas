@@ -249,7 +249,7 @@ export function buildProposalBody(proposal: PdfProposal): string {
           <th style="padding:8px 12px;text-align:right;color:#999;font-weight:500;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;">Investimento</th>
         </tr>`
 
-  const coverBgUrl = proposal.cover_bg_url || null
+  const coverBgUrl = proposal.cover_image_url || null
 
   return `
   <div style="position:relative;background:#161B20;padding:56px 40px;min-height:380px;display:flex;flex-direction:column;justify-content:space-between;${coverBgUrl ? `background-image:url('${coverBgUrl}');background-size:cover;background-position:center;` : ''}">
