@@ -39,10 +39,10 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    label: 'Apresentação',
+    label: 'Templates',
     adminOnly: true,
     items: [
-      { label: 'Biblioteca', href: '/dashboard/admin/conteudo', icon: BookOpen },
+      { label: 'Templates', href: '/dashboard/admin/conteudo', icon: BookOpen },
     ],
   },
   {
