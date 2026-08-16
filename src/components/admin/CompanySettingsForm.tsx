@@ -23,6 +23,7 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
   const [companyPhone, setCompanyPhone] = useState(maskPhone(settings?.company_phone || ''))
   const [companyWhatsapp, setCompanyWhatsapp] = useState(maskPhone(settings?.company_whatsapp || ''))
   const [logoUrl, setLogoUrl] = useState(settings?.logo_url || '')
+  const [logoDarkUrl, setLogoDarkUrl] = useState(settings?.logo_url_dark || '')
   const [primaryColor, setPrimaryColor] = useState(settings?.primary_color || '#1FE97C')
   const [secondaryColor, setSecondaryColor] = useState(settings?.secondary_color || '')
   const [aiTone, setAiTone] = useState(settings?.ai_tone || '')
@@ -60,6 +61,29 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
     setUploading(false)
   }
 
+  async function handleLogoDarkUpload(file: File) {
+    setUploading(true)
+    setUploadError(null)
+
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
+    const orgId = organizationId ?? settings?.organization_id ?? null
+    const path = orgId ? `${orgId}/company/logo-dark.${ext}` : `company/logo-dark.${ext}`
+
+    const { error: uploadErr } = await supabase.storage
+      .from('assets')
+      .upload(path, file, { upsert: true, contentType: file.type })
+
+    if (uploadErr) {
+      setUploadError('Erro ao enviar. Verifique as permissões do bucket.')
+      setUploading(false)
+      return
+    }
+
+    const { data: { publicUrl } } = supabase.storage.from('assets').getPublicUrl(path)
+    setLogoDarkUrl(publicUrl + '?v=' + Date.now())
+    setUploading(false)
+  }
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
@@ -80,6 +104,7 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
       company_phone: companyPhone.trim() || null,
       company_whatsapp: companyWhatsapp.trim() || null,
       logo_url: logoUrl.trim() || null,
+      logo_url_dark: logoDarkUrl.trim() || null,
       primary_color: primaryColor.trim() || '#1FE97C',
       secondary_color: secondaryColor.trim() || null,
       ai_tone: aiTone.trim() || null,
@@ -218,6 +243,56 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
                   <button
                     type="button"
                     onClick={() => setLogoUrl('')}
+                    className="flex items-center gap-1 text-xs text-app-muted hover:text-red-400 transition-colors"
+                  >
+                    <X size={11} />
+                    Remover logo
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className={labelClass}>Logo para dark mode (opcional)</label>
+          <p className="text-xs text-app-muted mb-2">Uma versão clara do logo que aparece quando o usuário está em tema escuro.</p>
+          <div className="flex items-center gap-4">
+
+            <div className="w-16 h-16 rounded-xl border border-app-border bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0">
+              {logoDarkUrl ? (
+                <img src={logoDarkUrl} alt="Logo Dark" className="max-w-[48px] max-h-[48px] object-contain" />
+              ) : (
+                <span className="text-[10px] text-gray-500 text-center leading-tight px-1">Sem logo</span>
+              )}
+            </div>
+
+            <div className="flex-1 space-y-1.5">
+              <label className={`flex items-center gap-3 h-12 px-4 border border-dashed rounded-xl transition-colors cursor-pointer ${
+                uploading
+                  ? 'border-app-border opacity-60 pointer-events-none'
+                  : 'border-app-border hover:border-brand-green-deep/60 hover:bg-brand-green/5'
+              }`}>
+                <Upload size={14} className="text-app-muted flex-shrink-0" />
+                <span className="text-sm text-app-muted">
+                  {uploading ? 'Enviando...' : 'Clique para escolher o arquivo'}
+                </span>
+                <span className="text-xs text-app-muted/60 ml-auto">PNG, SVG, JPG, WebP</span>
+                <input
+                  type="file"
+                  accept="image/png,image/svg+xml,image/jpeg,image/webp"
+                  className="hidden"
+                  disabled={uploading}
+                  onChange={e => { if (e.target.files?.[0]) handleLogoDarkUpload(e.target.files[0]) }}
+                />
+              </label>
+
+              <div className="flex items-center gap-3">
+                {uploadError && <p className="text-xs text-red-400">{uploadError}</p>}
+                {logoDarkUrl && !uploading && (
+                  <button
+                    type="button"
+                    onClick={() => setLogoDarkUrl('')}
                     className="flex items-center gap-1 text-xs text-app-muted hover:text-red-400 transition-colors"
                   >
                     <X size={11} />
