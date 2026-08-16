@@ -277,14 +277,20 @@ export function buildProposalBody(proposal: PdfProposal): string {
     .proposal-body {
       font-family: '${defaultFont}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: ${baseFontSize}px;
-      color: ${textColor};
-      background-color: ${backgroundColor};
+      color: ${textColor} !important;
+      background-color: ${backgroundColor} !important;
       line-height: ${textLineHeight};
     }
-    .proposal-body h1, .proposal-body h2, .proposal-body h3 {
+    .proposal-body h1, .proposal-body h2, .proposal-body h3, .proposal-body h4 {
       font-size: ${headingSize}px;
-      color: ${headingColor};
+      color: ${headingColor} !important;
       font-weight: ${headingBold ? 'bold' : 'normal'};
+    }
+    .proposal-body * {
+      color: ${textColor} !important;
+    }
+    .proposal-body h1, .proposal-body h2, .proposal-body h3, .proposal-body h4 {
+      color: ${headingColor} !important;
     }
     .cover-section h1, .cover-section p, .cover-section span {
       color: ${coverTextColor} !important;
