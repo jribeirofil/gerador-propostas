@@ -63,7 +63,6 @@ export interface PdfProposal {
   text_line_height?: string | null
   background_color?: string | null
   accent_color?: string | null
-  cover_text_color?: string | null
   custom_css?: string | null
   client: PdfClient | null
   items: PdfProposalProduct[]
@@ -159,7 +158,6 @@ export function buildProposalBody(proposal: PdfProposal): string {
   const textColor = proposal.text_color || '#1a1a1a'
   const textLineHeight = proposal.text_line_height || '1.6'
   const backgroundColor = proposal.background_color || '#ffffff'
-  const coverTextColor = proposal.cover_text_color || '#ffffff'
   const customCss = proposal.custom_css || ''
   const client = proposal.client || { empresa: 'Cliente', contato: '—' }
   const items = proposal.items || []
@@ -291,9 +289,6 @@ export function buildProposalBody(proposal: PdfProposal): string {
     }
     .proposal-body h1, .proposal-body h2, .proposal-body h3, .proposal-body h4 {
       color: ${headingColor} !important;
-    }
-    .cover-section h1, .cover-section p, .cover-section span {
-      color: ${coverTextColor} !important;
     }
     ${customCss}
   </style>

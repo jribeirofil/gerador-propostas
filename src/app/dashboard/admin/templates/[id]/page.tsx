@@ -55,7 +55,6 @@ export default async function TemplateEditorPage({ params }: { params: { id: str
           text_line_height: templateRes.data.text_line_height ?? null,
           background_color: templateRes.data.background_color ?? null,
           accent_color: templateRes.data.accent_color ?? null,
-          cover_text_color: templateRes.data.cover_text_color ?? null,
           custom_css: templateRes.data.custom_css ?? null,
         }}
         initialBlocks={blocksRes.data || []}
