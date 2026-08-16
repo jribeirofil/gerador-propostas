@@ -66,6 +66,7 @@ interface Props {
   userRole?: string | null
   userId?: string | null
   logoUrl?: string | null
+  logoDarkUrl?: string | null
   companyName?: string | null
 }
 
@@ -126,7 +127,7 @@ function ThemeToggle({ collapsed }: { collapsed: boolean }) {
   )
 }
 
-export default function Sidebar({ userName, userRole, userId, logoUrl, companyName }: Props) {
+export default function Sidebar({ userName, userRole, userId, logoUrl, logoDarkUrl, companyName }: Props) {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
@@ -193,7 +194,7 @@ export default function Sidebar({ userName, userRole, userId, logoUrl, companyNa
           <div className="flex justify-center w-full">
             <Link href="/dashboard" title="Início">
               {logoUrl ? (
-                <Logo src={logoUrl} srcDark={logoUrl} height={40} maxWidth={40} />
+                <Logo src={logoUrl} srcDark={logoDarkUrl || logoUrl} height={40} maxWidth={40} />
               ) : (
                 <span
                   className="font-sora font-black text-base leading-none flex items-center justify-center w-10 h-10 rounded-lg"
@@ -208,7 +209,7 @@ export default function Sidebar({ userName, userRole, userId, logoUrl, companyNa
           <div className="flex items-center justify-between w-full">
             <Link href="/dashboard" title="Início">
               {logoUrl ? (
-                <Logo src={logoUrl} srcDark={logoUrl} height={52} maxWidth={104} />
+                <Logo src={logoUrl} srcDark={logoDarkUrl || logoUrl} height={52} maxWidth={104} />
               ) : (
                 <span
                   className="font-sora font-black text-lg leading-none truncate max-w-[104px]"

@@ -19,8 +19,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const orgId = profile?.organization_id ?? null
   const { data: settings } = orgId
-    ? await supabase.from('company_settings').select('logo_url, company_name').eq('organization_id', orgId).limit(1).maybeSingle()
-    : await supabase.from('company_settings').select('logo_url, company_name').is('organization_id', null).limit(1).maybeSingle()
+    ? await supabase.from('company_settings').select('logo_url, logo_url_dark, company_name').eq('organization_id', orgId).limit(1).maybeSingle()
+    : await supabase.from('company_settings').select('logo_url, logo_url_dark, company_name').is('organization_id', null).limit(1).maybeSingle()
 
   return (
     <ToastProvider>
@@ -31,6 +31,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             userRole={profile?.role}
             userId={user.id}
             logoUrl={settings?.logo_url}
+            logoDarkUrl={settings?.logo_url_dark}
             companyName={settings?.company_name || null}
           />
         </div>
