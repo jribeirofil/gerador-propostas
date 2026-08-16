@@ -203,104 +203,99 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
 
       <div className={sectionClass}>
         <h2 className="text-sm font-semibold text-app-text">Branding</h2>
-        <p className="text-xs text-app-muted -mt-2">O logo aparece no sidebar do sistema.</p>
+        <p className="text-xs text-app-muted -mt-2">Logos aparecem no sidebar do sistema.</p>
 
-        <div>
-          <label className={labelClass}>Logo da empresa</label>
-          <div className="flex items-center gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Logo Light Mode */}
+          <div className="border border-app-border rounded-xl p-4 space-y-3">
+            <div>
+              <p className="text-xs font-semibold text-app-text mb-1">Tema Claro</p>
+              <p className="text-xs text-app-muted">Logo para fundo claro</p>
+            </div>
 
-            <div className="w-16 h-16 rounded-xl border border-app-border bg-app-surface2 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div className="w-full h-24 rounded-lg border border-app-border bg-white flex items-center justify-center overflow-hidden">
               {logoUrl ? (
-                <img src={logoUrl} alt="Logo" className="max-w-[48px] max-h-[48px] object-contain" />
+                <img src={logoUrl} alt="Logo Light" className="max-w-[80%] max-h-[80%] object-contain" />
               ) : (
-                <span className="text-[10px] text-app-muted text-center leading-tight px-1">Sem logo</span>
+                <span className="text-xs text-app-muted">Preview</span>
               )}
             </div>
 
-            <div className="flex-1 space-y-1.5">
-              <label className={`flex items-center gap-3 h-12 px-4 border border-dashed rounded-xl transition-colors cursor-pointer ${
-                uploading
-                  ? 'border-app-border opacity-60 pointer-events-none'
-                  : 'border-app-border hover:border-brand-green-deep/60 hover:bg-brand-green/5'
-              }`}>
-                <Upload size={14} className="text-app-muted flex-shrink-0" />
-                <span className="text-sm text-app-muted">
-                  {uploading ? 'Enviando...' : 'Clique para escolher o arquivo'}
-                </span>
-                <span className="text-xs text-app-muted/60 ml-auto">PNG, SVG, JPG, WebP</span>
-                <input
-                  type="file"
-                  accept="image/png,image/svg+xml,image/jpeg,image/webp"
-                  className="hidden"
-                  disabled={uploading}
-                  onChange={e => { if (e.target.files?.[0]) handleLogoUpload(e.target.files[0]) }}
-                />
-              </label>
+            <label className={`flex items-center justify-center gap-2 h-10 px-3 border border-dashed rounded-lg transition-colors cursor-pointer text-sm ${
+              uploading
+                ? 'border-app-border opacity-60 pointer-events-none'
+                : 'border-app-border hover:border-brand-green-deep/60 hover:bg-brand-green/5'
+            }`}>
+              <Upload size={13} className="text-app-muted" />
+              <span className="text-app-muted">
+                {uploading ? 'Enviando...' : 'Fazer upload'}
+              </span>
+              <input
+                type="file"
+                accept="image/png,image/svg+xml,image/jpeg,image/webp"
+                className="hidden"
+                disabled={uploading}
+                onChange={e => { if (e.target.files?.[0]) handleLogoUpload(e.target.files[0]) }}
+              />
+            </label>
 
-              <div className="flex items-center gap-3">
-                {uploadError && <p className="text-xs text-red-400">{uploadError}</p>}
-                {logoUrl && !uploading && (
-                  <button
-                    type="button"
-                    onClick={() => setLogoUrl('')}
-                    className="flex items-center gap-1 text-xs text-app-muted hover:text-red-400 transition-colors"
-                  >
-                    <X size={11} />
-                    Remover logo
-                  </button>
-                )}
-              </div>
-            </div>
+            {logoUrl && !uploading && (
+              <button
+                type="button"
+                onClick={() => setLogoUrl('')}
+                className="w-full flex items-center justify-center gap-1 text-xs text-app-muted hover:text-red-400 transition-colors py-1"
+              >
+                <X size={11} />
+                Remover
+              </button>
+            )}
+            {uploadError && <p className="text-xs text-red-400 text-center">{uploadError}</p>}
           </div>
-        </div>
 
-        <div>
-          <label className={labelClass}>Logo para dark mode (opcional)</label>
-          <p className="text-xs text-app-muted mb-2">Uma versão clara do logo que aparece quando o usuário está em tema escuro.</p>
-          <div className="flex items-center gap-4">
+          {/* Logo Dark Mode */}
+          <div className="border border-app-border rounded-xl p-4 space-y-3">
+            <div>
+              <p className="text-xs font-semibold text-app-text mb-1">Tema Escuro</p>
+              <p className="text-xs text-app-muted">Logo para fundo escuro (opcional)</p>
+            </div>
 
-            <div className="w-16 h-16 rounded-xl border border-app-border bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div className="w-full h-24 rounded-lg border border-app-border bg-gray-900 flex items-center justify-center overflow-hidden">
               {logoDarkUrl ? (
-                <img src={logoDarkUrl} alt="Logo Dark" className="max-w-[48px] max-h-[48px] object-contain" />
+                <img src={logoDarkUrl} alt="Logo Dark" className="max-w-[80%] max-h-[80%] object-contain" />
               ) : (
-                <span className="text-[10px] text-gray-500 text-center leading-tight px-1">Sem logo</span>
+                <span className="text-xs text-gray-500">Preview</span>
               )}
             </div>
 
-            <div className="flex-1 space-y-1.5">
-              <label className={`flex items-center gap-3 h-12 px-4 border border-dashed rounded-xl transition-colors cursor-pointer ${
-                uploading
-                  ? 'border-app-border opacity-60 pointer-events-none'
-                  : 'border-app-border hover:border-brand-green-deep/60 hover:bg-brand-green/5'
-              }`}>
-                <Upload size={14} className="text-app-muted flex-shrink-0" />
-                <span className="text-sm text-app-muted">
-                  {uploading ? 'Enviando...' : 'Clique para escolher o arquivo'}
-                </span>
-                <span className="text-xs text-app-muted/60 ml-auto">PNG, SVG, JPG, WebP</span>
-                <input
-                  type="file"
-                  accept="image/png,image/svg+xml,image/jpeg,image/webp"
-                  className="hidden"
-                  disabled={uploading}
-                  onChange={e => { if (e.target.files?.[0]) handleLogoDarkUpload(e.target.files[0]) }}
-                />
-              </label>
+            <label className={`flex items-center justify-center gap-2 h-10 px-3 border border-dashed rounded-lg transition-colors cursor-pointer text-sm ${
+              uploading
+                ? 'border-app-border opacity-60 pointer-events-none'
+                : 'border-app-border hover:border-brand-green-deep/60 hover:bg-brand-green/5'
+            }`}>
+              <Upload size={13} className="text-app-muted" />
+              <span className="text-app-muted">
+                {uploading ? 'Enviando...' : 'Fazer upload'}
+              </span>
+              <input
+                type="file"
+                accept="image/png,image/svg+xml,image/jpeg,image/webp"
+                className="hidden"
+                disabled={uploading}
+                onChange={e => { if (e.target.files?.[0]) handleLogoDarkUpload(e.target.files[0]) }}
+              />
+            </label>
 
-              <div className="flex items-center gap-3">
-                {uploadError && <p className="text-xs text-red-400">{uploadError}</p>}
-                {logoDarkUrl && !uploading && (
-                  <button
-                    type="button"
-                    onClick={() => setLogoDarkUrl('')}
-                    className="flex items-center gap-1 text-xs text-app-muted hover:text-red-400 transition-colors"
-                  >
-                    <X size={11} />
-                    Remover logo
-                  </button>
-                )}
-              </div>
-            </div>
+            {logoDarkUrl && !uploading && (
+              <button
+                type="button"
+                onClick={() => setLogoDarkUrl('')}
+                className="w-full flex items-center justify-center gap-1 text-xs text-app-muted hover:text-red-400 transition-colors py-1"
+              >
+                <X size={11} />
+                Remover
+              </button>
+            )}
+            {uploadError && <p className="text-xs text-red-400 text-center">{uploadError}</p>}
           </div>
         </div>
 
