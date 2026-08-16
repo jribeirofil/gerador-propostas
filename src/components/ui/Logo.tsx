@@ -29,7 +29,7 @@ export default function Logo({ src, srcDark, height = 36, maxWidth, className = 
         src={darkSrc}
         alt="Logo da empresa"
         className="hidden dark:block w-auto h-full object-contain select-none"
-        style={{ filter: 'brightness(1.6) saturate(1.1)' }}
+        style={{ filter: 'brightness(1.8) saturate(1.1)' }}
         draggable={false}
       />
     </div>
