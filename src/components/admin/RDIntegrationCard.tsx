@@ -26,7 +26,7 @@ export default function RDIntegrationCard({ isConnected }: Props) {
           <p className="text-xs text-app-muted">
             {isConnected
               ? 'Busca de leads ativa na criação de propostas.'
-              : 'Adicione RD_CRM_TOKEN ao .env.local para ativar a busca de leads.'}
+              : 'Configure sua conta RD Station adicionando o token de API nas integrações.'}
           </p>
         </div>
       </div>
