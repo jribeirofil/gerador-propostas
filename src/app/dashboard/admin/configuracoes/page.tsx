@@ -4,6 +4,7 @@ import { requireAdmin } from '@/lib/admin-guard'
 import { createClient } from '@/lib/supabase/server'
 import CompanySettingsForm from '@/components/admin/CompanySettingsForm'
 import RDIntegrationCard from '@/components/admin/RDIntegrationCard'
+import RDIntegrationForm from '@/components/admin/RDIntegrationForm'
 import { isRDConnected } from '@/lib/rdstation'
 import type { CompanySettings } from '@/types/admin'
 import PageHeader from '@/components/ui/PageHeader'
@@ -38,7 +39,10 @@ export default async function ConfiguracoesPage() {
       <div className="mt-10">
         <h2 className="font-sora font-semibold text-sm text-app-muted uppercase tracking-wider mb-4">Integrações</h2>
         <Suspense>
-          <RDIntegrationCard isConnected={rdConnected} />
+          <div className="space-y-4">
+            <RDIntegrationCard isConnected={rdConnected} />
+            {!rdConnected && <RDIntegrationForm isConnected={rdConnected} />}
+          </div>
         </Suspense>
       </div>
     </div>
