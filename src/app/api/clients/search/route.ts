@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
   }))
 
   // 2. Search RD Station (fire in parallel, degrade gracefully if unavailable)
-  const rdContacts = await searchRDContacts(q)
+  const rdContacts = await searchRDContacts(orgId, q)
 
   // Deduplicate: skip RD results whose email already exists locally
   const localEmails = new Set(local.map(c => c.email?.toLowerCase()).filter(Boolean))

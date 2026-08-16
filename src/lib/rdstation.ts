@@ -1,4 +1,5 @@
 // Server-only — never import this in client components
+import { createAdminClient } from './supabase/admin'
 
 export interface RDClientResult {
   rd_id: string
@@ -9,12 +10,25 @@ export interface RDClientResult {
   cargo?: string
 }
 
-export async function isRDConnected(): Promise<boolean> {
-  return !!process.env.RD_CRM_TOKEN
+async function getRDToken(organizationId: string): Promise<string | null> {
+  const db = createAdminClient()
+  const { data } = await db
+    .from('integrations')
+    .select('refresh_token')
+    .eq('provider', 'rd')
+    .eq('organization_id', organizationId)
+    .limit(1)
+    .maybeSingle()
+
+  return data?.refresh_token ?? null
 }
 
-export async function searchRDContacts(query: string): Promise<RDClientResult[]> {
-  const token = process.env.RD_CRM_TOKEN
+export async function isRDConnected(organizationId: string): Promise<boolean> {
+  return !!(await getRDToken(organizationId))
+}
+
+export async function searchRDContacts(organizationId: string, query: string): Promise<RDClientResult[]> {
+  const token = await getRDToken(organizationId)
   if (!token || !query.trim()) return []
 
   try {

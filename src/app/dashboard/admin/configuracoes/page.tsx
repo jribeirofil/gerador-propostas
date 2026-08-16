@@ -21,7 +21,7 @@ export default async function ConfiguracoesPage() {
 
   const [{ data: settings }, rdConnected] = await Promise.all([
     settingsQuery,
-    isRDConnected(),
+    orgId ? isRDConnected(orgId) : Promise.resolve(false),
   ])
 
   return (
