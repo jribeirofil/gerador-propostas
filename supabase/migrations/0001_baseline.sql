@@ -855,7 +855,7 @@ begin
     select 1 from pg_constraint
     where conname = 'profiles_role_check' and conrelid = 'public.profiles'::regclass
   ) then
-    execute 'alter table public.profiles add constraint profiles_role_check check (role in ('admin', 'manager', 'seller', 'viewer'))';
+    execute 'alter table public.profiles add constraint profiles_role_check check (role in (''admin'', ''manager'', ''seller'', ''viewer''))';
   end if;
 end $$;
 
@@ -865,7 +865,7 @@ begin
     select 1 from pg_constraint
     where conname = 'proposal_status_check' and conrelid = 'public.proposal'::regclass
   ) then
-    execute 'alter table public.proposal add constraint proposal_status_check check (status in ('draft', 'generated', 'sent', 'won', 'lost'))';
+    execute 'alter table public.proposal add constraint proposal_status_check check (status in (''draft'', ''generated'', ''sent'', ''won'', ''lost''))';
   end if;
 end $$;
 
@@ -875,7 +875,7 @@ begin
     select 1 from pg_constraint
     where conname = 'proposal_block_type_check' and conrelid = 'public.proposal_block'::regclass
   ) then
-    execute 'alter table public.proposal_block add constraint proposal_block_type_check check (type in ('cover','cenario','objetivos','solucao','beneficios','escopo','diferenciais','faq','proximos_passos','sobre','investimento','assinatura'))';
+    execute 'alter table public.proposal_block add constraint proposal_block_type_check check (type in (''cover'',''cenario'',''objetivos'',''solucao'',''beneficios'',''escopo'',''diferenciais'',''faq'',''proximos_passos'',''sobre'',''investimento'',''assinatura''))';
   end if;
 end $$;
 
@@ -885,7 +885,7 @@ begin
     select 1 from pg_constraint
     where conname = 'proposal_event_event_type_check' and conrelid = 'public.proposal_event'::regclass
   ) then
-    execute 'alter table public.proposal_event add constraint proposal_event_event_type_check check (event_type in ('created','edited','pdf_generated','pdf_downloaded','sent','approved','lost','opened','heartbeat','opportunity_won','opportunity_lost','adjustments_requested','update_requested','duplicated','archived'))';
+    execute 'alter table public.proposal_event add constraint proposal_event_event_type_check check (event_type in (''created'',''edited'',''pdf_generated'',''pdf_downloaded'',''sent'',''approved'',''lost'',''opened'',''heartbeat'',''opportunity_won'',''opportunity_lost'',''adjustments_requested'',''update_requested'',''duplicated'',''archived''))';
   end if;
 end $$;
 
@@ -895,7 +895,7 @@ begin
     select 1 from pg_constraint
     where conname = 'proposal_product_pricing_type_check' and conrelid = 'public.proposal_product'::regclass
   ) then
-    execute 'alter table public.proposal_product add constraint proposal_product_pricing_type_check check (pricing_type in ('monthly','one_time','per_employee','per_project'))';
+    execute 'alter table public.proposal_product add constraint proposal_product_pricing_type_check check (pricing_type in (''monthly'',''one_time'',''per_employee'',''per_project''))';
   end if;
 end $$;
 
