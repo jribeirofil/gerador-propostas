@@ -46,6 +46,17 @@ export default async function TemplateEditorPage({ params }: { params: { id: str
           product_slugs: templateRes.data.product_slugs,
           cover_image_url: templateRes.data.cover_image_url ?? null,
           cover_video_url: templateRes.data.cover_video_url ?? null,
+          default_font: templateRes.data.default_font ?? null,
+          base_font_size: templateRes.data.base_font_size ?? null,
+          heading_size: templateRes.data.heading_size ?? null,
+          heading_color: templateRes.data.heading_color ?? null,
+          heading_bold: templateRes.data.heading_bold ?? false,
+          text_color: templateRes.data.text_color ?? null,
+          text_line_height: templateRes.data.text_line_height ?? null,
+          background_color: templateRes.data.background_color ?? null,
+          accent_color: templateRes.data.accent_color ?? null,
+          cover_text_color: templateRes.data.cover_text_color ?? null,
+          custom_css: templateRes.data.custom_css ?? null,
         }}
         initialBlocks={blocksRes.data || []}
         allProducts={productsRes.data || []}

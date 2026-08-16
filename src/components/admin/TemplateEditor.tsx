@@ -44,6 +44,17 @@ interface TemplateData {
   product_slugs: string[]
   cover_image_url: string | null
   cover_video_url: string | null
+  default_font: string | null
+  base_font_size: number | null
+  heading_size: number | null
+  heading_color: string | null
+  heading_bold: boolean
+  text_color: string | null
+  text_line_height: string | null
+  background_color: string | null
+  accent_color: string | null
+  cover_text_color: string | null
+  custom_css: string | null
 }
 
 interface ProductOption {
