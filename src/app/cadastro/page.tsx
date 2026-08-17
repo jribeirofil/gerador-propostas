@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Mail, Lock, Eye, EyeOff, User, Building2, UserPlus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { formatCNPJ } from '@/lib/cnpj'
 
 function DotGrid() {
   return (
@@ -21,6 +22,7 @@ function DotGrid() {
 export default function CadastroPage() {
   const [fullName, setFullName] = useState('')
   const [companyName, setCompanyName] = useState('')
+  const [cnpj, setCnpj] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -30,14 +32,34 @@ export default function CadastroPage() {
   const supabase = createClient()
   const router = useRouter()
 
+  function handleCNPJChange(value: string) {
+    const clean = value.replace(/\D/g, '')
+    const limited = clean.slice(0, 14)
+    setCnpj(formatCNPJ(limited))
+  }
+
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
+
+    if (!fullName.trim()) {
+      setError('Nome completo é obrigatório')
+      return
+    }
+    if (!companyName.trim()) {
+      setError('Nome da empresa é obrigatório')
+      return
+    }
+    if (!cnpj.trim()) {
+      setError('CNPJ é obrigatório')
+      return
+    }
+
     setLoading(true)
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName, company_name: companyName } },
+      options: { data: { full_name: fullName } },
     })
     if (error) {
       if (error.message.includes('already registered')) {
@@ -51,6 +73,27 @@ export default function CadastroPage() {
       return
     }
     if (data.session) {
+      // Criar empresa automaticamente após signup
+      try {
+        const createOrgRes = await fetch('/api/organizations/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            company_name: companyName,
+            cnpj,
+          }),
+        })
+        if (!createOrgRes.ok) {
+          const err = await createOrgRes.json()
+          setError(err.error || 'Erro ao criar empresa')
+          setLoading(false)
+          return
+        }
+      } catch (err) {
+        setError('Erro ao criar empresa. Tente novamente.')
+        setLoading(false)
+        return
+      }
       router.push('/dashboard')
       router.refresh()
       return
@@ -165,6 +208,21 @@ export default function CadastroPage() {
                   onChange={e => setCompanyName(e.target.value)}
                   placeholder="Nome da sua empresa"
                   className="w-full bg-white dark:bg-slate-800 border border-[#E4E8EE] dark:border-slate-700 rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] dark:text-white placeholder-[#9CA3AF] dark:placeholder-slate-400 focus:outline-none focus:border-brand-green-deep dark:focus:border-brand-green transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#0F1318] mb-2">CNPJ</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  required
+                  value={cnpj}
+                  onChange={e => handleCNPJChange(e.target.value)}
+                  placeholder="00.000.000/0000-00"
+                  maxLength={18}
+                  className="w-full bg-white dark:bg-slate-800 border border-[#E4E8EE] dark:border-slate-700 rounded-lg pl-4 pr-4 py-3 text-sm text-[#0F1318] dark:text-white placeholder-[#9CA3AF] dark:placeholder-slate-400 focus:outline-none focus:border-brand-green-deep dark:focus:border-brand-green transition-colors font-mono"
                 />
               </div>
             </div>
