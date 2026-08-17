@@ -80,34 +80,39 @@ export default function CadastroPage() {
         setLoading(false)
         return
       }
-    if (data.session) {
-      // Criar empresa automaticamente após signup
-      try {
-        const createOrgRes = await fetch('/api/organizations/create', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            company_name: companyName,
-            cnpj,
-          }),
-        })
-        if (!createOrgRes.ok) {
-          const err = await createOrgRes.json()
-          setError(err.error || 'Erro ao criar empresa')
+      if (data.session) {
+        // Criar empresa automaticamente após signup
+        try {
+          const createOrgRes = await fetch('/api/organizations/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              company_name: companyName,
+              cnpj,
+            }),
+          })
+          if (!createOrgRes.ok) {
+            const err = await createOrgRes.json()
+            setError(err.error || 'Erro ao criar empresa')
+            setLoading(false)
+            return
+          }
+        } catch (err) {
+          setError('Erro ao criar empresa. Tente novamente.')
           setLoading(false)
           return
         }
-      } catch (err) {
-        setError('Erro ao criar empresa. Tente novamente.')
-        setLoading(false)
+        router.push('/dashboard')
+        router.refresh()
         return
       }
-      router.push('/dashboard')
-      router.refresh()
-      return
+      setSuccess(true)
+      setLoading(false)
+    } catch (err) {
+      console.error('Unexpected error:', err)
+      setError('Erro inesperado. Tente novamente.')
+      setLoading(false)
     }
-    setSuccess(true)
-    setLoading(false)
   }
 
   const leftPanel = (
