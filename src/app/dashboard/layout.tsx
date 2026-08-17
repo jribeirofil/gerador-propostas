@@ -17,8 +17,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     .eq('id', user.id)
     .single()
 
-  // Se usuário não tem organização (erro), redirecionar para login
-  if (!profile?.organization_id) {
+  if (!profile) {
     redirect('/login')
   }
 

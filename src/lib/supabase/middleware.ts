@@ -30,6 +30,7 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login') ||
                        request.nextUrl.pathname.startsWith('/cadastro')
   const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')
+  const isSetupRoute = request.nextUrl.pathname === '/dashboard/criar-empresa'
 
   // Não logado tentando acessar o dashboard → manda para o login
   if (!user && isDashboardRoute) {
@@ -43,6 +44,36 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
     return NextResponse.redirect(url)
+  }
+
+  // Logado, no dashboard, mas sem organização
+  if (user && isDashboardRoute && !isSetupRoute) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('organization_id')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile?.organization_id) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard/criar-empresa'
+      return NextResponse.redirect(url)
+    }
+  }
+
+  // Logado com organização tentando acessar setup → manda para dashboard
+  if (user && isSetupRoute) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('organization_id')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.organization_id) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard'
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse

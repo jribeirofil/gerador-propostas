@@ -110,7 +110,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
   const baseFontSize = templateCover?.base_font_size || null
   const headingSize = templateCover?.heading_size || null
   const headingColor = templateCover?.heading_color || null
-  const headingBold = templateCover?.heading_bold
+  const headingBold = templateCover?.heading_bold ?? undefined
   const textColor = templateCover?.text_color || null
   const textLineHeight = templateCover?.text_line_height || null
   const backgroundColor = templateCover?.background_color || null

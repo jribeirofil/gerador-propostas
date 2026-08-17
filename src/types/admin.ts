@@ -160,6 +160,7 @@ export interface CompanySettings {
   company_phone: string | null
   company_whatsapp: string | null
   logo_url: string | null
+  logo_url_dark: string | null
   primary_color: string
   secondary_color: string | null
   ai_tone: string | null

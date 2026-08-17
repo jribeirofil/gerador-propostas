@@ -63,6 +63,7 @@ export interface PdfProposal {
   text_line_height?: string | null
   background_color?: string | null
   accent_color?: string | null
+  cover_text_color?: string | null
   custom_css?: string | null
   client: PdfClient | null
   items: PdfProposalProduct[]
