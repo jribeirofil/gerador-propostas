@@ -54,12 +54,7 @@ export async function updateSession(request: NextRequest) {
       .eq('id', user.id)
       .maybeSingle()
 
-    if (error) {
-      // Se erro na query, permite continuar (erro será tratado no layout)
-      return supabaseResponse
-    }
-
-    if (!profile?.organization_id) {
+    if (error || !profile?.organization_id) {
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard/criar-empresa'
       return NextResponse.redirect(url)
@@ -74,12 +69,7 @@ export async function updateSession(request: NextRequest) {
       .eq('id', user.id)
       .maybeSingle()
 
-    if (error) {
-      // Se erro na query, permite continuar
-      return supabaseResponse
-    }
-
-    if (profile?.organization_id) {
+    if (!error && profile?.organization_id) {
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'
       return NextResponse.redirect(url)
