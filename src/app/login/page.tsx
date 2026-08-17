@@ -30,8 +30,13 @@ export default function LoginPage() {
   const { setTheme } = useTheme()
 
   useEffect(() => {
-    setTheme('light')
-  }, [])
+    console.log('Setting theme to light')
+    try {
+      setTheme('light')
+    } catch (e) {
+      console.error('Error setting theme:', e)
+    }
+  }, [setTheme])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
