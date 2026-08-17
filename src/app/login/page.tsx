@@ -167,6 +167,13 @@ export default function LoginPage() {
 
             {error && <p className="text-xs text-red-500">{error}</p>}
 
+            <Link
+              href="/reset-password"
+              className="text-xs text-brand-green-deep hover:underline text-right block"
+            >
+              Esqueci minha senha
+            </Link>
+
             <button
               type="submit"
               disabled={loading}
