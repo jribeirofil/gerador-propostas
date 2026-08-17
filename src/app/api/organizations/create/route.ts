@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
       body_padding_h: '40',
       body_padding_v: '32',
       heading_font_size: '24',
-    })
+    } as any)
 
   if (templateError) {
     return NextResponse.json({ error: 'Erro ao criar template padrão' }, { status: 500 })

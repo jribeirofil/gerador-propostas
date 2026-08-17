@@ -152,6 +152,7 @@ export type Database = {
           company_whatsapp: string | null
           id: string
           logo_url: string | null
+          logo_url_dark: string | null
           organization_id: string
           pdf_default_conditions: string | null
           pdf_footer_text: string | null
@@ -174,6 +175,7 @@ export type Database = {
           company_whatsapp?: string | null
           id?: string
           logo_url?: string | null
+          logo_url_dark?: string | null
           organization_id?: string
           pdf_default_conditions?: string | null
           pdf_footer_text?: string | null
@@ -196,6 +198,7 @@ export type Database = {
           company_whatsapp?: string | null
           id?: string
           logo_url?: string | null
+          logo_url_dark?: string | null
           organization_id?: string
           pdf_default_conditions?: string | null
           pdf_footer_text?: string | null
@@ -300,18 +303,21 @@ export type Database = {
       }
       organization: {
         Row: {
+          cnpj: string | null
           created_at: string | null
           created_by: string | null
           id: string
           name: string
         }
         Insert: {
+          cnpj?: string | null
           created_at?: string | null
           created_by?: string | null
           id?: string
           name: string
         }
         Update: {
+          cnpj?: string | null
           created_at?: string | null
           created_by?: string | null
           id?: string
@@ -616,7 +622,7 @@ export type Database = {
           full_name: string | null
           id: string
           job_title: string | null
-          organization_id: string
+          organization_id: string | null
           phone: string | null
           role: string
         }
@@ -626,7 +632,7 @@ export type Database = {
           full_name?: string | null
           id: string
           job_title?: string | null
-          organization_id: string
+          organization_id?: string | null
           phone?: string | null
           role?: string
         }
@@ -636,7 +642,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           job_title?: string | null
-          organization_id?: string
+          organization_id?: string | null
           phone?: string | null
           role?: string
         }

@@ -126,7 +126,7 @@ export default function CreateOrganizationForm() {
         </form>
 
         <p className="text-xs text-app-muted text-center mt-6">
-          Você pode alterar essas informações depois em <span className="font-medium">Admin > Configurações</span>
+          Você pode alterar essas informações depois em <span className="font-medium">Admin &gt; Configurações</span>
         </p>
       </div>
     </div>
