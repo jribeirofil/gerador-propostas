@@ -17,12 +17,18 @@ export default async function DashboardLayout({ children }: { children: React.Re
     .eq('id', user.id)
     .single()
 
-  // Redirecionar para criar empresa se usuário não tem organização
-  if (!profile?.organization_id) {
-    redirect('/dashboard/criar-empresa')
-  }
+  // Se usuário não tem organização, renderizar apenas os filhos (criar-empresa vai ser renderizado sem sidebar)
+  const orgId = profile?.organization_id
 
-  const orgId = profile.organization_id
+  if (!orgId) {
+    return (
+      <ToastProvider>
+        <main style={{ background: 'var(--bg)' }}>
+          {children}
+        </main>
+      </ToastProvider>
+    )
+  }
   const { data: settings } = orgId
     ? await supabase.from('company_settings').select('logo_url, logo_url_dark, company_name').eq('organization_id', orgId).limit(1).maybeSingle()
     : await supabase.from('company_settings').select('logo_url, logo_url_dark, company_name').is('organization_id', null).limit(1).maybeSingle()
