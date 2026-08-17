@@ -2,7 +2,7 @@
 
 Dashboard de fases e execução. Atualizar a cada mudança de status.
 
-Última atualização: **2026-08-15**
+Última atualização: **2026-08-17**
 
 > **Multi-tenant (15/08):** PRD-02 executado e validado — Fases 0–6 implementadas. Storage org-isolado
 > (Fase 5: SQL aplicado, policies `assets_org_*` ativas, legadas permissivas removidas).
@@ -24,6 +24,16 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 > `useWatch({ control })` e a prévia atualiza em tempo real em qualquer mudança de valor (`9b2f6e9`). Validado
 > E2E manual bidirecional (Automático/Canal ↔ Teste).
 
+> **Organizações isoladas com CNPJ (17/08):** Preparação para marketplace públi — validação por CNPJ obrigatório
+> previne duplicação (múltiplos colaboradores não criam mesma empresa 2x). Fluxo: signup individual → dashboard
+> → "Criar empresa" (CNPJ único) → template padrão + user=admin. Migration 0008 com trigger `handle_new_user`
+> recriada para admin role + template auto-criado. Testado em local com signup flow: novo usuário → role=admin ✅,
+> template "Padrão" criado ✅, 9 blocos presentes ✅.
+>
+> **Logo upload UX grid 2-colunas (17/08):** CompanySettingsForm.tsx refatorada — light + dark mode em cards
+> separados lado a lado (grid `grid-cols-1 md:grid-cols-2`), preview maior (h-24), fundo claro/escuro no preview.
+> Melhora visual e UX para upload de logos multi-tema.
+>
 > **Evidência de demanda (14/08):** cliente-alvo rejeitou o concorrente porque "gerava um layout lá e só";
 > quer o layout da empresa (informações + conteúdo institucional + valor de investimento ao final).
 > Vira o item **A6** e reforça o posicionamento "o layout é da SUA empresa". Detalhe no PRD-01.
