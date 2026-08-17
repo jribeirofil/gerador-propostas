@@ -1,9 +1,10 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useTheme } from 'next-themes'
 
 function DotGrid() {
   return (
@@ -26,6 +27,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+  const { setTheme } = useTheme()
+
+  useEffect(() => {
+    setTheme('light')
+  }, [])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()

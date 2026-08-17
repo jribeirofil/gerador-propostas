@@ -1,10 +1,11 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Mail, Lock, Eye, EyeOff, User, Building2, UserPlus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { formatCNPJ } from '@/lib/cnpj'
+import { useTheme } from 'next-themes'
 
 function DotGrid() {
   return (
@@ -31,6 +32,11 @@ export default function CadastroPage() {
   const [loading, setLoading] = useState(false)
   const supabase = createClient()
   const router = useRouter()
+  const { setTheme } = useTheme()
+
+  useEffect(() => {
+    setTheme('light')
+  }, [setTheme])
 
   function handleCNPJChange(value: string) {
     const clean = value.replace(/\D/g, '')
