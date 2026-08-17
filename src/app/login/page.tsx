@@ -36,15 +36,32 @@ export default function LoginPage() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
-    setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) {
-      setError('E-mail ou senha incorretos.')
-      setLoading(false)
+
+    if (!email.trim()) {
+      setError('E-mail é obrigatório.')
       return
     }
-    router.push('/dashboard')
-    router.refresh()
+    if (!password.trim()) {
+      setError('Senha é obrigatória.')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) {
+        console.error('Login error:', error)
+        setError('E-mail ou senha incorretos.')
+        setLoading(false)
+        return
+      }
+      router.push('/dashboard')
+      router.refresh()
+    } catch (err) {
+      console.error('Unexpected error:', err)
+      setError('Erro inesperado. Tente novamente.')
+      setLoading(false)
+    }
   }
 
   return (

@@ -62,22 +62,24 @@ export default function CadastroPage() {
     }
 
     setLoading(true)
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { full_name: fullName } },
-    })
-    if (error) {
-      if (error.message.includes('already registered')) {
-        setError('Esse e-mail já tem cadastro. Tente entrar.')
-      } else if (error.message.includes('Password')) {
-        setError('A senha precisa ter pelo menos 6 caracteres.')
-      } else {
-        setError('Não foi possível criar a conta. Tente novamente.')
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: fullName } },
+      })
+      if (error) {
+        console.error('Signup error:', error)
+        if (error.message.includes('already registered')) {
+          setError('Esse e-mail já tem cadastro. Tente entrar.')
+        } else if (error.message.includes('Password')) {
+          setError('A senha precisa ter pelo menos 6 caracteres.')
+        } else {
+          setError('Não foi possível criar a conta. Tente novamente.')
+        }
+        setLoading(false)
+        return
       }
-      setLoading(false)
-      return
-    }
     if (data.session) {
       // Criar empresa automaticamente após signup
       try {
