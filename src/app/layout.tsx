@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <div className="fixed inset-x-0 top-0 z-[999] h-[5px] bg-brand-green" />
           <div className="pt-[5px] flex flex-col" style={{ height: '100dvh' }}>
             {children}
