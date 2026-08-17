@@ -48,11 +48,16 @@ export async function updateSession(request: NextRequest) {
 
   // Logado, no dashboard, mas sem organização
   if (user && isDashboardRoute && !isSetupRoute) {
-    const { data: profile } = await supabase
+    const { data: profile, error } = await supabase
       .from('profiles')
       .select('organization_id')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
+
+    if (error) {
+      // Se erro na query, permite continuar (erro será tratado no layout)
+      return supabaseResponse
+    }
 
     if (!profile?.organization_id) {
       const url = request.nextUrl.clone()
@@ -63,11 +68,16 @@ export async function updateSession(request: NextRequest) {
 
   // Logado com organização tentando acessar setup → manda para dashboard
   if (user && isSetupRoute) {
-    const { data: profile } = await supabase
+    const { data: profile, error } = await supabase
       .from('profiles')
       .select('organization_id')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
+
+    if (error) {
+      // Se erro na query, permite continuar
+      return supabaseResponse
+    }
 
     if (profile?.organization_id) {
       const url = request.nextUrl.clone()

@@ -11,13 +11,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/login')
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from('profiles')
     .select('full_name, role, organization_id')
     .eq('id', user.id)
-    .single()
+    .maybeSingle()
 
-  if (!profile) {
+  if (error || !profile) {
     redirect('/login')
   }
 
