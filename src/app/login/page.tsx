@@ -30,13 +30,8 @@ export default function LoginPage() {
   const { setTheme } = useTheme()
 
   useEffect(() => {
-    console.log('Setting theme to light')
-    try {
-      setTheme('light')
-    } catch (e) {
-      console.error('Error setting theme:', e)
-    }
-  }, [setTheme])
+    setTheme('light')
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()

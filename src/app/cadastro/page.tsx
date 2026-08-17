@@ -36,7 +36,7 @@ export default function CadastroPage() {
 
   useEffect(() => {
     setTheme('light')
-  }, [setTheme])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleCNPJChange(value: string) {
     const clean = value.replace(/\D/g, '')

@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     setTheme('light')
-  }, [setTheme])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleResetPassword(e: React.FormEvent) {
     e.preventDefault()

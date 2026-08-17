@@ -22,7 +22,7 @@ export default function ResetPasswordConfirmPage() {
 
   useEffect(() => {
     setTheme('light')
-  }, [setTheme])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Verificar se token de recuperação é válido
   useEffect(() => {
