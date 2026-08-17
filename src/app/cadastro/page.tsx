@@ -149,7 +149,7 @@ export default function CadastroPage() {
                   value={fullName}
                   onChange={e => setFullName(e.target.value)}
                   placeholder="Seu nome"
-                  className="w-full border border-[#E4E8EE] rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] placeholder-[#9CA3AF] focus:outline-none focus:border-brand-green-deep transition-colors"
+                  className="w-full bg-white dark:bg-slate-800 border border-[#E4E8EE] dark:border-slate-700 rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] dark:text-white placeholder-[#9CA3AF] dark:placeholder-slate-400 focus:outline-none focus:border-brand-green-deep dark:focus:border-brand-green transition-colors"
                 />
               </div>
             </div>
@@ -164,7 +164,7 @@ export default function CadastroPage() {
                   value={companyName}
                   onChange={e => setCompanyName(e.target.value)}
                   placeholder="Nome da sua empresa"
-                  className="w-full border border-[#E4E8EE] rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] placeholder-[#9CA3AF] focus:outline-none focus:border-brand-green-deep transition-colors"
+                  className="w-full bg-white dark:bg-slate-800 border border-[#E4E8EE] dark:border-slate-700 rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] dark:text-white placeholder-[#9CA3AF] dark:placeholder-slate-400 focus:outline-none focus:border-brand-green-deep dark:focus:border-brand-green transition-colors"
                 />
               </div>
             </div>
@@ -179,7 +179,7 @@ export default function CadastroPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="w-full border border-[#E4E8EE] rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] placeholder-[#9CA3AF] focus:outline-none focus:border-brand-green-deep transition-colors"
+                  className="w-full bg-white dark:bg-slate-800 border border-[#E4E8EE] dark:border-slate-700 rounded-lg pl-10 pr-4 py-3 text-sm text-[#0F1318] dark:text-white placeholder-[#9CA3AF] dark:placeholder-slate-400 focus:outline-none focus:border-brand-green-deep dark:focus:border-brand-green transition-colors"
                 />
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function CadastroPage() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Mínimo 6 caracteres"
-                  className="w-full border border-[#E4E8EE] rounded-lg pl-10 pr-11 py-3 text-sm text-[#0F1318] placeholder-[#9CA3AF] focus:outline-none focus:border-brand-green-deep transition-colors"
+                  className="w-full bg-white dark:bg-slate-800 border border-[#E4E8EE] dark:border-slate-700 rounded-lg pl-10 pr-11 py-3 text-sm text-[#0F1318] dark:text-white placeholder-[#9CA3AF] dark:placeholder-slate-400 focus:outline-none focus:border-brand-green-deep dark:focus:border-brand-green transition-colors"
                 />
                 <button
                   type="button"

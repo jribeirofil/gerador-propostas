@@ -88,7 +88,7 @@ export default function CreateOrganizationForm() {
               value={companyName}
               onChange={e => setCompanyName(e.target.value)}
               placeholder="Ex: Acme Corporation"
-              className="w-full bg-app-surface border border-app-border rounded px-3 py-2 text-sm text-app-text placeholder-app-muted focus:outline-none focus:border-brand-green-deep transition-colors"
+              className="w-full bg-white dark:bg-slate-800 border border-app-border dark:border-slate-700 rounded px-3 py-2 text-sm text-app-text dark:text-white placeholder-app-muted dark:placeholder-slate-400 focus:outline-none focus:border-brand-green-deep dark:focus:border-brand-green transition-colors"
             />
           </div>
 
