@@ -50,23 +50,26 @@ export async function POST(req: NextRequest) {
   }
 
   const cleanedCNPJ = cleanCNPJ(cnpj)
+  const shouldValidateCNPJ = process.env.NEXT_PUBLIC_VALIDATE_CNPJ !== 'false'
 
   if (!isValidCNPJ(cleanedCNPJ)) {
     return NextResponse.json({ error: 'CNPJ inválido' }, { status: 400 })
   }
 
-  // Verificar se CNPJ já existe
-  const { data: existingOrg } = await db
-    .from('organization')
-    .select('id, name')
-    .eq('cnpj', cleanedCNPJ)
-    .single()
+  // Verificar se CNPJ já existe (apenas em prod com validação ativada)
+  if (shouldValidateCNPJ) {
+    const { data: existingOrg } = await db
+      .from('organization')
+      .select('id, name')
+      .eq('cnpj', cleanedCNPJ)
+      .single()
 
-  if (existingOrg) {
-    return NextResponse.json(
-      { error: `Esta empresa (${existingOrg.name}) já está registrada no sistema` },
-      { status: 409 }
-    )
+    if (existingOrg) {
+      return NextResponse.json(
+        { error: `Esta empresa (${existingOrg.name}) já está registrada no sistema` },
+        { status: 409 }
+      )
+    }
   }
 
   // Verificar se usuário já tem organização

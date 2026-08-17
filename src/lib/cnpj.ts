@@ -1,4 +1,5 @@
 // Validar CNPJ (algoritmo módulo 11)
+// Em dev (NEXT_PUBLIC_VALIDATE_CNPJ=false), apenas verifica formato
 export function isValidCNPJ(cnpj: string): boolean {
   if (!cnpj) return false
 
@@ -7,6 +8,11 @@ export function isValidCNPJ(cnpj: string): boolean {
 
   // CNPJ deve ter 14 dígitos
   if (clean.length !== 14) return false
+
+  // Em dev, apenas validar formato (não algoritmo)
+  if (process.env.NEXT_PUBLIC_VALIDATE_CNPJ === 'false') {
+    return true
+  }
 
   // Rejeita sequências repetidas (11111111111111, etc)
   if (/^(\d)\1{13}$/.test(clean)) return false
