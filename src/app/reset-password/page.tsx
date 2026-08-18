@@ -4,19 +4,7 @@ import Link from 'next/link'
 import { Mail, ArrowLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useTheme } from 'next-themes'
-
-function DotGrid() {
-  return (
-    <div
-      className="grid gap-[10px] opacity-40"
-      style={{ gridTemplateColumns: 'repeat(10, 1fr)' }}
-    >
-      {Array.from({ length: 70 }).map((_, i) => (
-        <div key={i} className="w-[5px] h-[5px] rounded-full bg-brand-green-deep" />
-      ))}
-    </div>
-  )
-}
+import AuthPanel from '@/components/auth/AuthPanel'
 
 export default function ResetPasswordPage() {
   const [email, setEmail] = useState('')
@@ -65,38 +53,11 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex">
       {/* ── Painel esquerdo ── */}
-      <div
-        className="hidden lg:flex lg:w-[58%] relative flex-col justify-between p-12"
-        style={{ background: 'linear-gradient(140deg, #B8F0D0 0%, #D4F7E6 40%, #EBF9F3 100%)' }}
-      >
-        <div className="flex items-end gap-1.5">
-          <div className="leading-none">
-            <p className="font-sora font-black text-[15px] leading-[1.15] text-[#0F1318]">fine</p>
-            <p className="font-sora font-black text-[15px] leading-[1.15] text-[#0F1318]">and</p>
-            <p className="font-sora font-black text-[15px] leading-[1.15] text-[#0F1318]">you</p>
-          </div>
-        </div>
-
-        <div className="absolute top-12 right-12">
-          <DotGrid />
-        </div>
-
-        <div className="mb-8">
-          <h1 className="font-sora font-black text-[52px] leading-[1.1] text-[#0F1318]">
-            Recuperar<br />
-            <span className="text-brand-green-deep">sua senha</span>
-          </h1>
-          <div className="w-10 h-[3px] bg-brand-green-deep rounded-full mt-6 mb-6" />
-          <p className="text-[#374151] text-[15px] leading-relaxed max-w-[380px]">
-            Enviaremos um link para o seu e-mail para que você possa criar uma nova senha.
-          </p>
-        </div>
-
-        <div className="flex items-center justify-between text-xs text-[#6B7280]">
-          <span>© 2026 Gerador de Propostas</span>
-          <span>Propostas Comerciais</span>
-        </div>
-      </div>
+      <AuthPanel
+        headline="Recuperar"
+        highlight="sua senha"
+        sub="Enviaremos um link para o seu e-mail para que você possa criar uma nova senha."
+      />
 
       {/* ── Painel direito ── */}
       <div className="flex-1 flex items-center justify-center bg-white px-8 py-12">
@@ -115,8 +76,8 @@ export default function ResetPasswordPage() {
 
           {success ? (
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-full bg-[#D4F7E6] flex items-center justify-center mx-auto mb-4">
-                <span className="text-brand-green-deep text-xl">✓</span>
+              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                <span className="text-slate-500 text-xl">✓</span>
               </div>
               <p className="text-sm text-[#6B7280] text-center leading-relaxed">
                 Se esse e-mail estiver cadastrado, você receberá um link para resetar sua senha.

@@ -5,19 +5,7 @@ import Link from 'next/link'
 import { Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useTheme } from 'next-themes'
-
-function DotGrid() {
-  return (
-    <div
-      className="grid gap-[10px] opacity-40"
-      style={{ gridTemplateColumns: 'repeat(10, 1fr)' }}
-    >
-      {Array.from({ length: 70 }).map((_, i) => (
-        <div key={i} className="w-[5px] h-[5px] rounded-full bg-brand-green-deep" />
-      ))}
-    </div>
-  )
-}
+import AuthPanel from '@/components/auth/AuthPanel'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -68,44 +56,11 @@ export default function LoginPage() {
     <div className="min-h-screen flex">
 
       {/* ── Painel esquerdo ── */}
-      <div
-        className="hidden lg:flex lg:w-[58%] relative flex-col justify-between p-12"
-        style={{ background: 'linear-gradient(140deg, #B8F0D0 0%, #D4F7E6 40%, #EBF9F3 100%)' }}
-      >
-        {/* Logo */}
-        <div className="flex items-end gap-1.5">
-          <div className="leading-none">
-            <p className="font-sora font-black text-[15px] leading-[1.15] text-[#0F1318]">fine</p>
-            <p className="font-sora font-black text-[15px] leading-[1.15] text-[#0F1318]">and</p>
-            <p className="font-sora font-black text-[15px] leading-[1.15] text-[#0F1318]">you</p>
-          </div>
-        </div>
-
-        {/* Dot grid */}
-        <div className="absolute top-12 right-12">
-          <DotGrid />
-        </div>
-
-        {/* Headline */}
-        <div className="mb-8">
-          <h1 className="font-sora font-black text-[52px] leading-[1.1] text-[#0F1318]">
-            Propostas que<br />
-            <span className="text-brand-green-deep">fecham negócios</span><br />
-            de verdade.
-          </h1>
-          <div className="w-10 h-[3px] bg-brand-green-deep rounded-full mt-6 mb-6" />
-          <p className="text-[#374151] text-[15px] leading-relaxed max-w-[380px]">
-            Crie, personalize e envie propostas comerciais
-            para seus clientes de forma rápida e profissional.
-          </p>
-        </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-between text-xs text-[#6B7280]">
-          <span>© 2026 Gerador de Propostas</span>
-          <span>Propostas Comerciais</span>
-        </div>
-      </div>
+      <AuthPanel
+        headline="Propostas que"
+        highlight="fecham negócios"
+        sub="Crie, personalize e envie propostas comerciais para seus clientes de forma rápida e profissional."
+      />
 
       {/* ── Painel direito ── */}
       <div className="flex-1 flex items-center justify-center bg-white px-8 py-12">

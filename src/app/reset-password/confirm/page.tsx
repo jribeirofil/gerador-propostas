@@ -91,8 +91,8 @@ export default function ResetPasswordConfirmPage() {
 
         {success ? (
           <div className="space-y-4">
-            <div className="w-12 h-12 rounded-full bg-[#D4F7E6] flex items-center justify-center mx-auto mb-4">
-              <span className="text-brand-green-deep text-xl">✓</span>
+            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+              <span className="text-slate-500 text-xl">✓</span>
             </div>
             <p className="text-sm text-[#6B7280] text-center leading-relaxed">
               Sua senha foi redefinida com sucesso!
