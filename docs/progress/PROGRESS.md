@@ -2,7 +2,58 @@
 
 Dashboard de fases e execução. Atualizar a cada mudança de status.
 
-Última atualização: **2026-08-17**
+Última atualização: **2026-08-18**
+
+> **Fase D — E2E manual completo + correções (17-18/08):** fluxo integral validado em
+> ambiente local (cadastro → empresa CNPJ → categoria/produto → price table → proposta
+> → publish → link público → decisão) com isolamento multi-tenant confirmado. Bugs reais
+> encontrados e corrigidos durante o E2E:
+> - 🔴 **`service_role` sem DML** (baseline só concedia a `authenticated`, linha 1202) → todos
+>   os writes via `createAdminClient` (rotas server/página pública) davam 500. Corrigido com
+>   grants em `0014`.
+> - 🔴 **Defaults de `organization_id` removidos na 0012/0013 sem o app informar a coluna em
+>   todos os inserts client-side** → todo create via RLS falhava ("violates row-level
+>   security policy"). Decisão: restaurar `default public.current_org_id()` (0012 era
+>   excessiva; a barreira de segurança continua no RLS — sem org → NULL → NOT NULL barra;
+>   cross-org → `with check` barra). Aplicado em `0014`.
+> - 🔴 **`proposal.code` NOT NULL sem default e sem geração no app** (a UI já o trata como
+>   opcional) → "Gerar proposta" estourava 400. Corrigido para nullable em `0014`.
+> - 🟠 **`organizations/create`** inseria colunas de template legadas (`cover_bg_color`,
+>   `body_bg_color`, `accent_color_2`…) que não existem mais — removidas do insert.
+> - 🟠 **CNPJ** (`src/lib/cnpj.ts`): DV era calculado sobre 8/9 dígitos em vez de 12/13 —
+>   bloqueava cadastro de empresa. Corrigido e validado via E2E.
+> - 🟡 **`PriceTableEditor`**: autosave por keystroke — digitação rápida grava valores
+>   intermediários no banco (race). Não bloqueia, mas fica como dívida D14.
+> - **Recuperados durante E2E:** tabela `template_block` (droppada acidentalmente na limpeza
+>   da sessão anterior) restaurada da baseline com FK + policies.
+> - **Isolamento multi-tenant confirmado E2E:** Org B (`Consultoria Beta S/A`, CNPJ
+>   `10.949.373/0001-67`) não vê produtos/categorias da Org A, recebe 404 em proposta da
+>   outra org e RLS retorna 0 linhas para o role `authenticated` da outra org.
+> - Migration `0014` criada e validada (execução via transaction + rollback contra o banco
+>   local): grants service_role, defaults de org, `proposal.code` nullable e reset de dados.
+>   Typecheck limpo, 21 testes passando, lint sem erros (só warnings pré-existentes).
+
+> **Análise geral de saúde + reset limpo + identidade neutra (17/08):**
+> - **Auditoria de saúde** (build/tests/lint/segurança): `tsc` limpo, 21 testes ✅; **ESLint segue sem
+>   configuração** (`next lint` abre wizard — dívida D8). Achados reais de tenancy:
+>   - 🔴 `api/admin/users/[id]/delete` deleta profile+auth SEM filtro de org (cross-tenant).
+>   - 🔴 `api/templates/[id]` (DELETE) atualiza propostas/apaga blocos SEM filtro de org.
+>   - 🟠 Storage `assets` público + fallback p/ org raiz; sem headers de segurança/CSP; sem rate-limit
+>     nos endpoints públicos `/api/p/[token]/*`.
+> - **Eliminada a "org raiz" (DECIDIDO):** migrations `0001` (INSERTs da raiz, defaults
+>   `coalesce(current_org_id(),'0000…0001')` em 9 tabelas, backfills, fallback nas policies de storage,
+>   default `company_name='FineAndYou'`) limpas; `0003` e `0008` viram **no-op** (template padrão agora é
+>   criado pelo fluxo `organizations/create`); `seed.sql` zerado; `0012`/`0013` corrigidas para serem
+>   condicionais à existência da coluna (`proposal_analytics` nunca teve `organization_id`). **Reset limpo
+>   aplicado**: 0 orgs, 0 perfis, migrations 0001–0013 registradas.
+> - **Identidade neutra do produto:** login/cadastro/reset-password usam `AuthPanel` (painel grafite
+>   "Gerador de Propostas") — removidos logo "fine/and/you", gradiente verde e filhos do piloto.
+>   **Cor padrão do sistema = Índigo `#4F46E5`** (`#1FE97C`/`#00B765`/`#10B981` trocados em 11 arquivos
+>   e no default `primary_color` do schema).
+> - **Pendências registradas p/ próxima iteração:** corrigir os 2 bugs cross-org, fechar storage/headers/
+>   rate-limit, configurar ESLint (D8), remover deps órfãs (`clsx`, `tailwind-merge`, `html2canvas`,
+>   `jspdf`, `puppeteer`), remover SQLs soltos da raiz do repo, carregar fontes (`next/font` Sora/Inter),
+>   decidir super admin de plataforma (recomendado: só quando tiver ~5 clientes pagos).
 
 > **Multi-tenant (15/08):** PRD-02 executado e validado — Fases 0–6 implementadas. Storage org-isolado
 > (Fase 5: SQL aplicado, policies `assets_org_*` ativas, legadas permissivas removidas).
@@ -40,7 +91,8 @@ Dashboard de fases e execução. Atualizar a cada mudança de status.
 >
 > **Identidade (14/08):** "FineAndYou" é o primeiro cliente **piloto**, não o nome do sistema (ainda sem nome).
 > O produto é **horizontal/agnóstico de segmento** — agências, painéis de LED, rodízio de pizza, etc.
-> Branding por empresa é requisito central; remover hardcodes da marca (28 ocorrências em 17 arquivos).
+> Branding por empresa é requisito central. **Hardcodes da marca removidos do produto em 17/08**
+> (telas públicas, defaults e schema); o sistema usa placeholder neutro "Gerador de Propostas" até decidir o nome.
 
 ---
 
@@ -119,11 +171,13 @@ Decisão e referência: [`docs/DECISOES-MODELO-DE-CONTEUDO.md`](../DECISOES-MODE
 
 | Decisão | Contexto | Impacto | Responsável |
 |---|---|---|---|
-| **Branding por empresa** | **DECIDIDO como requisito central** (14/08): cada cliente coloca a própria marca na proposta (logo, cores, informações, conteúdo). Hoje a marca FineAndYou está hardcoded (28 ocorrências) e o produto veste a identidade do piloto | Pré-requisito de qualquer venda fora do piloto; o momento pré-dados é o mais barato para a mudança | dono |
-| **Multi-tenant SaaS** | **DECIDIDO e IMPLEMENTADO (15/08):** cada organização tem textos, cores, logos, produtos e clientes próprios; novo cadastro cria a própria org. PRD-02 Fases 0–6 executadas ([PRD-02](../prds/PRD-02-multi-tenant-saas.md)); falta e2e manual | Base para escalar clientes; A6 fora do piloto desbloqueado | dono |
+| **Branding por empresa** | **DECIDIDO e CENTRAL (14/08; reforçado 17/08):** cada cliente coloca a própria marca na proposta (logo, cores, informações, conteúdo). A marca do piloto foi **removida das telas públicas e defaults** (17/08) — produto agora vestido neutro até decidir nome | Pré-requisito de qualquer venda fora do piloto; sem resíduos da marca no código | dono |
+| **Multi-tenant SaaS** | **DECIDIDO e IMPLEMENTADO (15/08); org raiz ELIMINADA (17/08):** migrations `0001`/`0003`/`0008`/`seed` limpos, reset local zerado (0 orgs). Novo cadastro nasce sem org; cria a própria empresa (CNPJ). PRD-02 Fases 0–6 executadas | Base para escalar clientes | dono |
+| **Cor padrão do sistema** | **DECIDIDO (17/08):** índigo `#4F46E5` (accent 2 `#4338CA`) — cor default que toda empresa nova nasce e que aparece nos fallbacks até personalizar | Identidade visual de templates/previews/PDF | dono |
+| **Super admin de plataforma** | **EM ABERTO — recomendação:** adiar até ~5 clientes pagos. Hoje o dono opera pelo dashboard do Supabase. Quando criar, implementar como nível separado (`role='owner'` + uma policy `is_platform_admin()`) e painel próprio — nunca via service-role sem filtro | Controle de todas as empresas do SaaS; deve vir DEPOIS de fechar os 2 bugs cross-org | dono |
 | **Nome do sistema** | Sem nome ainda. "FineAndYou" é o piloto, não o produto. Usar placeholder neutro ("Gerador de Propostas") até decidir | Identidade visual do admin, docs, landing | dono |
 | **Segmento-alvo** | **Fechado (14/08):** produto horizontal/agnóstico — qualquer negócio (agências, LED, rodízio). Piloto FineAndYou não verticaliza | Template padrão genérico; cada empresa preenche o próprio conteúdo | dono |
-| **Onde o texto mora** | **DECIDIDO (14/08):** um dono por texto — produto (fatos), empresa (identidade/termos), template (só estrutura + próximos passos), proposta (negócio). Precedência: proposta → produto → empresa. Referência: `docs/DECISOES-MODELO-DE-CONTEUDO.md` | Código implementado; SQL `add-model-content.sql` pendente | dono |
+| **Onde o texto mora** | **DECIDIDO (14/08):** um dono por texto — produto (fatos), empresa (identidade/termos), template (só estrutura + próximos passos), proposta (negócio). Precedência: proposta → produto → empresa. Referência: `docs/DECISOES-MODELO-DE-CONTEUDO.md` | Código implementado; colunas já presentes na baseline (`0001`) | dono |
 | **Pipeline de oportunidades vira CRM vendável?** | Já construído; pode ser produto próprio ou recurso interno | Posicionamento da Fase 2 | dono |
 
 ## Dívidas registradas (baseline Fase 0)
@@ -136,8 +190,14 @@ Decisão e referência: [`docs/DECISOES-MODELO-DE-CONTEUDO.md`](../DECISOES-MODE
 | D4 | Sem billing | Média | Pós-piloto |
 | D5 | `database.types.ts` desatualizado | Média | Fase 1 (A1) |
 | D6 | PDF server-side, auth completo | Baixa | Pós-piloto |
-| D7 | Marca do piloto no produto (FineAndYou hardcoded + skin `fay-*`) | Média | Fase 1 (A6) |
-| D8 | ESLint sem configuração (`next lint` abre wizard) | Baixa | Pós-piloto |
+| D7 | Marca do piloto no produto (FineAndYou hardcoded + skin `fay-*`) | Média | **Resolvida (17/08)** — removida das telas públicas, defaults e schema; placeholder neutro até decidir nome |
+| D8 | ESLint sem configuração (`next lint` abre wizard) | Baixa | Pós-piloto — pendente |
+| D9 | 🔴 Delete de usuário cross-org (`api/admin/users/[id]/delete` sem filtro) | Alta | ✅ Resolvida (18/08) — alvo validado por `organization_id` antes de deletar profile+auth |
+| D10 | 🔴 DELETE de template cross-org (`api/templates/[id]` sem filtro em proposal/template_block) | Alta | ✅ Resolvida (18/08) — template buscado/atualizado/deletado sempre com `organization_id`; propostas desatreladas por org |
+| D11 | Storage `assets` público com fallback a org raiz nas policies + sem headers de segurança/CSP + sem rate-limit nos endpoints públicos | Média | Próxima iteração |
+| D12 | Deps órfãs (`clsx`, `tailwind-merge`, `html2canvas`, `jspdf`, `puppeteer`) + SQLs soltos na raiz do repo + `supabase/.temp/linked-project.json` rastreado | Baixa | Próxima iteração |
+| D13 | Fontes Sora/Inter referenciadas no Tailwind mas nunca carregadas (`next/font` ausente) | Baixa | Quando decidir identidade |
+| D14 | `PriceTableEditor` autosave por keystroke grava valores intermediários (digitação rápida → race; campo exibe 12,50 mas banco fica 0,12/1,25) | Baixa | Próxima iteração |
 
 ## Como usar este arquivo
 
