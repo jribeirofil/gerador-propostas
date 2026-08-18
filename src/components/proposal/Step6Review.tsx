@@ -96,7 +96,7 @@ export default function Step6Review({ data: initialData, control, setValue }: Pr
     <div className="space-y-5">
       <div>
         <h2 className="font-sora font-semibold text-base text-app-text">Revisão da proposta</h2>
-        <p className="text-xs text-app-muted mt-0.5">Confira os dados antes de gerar. A proposta só é salva ao clicar em "Gerar proposta".</p>
+        <p className="text-xs text-app-muted mt-0.5">Confira os dados antes de gerar. A proposta só é salva ao clicar em &quot;Gerar proposta&quot;.</p>
       </div>
 
       {/* Cliente + Condições */}

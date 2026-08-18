@@ -164,7 +164,7 @@ export default function PdfPage() {
       </div>
 
       <p className="text-xs text-app-muted mt-4 text-center">
-        No diálogo de impressão, selecione "Salvar como PDF" e desative cabeçalhos/rodapés para melhor resultado.
+        No diálogo de impressão, selecione &quot;Salvar como PDF&quot; e desative cabeçalhos/rodapés para melhor resultado.
       </p>
 
       <ConfirmDialog
