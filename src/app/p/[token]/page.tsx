@@ -43,7 +43,7 @@ export default async function PublicProposalPage({ params }: { params: { token: 
   const { doc, settings } = await loadProposalDocument(db, proposal)
 
   const companyName = settings?.company_name || 'Sua empresa'
-  const primaryColor = settings?.primary_color || '#1FE97C'
+  const primaryColor = settings?.primary_color || '#4F46E5'
   const clientName = (proposal.client as { empresa?: string } | null)?.empresa || ''
   const documentHtml = buildProposalBody(doc)
 

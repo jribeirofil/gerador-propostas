@@ -24,7 +24,7 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
   const [companyWhatsapp, setCompanyWhatsapp] = useState(maskPhone(settings?.company_whatsapp || ''))
   const [logoUrl, setLogoUrl] = useState(settings?.logo_url || '')
   const [logoDarkUrl, setLogoDarkUrl] = useState(settings?.logo_url_dark || '')
-  const [primaryColor, setPrimaryColor] = useState(settings?.primary_color || '#1FE97C')
+  const [primaryColor, setPrimaryColor] = useState(settings?.primary_color || '#4F46E5')
   const [secondaryColor, setSecondaryColor] = useState(settings?.secondary_color || '')
   const [aiTone, setAiTone] = useState(settings?.ai_tone || '')
   const [companyAbout, setCompanyAbout] = useState(settings?.company_about || '')
@@ -105,7 +105,7 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
       company_whatsapp: companyWhatsapp.trim() || null,
       logo_url: logoUrl.trim() || null,
       logo_url_dark: logoDarkUrl.trim() || null,
-      primary_color: primaryColor.trim() || '#1FE97C',
+      primary_color: primaryColor.trim() || '#4F46E5',
       secondary_color: secondaryColor.trim() || null,
       ai_tone: aiTone.trim() || null,
       company_about: companyAbout.trim() || null,
@@ -305,7 +305,7 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
             <div className="flex items-center gap-2">
               <input
                 type="color"
-                value={primaryColor || '#1FE97C'}
+                value={primaryColor || '#4F46E5'}
                 onChange={e => setPrimaryColor(e.target.value)}
                 className="w-12 h-10 rounded border border-app-border cursor-pointer"
               />
@@ -314,7 +314,7 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
                 value={primaryColor}
                 onChange={e => setPrimaryColor(e.target.value)}
                 className={`${inputClass} flex-1`}
-                placeholder="#1FE97C"
+                placeholder="#4F46E5"
               />
             </div>
           </div>
@@ -323,7 +323,7 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
             <div className="flex items-center gap-2">
               <input
                 type="color"
-                value={secondaryColor || '#00B765'}
+                value={secondaryColor || '#4338CA'}
                 onChange={e => setSecondaryColor(e.target.value)}
                 className="w-12 h-10 rounded border border-app-border cursor-pointer"
               />
@@ -332,7 +332,7 @@ export default function CompanySettingsForm({ settings, organizationId }: Props)
                 value={secondaryColor}
                 onChange={e => setSecondaryColor(e.target.value)}
                 className={`${inputClass} flex-1`}
-                placeholder="#00B765"
+                placeholder="#4338CA"
               />
             </div>
           </div>

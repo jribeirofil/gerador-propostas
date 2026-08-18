@@ -61,8 +61,8 @@ function isValidEmail(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
 }
 
-export default function ProposalDecision({ token, opportunityStatus, primaryColor = '#1FE97C' }: Props) {
-  const brand = primaryColor || '#1FE97C'
+export default function ProposalDecision({ token, opportunityStatus, primaryColor = '#4F46E5' }: Props) {
+  const brand = primaryColor || '#4F46E5'
   const brandVars = {
     '--brand': brand,
     '--brand-hover': darken(brand, 10),

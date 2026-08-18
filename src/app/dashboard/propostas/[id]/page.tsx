@@ -175,7 +175,7 @@ export default async function ProposalWorkspacePage({ params }: { params: { id: 
       versionHistory={versionHistory || []}
       signerData={signerData}
       companyName={settings?.company_name || 'Sua empresa'}
-      primaryColor={settings?.primary_color || '#1FE97C'}
+      primaryColor={settings?.primary_color || '#4F46E5'}
       secondaryColor={settings?.secondary_color || null}
       coverBgUrl={coverBgUrl}
       coverVideoUrl={coverVideoUrl}

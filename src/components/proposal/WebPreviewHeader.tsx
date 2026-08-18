@@ -10,7 +10,7 @@ interface Props {
   primaryColor?: string
 }
 
-export default function WebPreviewHeader({ companyName, clientName, pdfUrl, backUrl, primaryColor = '#1FE97C' }: Props) {
+export default function WebPreviewHeader({ companyName, clientName, pdfUrl, backUrl, primaryColor = '#4F46E5' }: Props) {
   const [loading, setLoading] = useState(false)
 
   async function handleDownloadPdf() {

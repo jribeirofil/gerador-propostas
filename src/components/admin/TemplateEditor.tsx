@@ -763,7 +763,7 @@ export default function TemplateEditor({ template, initialBlocks, allProducts, t
                     <div className="flex items-center gap-2">
                       <input
                         type="color"
-                        value={accentColor || '#1FE97C'}
+                        value={accentColor || '#4F46E5'}
                         onChange={e => setAccentColor(e.target.value)}
                         className="w-10 h-10 rounded border border-app-border cursor-pointer"
                       />

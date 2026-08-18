@@ -44,7 +44,7 @@ export default async function PreviewWebPage({ params }: { params: { id: string 
   const { doc, settings } = await loadProposalDocument(db, proposal)
 
   const companyName = settings?.company_name || 'Sua empresa'
-  const primaryColor = settings?.primary_color || '#1FE97C'
+  const primaryColor = settings?.primary_color || '#4F46E5'
   const clientName = proposal.client?.empresa || ''
   const documentHtml = buildProposalBody(doc)
 

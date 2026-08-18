@@ -168,7 +168,7 @@ export function buildProposalBody(proposal: PdfProposal): string {
     : format(new Date(), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
 
   const companyName = proposal.settings?.company_name || 'Sua empresa'
-  const primary = proposal.settings?.primary_color || '#1FE97C'
+  const primary = proposal.settings?.primary_color || '#4F46E5'
   const secondary = proposal.settings?.secondary_color || null
   const brandDeep = darken(primary, 42)
   const brandMuted = darken(primary, 25)

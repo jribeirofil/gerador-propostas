@@ -142,7 +142,7 @@ export default function PriceTablesClient() {
 
       <PageHeader
         icon={CircleDollarSign}
-        iconBg="#10B981"
+        iconBg="#4F46E5"
         title="Tabelas de preço"
         subtitle={`Gerencie as faixas de preço por quantidade para ${product.name}.`}
       />
