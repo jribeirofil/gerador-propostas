@@ -15,5 +15,10 @@ node_modules/
 graphify-out/
 .gstack/
 
+# Supabase CLI artifacts / scratch
+supabase/.temp/
+supabase/.branches/
+supabase/snippets/
+
 # Logs
 *.log
