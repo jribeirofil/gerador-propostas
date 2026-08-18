@@ -123,17 +123,6 @@ export async function POST(req: NextRequest) {
       is_default: true,
       product_slugs: [],
       organization_id: org.id,
-      cover_bg_color: '#FFFFFF',
-      body_bg_color: '#FAFAF9',
-      body_text_color: '#1F2937',
-      body_font_size: '16',
-      accent_color: '#1FE97C',
-      accent_color_2: '#00B765',
-      section_title_color: '#1F2937',
-      body_line_height: '1.6',
-      body_padding_h: '40',
-      body_padding_v: '32',
-      heading_font_size: '24',
     } as any)
 
   if (templateError) {

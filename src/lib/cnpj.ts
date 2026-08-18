@@ -17,10 +17,10 @@ export function isValidCNPJ(cnpj: string): boolean {
   // Rejeita sequências repetidas (11111111111111, etc)
   if (/^(\d)\1{13}$/.test(clean)) return false
 
-  // Valida primeiro dígito verificador
+  // Valida primeiro dígito verificador sobre os 12 dígitos da base
   let sum = 0
   let multiplier = 5
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 12; i++) {
     sum += parseInt(clean[i]) * multiplier
     multiplier = multiplier === 2 ? 9 : multiplier - 1
   }
@@ -28,12 +28,12 @@ export function isValidCNPJ(cnpj: string): boolean {
   let remainder = sum % 11
   const digit1 = remainder < 2 ? 0 : 11 - remainder
 
-  if (parseInt(clean[8]) !== digit1) return false
+  if (parseInt(clean[12]) !== digit1) return false
 
-  // Valida segundo dígito verificador
+  // Valida segundo dígito verificador sobre os 13 dígitos (base + DV1)
   sum = 0
   multiplier = 6
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 13; i++) {
     sum += parseInt(clean[i]) * multiplier
     multiplier = multiplier === 2 ? 9 : multiplier - 1
   }
@@ -41,7 +41,7 @@ export function isValidCNPJ(cnpj: string): boolean {
   remainder = sum % 11
   const digit2 = remainder < 2 ? 0 : 11 - remainder
 
-  if (parseInt(clean[9]) !== digit2) return false
+  if (parseInt(clean[13]) !== digit2) return false
 
   return true
 }
