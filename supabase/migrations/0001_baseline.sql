@@ -1,5 +1,5 @@
 -- ============================================================
--- FineAndYou — 0001_baseline.sql (idempotente)
+-- 0001_baseline.sql (idempotente)
 -- Snapshot canonico do schema vivo (2026-08-15).
 -- Fontes:
 --   - OpenAPI do PostgREST (tabelas, colunas, tipos, defaults, NOT NULL)
@@ -23,18 +23,6 @@ create table if not exists public.organization (
   created_at timestamptz default now()
 );
 
-
-do $$
-declare
-  v_root uuid := '00000000-0000-0000-0000-000000000001';
-  v_org_count int;
-begin
-  select count(*) into v_org_count from public.organization;
-  if v_org_count = 0 then
-    insert into public.organization (id, name, created_by)
-    values (v_root, 'FineAndYou', null);
-  end if;
-end $$;
 
 -- ────────────────────────────────────────────────────────────
 -- 2. PROFILES (dependencia de current_org_id)
@@ -97,7 +85,7 @@ begin
     new.id,
     new.raw_user_meta_data->>'full_name',
     'seller',
-    (select id from public.organization order by created_at limit 1)
+    null
   );
   return new;
 end; $$;
@@ -121,7 +109,7 @@ create table if not exists public.category (
   color text default 'blue' not null,
   sort_order integer default 0 not null,
   created_at timestamptz default now() not null,
-  organization_id uuid default COALESCE(public.current_org_id(), '00000000-0000-0000-0000-000000000001'::uuid) not null
+  organization_id uuid default public.current_org_id() not null
 );
 
 
@@ -140,19 +128,19 @@ create table if not exists public.clients (
   rd_lead_id text,
   origem text default 'manual',
   updated_from_rd_at timestamptz,
-  organization_id uuid default COALESCE(public.current_org_id(), '00000000-0000-0000-0000-000000000001'::uuid) not null
+  organization_id uuid default public.current_org_id() not null
 );
 
 
 create table if not exists public.company_settings (
   id uuid primary key default gen_random_uuid(),
-  company_name text default 'FineAndYou' not null,
+  company_name text default 'Minha Empresa' not null,
   company_site text,
   company_email text,
   company_phone text,
   company_whatsapp text,
   logo_url text,
-  primary_color text default '#1FE97C' not null,
+  primary_color text default '#4F46E5' not null,
   secondary_color text,
   pdf_footer_text text,
   pdf_default_conditions text,
@@ -164,7 +152,7 @@ create table if not exists public.company_settings (
   updated_by uuid,
   ai_tone text,
   cover_bg_url text,
-  organization_id uuid default COALESCE(public.current_org_id(), '00000000-0000-0000-0000-000000000001'::uuid) not null,
+  organization_id uuid default public.current_org_id() not null,
   cover_video_url text,
   company_about text
 );
@@ -177,7 +165,7 @@ create table if not exists public.content_library (
   content jsonb not null,
   created_by uuid,
   created_at timestamptz default now(),
-  organization_id uuid default COALESCE(public.current_org_id(), '00000000-0000-0000-0000-000000000001'::uuid) not null
+  organization_id uuid default public.current_org_id() not null
 );
 
 
@@ -187,7 +175,7 @@ create table if not exists public.integrations (
   refresh_token text not null,
   connected_at timestamptz default now(),
   updated_at timestamptz default now(),
-  organization_id uuid default COALESCE(public.current_org_id(), '00000000-0000-0000-0000-000000000001'::uuid) not null
+  organization_id uuid default public.current_org_id() not null
 );
 
 
@@ -199,7 +187,7 @@ create table if not exists public.price_table (
   active boolean default true not null,
   created_at timestamptz default now(),
   updated_at timestamptz default now(),
-  organization_id uuid default COALESCE(public.current_org_id(), '00000000-0000-0000-0000-000000000001'::uuid) not null
+  organization_id uuid default public.current_org_id() not null
 );
 
 
@@ -229,7 +217,7 @@ create table if not exists public.product (
   default_price_table_id uuid,
   unit_label text default 'unidades' not null,
   category text,
-  organization_id uuid default COALESCE(public.current_org_id(), '00000000-0000-0000-0000-000000000001'::uuid) not null,
+  organization_id uuid default public.current_org_id() not null,
   commercial_conditions text
 );
 
@@ -302,7 +290,7 @@ create table if not exists public.proposal (
   code integer not null,
   has_pending_review boolean default false,
   vigencia_contrato text,
-  organization_id uuid default COALESCE(public.current_org_id(), '00000000-0000-0000-0000-000000000001'::uuid) not null,
+  organization_id uuid default public.current_org_id() not null,
   commercial_conditions text
 );
 
@@ -371,7 +359,7 @@ create table if not exists public.proposal_template (
   product_slugs text[] not null,
   cover_image_url text,
   cover_video_url text,
-  organization_id uuid default COALESCE(public.current_org_id(), '00000000-0000-0000-0000-000000000001'::uuid) not null
+  organization_id uuid default public.current_org_id() not null
 );
 
 
@@ -392,63 +380,43 @@ create table if not exists public.template_block (
 -- ────────────────────────────────────────────────────────────
 
 alter table public.profiles add column if not exists organization_id uuid
-  default coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001');
-update public.profiles set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+  default public.current_org_id();
 alter table public.profiles alter column organization_id set not null;
 
 alter table public.company_settings add column if not exists organization_id uuid
-  default coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001');
-update public.company_settings set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+  default public.current_org_id();
 alter table public.company_settings alter column organization_id set not null;
 
 alter table public.clients add column if not exists organization_id uuid
-  default coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001');
-update public.clients set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+  default public.current_org_id();
 alter table public.clients alter column organization_id set not null;
 
 alter table public.product add column if not exists organization_id uuid
-  default coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001');
-update public.product set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+  default public.current_org_id();
 alter table public.product alter column organization_id set not null;
 
 alter table public.category add column if not exists organization_id uuid
-  default coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001');
-update public.category set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+  default public.current_org_id();
 alter table public.category alter column organization_id set not null;
 
 alter table public.price_table add column if not exists organization_id uuid
-  default coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001');
-update public.price_table set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+  default public.current_org_id();
 alter table public.price_table alter column organization_id set not null;
 
 alter table public.content_library add column if not exists organization_id uuid
-  default coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001');
-update public.content_library set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+  default public.current_org_id();
 alter table public.content_library alter column organization_id set not null;
 
 alter table public.proposal_template add column if not exists organization_id uuid
-  default coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001');
-update public.proposal_template set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+  default public.current_org_id();
 alter table public.proposal_template alter column organization_id set not null;
 
 alter table public.proposal add column if not exists organization_id uuid
-  default coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001');
-update public.proposal set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+  default public.current_org_id();
 alter table public.proposal alter column organization_id set not null;
 
 alter table public.integrations add column if not exists organization_id uuid
-  default coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001');
-update public.integrations set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+  default public.current_org_id();
 alter table public.integrations alter column organization_id set not null;
 
 
@@ -1194,7 +1162,7 @@ create policy assets_org_insert on storage.objects
   with check (
     bucket_id = 'assets'
     and (storage.foldername(name))[1] =
-        coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001')::text
+        public.current_org_id()::text
   );
 
 create policy assets_org_update on storage.objects
@@ -1202,7 +1170,7 @@ create policy assets_org_update on storage.objects
   using (
     bucket_id = 'assets'
     and (storage.foldername(name))[1] =
-        coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001')::text
+        public.current_org_id()::text
   );
 
 create policy assets_org_delete on storage.objects
@@ -1210,7 +1178,7 @@ create policy assets_org_delete on storage.objects
   using (
     bucket_id = 'assets'
     and (storage.foldername(name))[1] =
-        coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001')::text
+        public.current_org_id()::text
   );
 
 create policy assets_org_select on storage.objects
@@ -1218,7 +1186,7 @@ create policy assets_org_select on storage.objects
   using (
     bucket_id = 'assets'
     and (storage.foldername(name))[1] =
-        coalesce(public.current_org_id(), '00000000-0000-0000-0000-000000000001')::text
+        public.current_org_id()::text
   );
 
 
@@ -1226,24 +1194,9 @@ create policy assets_org_select on storage.objects
 -- 11. SEED + GRANTS
 -- ────────────────────────────────────────────────────────────
 
-do $$
-declare
-  v_root uuid := '00000000-0000-0000-0000-000000000001';
-  v_org_count int;
-begin
-  select count(*) into v_org_count from public.organization;
-  if v_org_count = 0 then
-    insert into public.organization (id, name, created_by)
-    values (
-      v_root,
-      coalesce((select company_name from public.company_settings limit 1), 'Empresa'),
-      null
-    );
-  end if;
-end $$;
-
-update public.profiles set organization_id = '00000000-0000-0000-0000-000000000001'
-  where organization_id is null;
+-- ────────────────────────────────────────────────────────────
+-- 11. GRANTS
+-- ────────────────────────────────────────────────────────────
 
 grant usage on schema public to anon, authenticated;
 grant all on all tables in schema public to authenticated;

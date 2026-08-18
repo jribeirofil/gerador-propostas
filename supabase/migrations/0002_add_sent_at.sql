@@ -1,5 +1,5 @@
 -- ============================================================
--- FineAndYou — 0002_add_sent_at.sql (idempotente)
+-- 0002_add_sent_at.sql (idempotente)
 -- A2 (PRD-01): radar de follow-up.
 -- sent_at: quando a proposta foi enviada ao cliente (publish).
 -- followup_days: janela (dias) apos sent_at para considerar a
