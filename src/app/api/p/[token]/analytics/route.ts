@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { clientIp, rateLimit } from '@/lib/rate-limit'
 
 const VALID_EVENTS = ['opened', 'heartbeat']
 
 export async function POST(req: NextRequest, { params }: { params: { token: string } }) {
   try {
+    const limiter = rateLimit({ key: `analytics:${clientIp(req)}`, limit: 60, windowMs: 60_000 })
+    if (!limiter.ok) {
+      return NextResponse.json(
+        { error: 'Muitas tentativas.' },
+        { status: 429, headers: { 'Retry-After': String(limiter.retryAfterSeconds) } }
+      )
+    }
+
     const body = await req.json()
     const { event, sessionId } = body as { event: string; sessionId?: string }
 

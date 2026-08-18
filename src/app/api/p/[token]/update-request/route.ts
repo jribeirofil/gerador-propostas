@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { clientIp, rateLimit } from '@/lib/rate-limit'
 
 const ALLOWED_TYPES = ['view', 'request'] as const
 
 export async function POST(req: NextRequest, { params }: { params: { token: string } }) {
   try {
+    const limiter = rateLimit({ key: `update-request:${clientIp(req)}`, limit: 30, windowMs: 60_000 })
+    if (!limiter.ok) {
+      return NextResponse.json(
+        { error: 'Muitas tentativas. Aguarde e tente novamente.' },
+        { status: 429, headers: { 'Retry-After': String(limiter.retryAfterSeconds) } }
+      )
+    }
+
     const body = await req.json()
     const type = body.type as string
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { clientIp, rateLimit } from '@/lib/rate-limit'
 
 type DecisionType = 'approved' | 'adjustments' | 'declined'
 
@@ -34,6 +35,14 @@ function getAuditInfo(req: NextRequest): { ip: string | null; user_agent: string
 
 export async function POST(req: NextRequest, { params }: { params: { token: string } }) {
   try {
+    const limiter = rateLimit({ key: `decision:${clientIp(req)}`, limit: 20, windowMs: 60_000 })
+    if (!limiter.ok) {
+      return NextResponse.json(
+        { error: 'Muitas tentativas. Aguarde e tente novamente.' },
+        { status: 429, headers: { 'Retry-After': String(limiter.retryAfterSeconds) } }
+      )
+    }
+
     const body = await req.json()
     const type    = body.type as string
     const comment = typeof body.comment === 'string' ? body.comment.slice(0, MAX_COMMENT) : undefined

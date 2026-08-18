@@ -23,11 +23,31 @@ export async function DELETE(
     return NextResponse.json({ error: 'Acesso negado.' }, { status: 403 })
   }
 
+  const orgId = profile.organization_id
+  if (!orgId) {
+    return NextResponse.json({ error: 'Acesso negado.' }, { status: 403 })
+  }
+
   try {
     const db = createAdminClient()
 
-    // Delete from profiles first
-    await db.from('profiles').delete().eq('id', params.id)
+    // O alvo DEVE pertencer à mesma organização do admin que está deletando
+    const { data: targetProfile } = await db
+      .from('profiles')
+      .select('id')
+      .eq('id', params.id)
+      .eq('organization_id', orgId)
+      .maybeSingle()
+
+    if (!targetProfile) {
+      return NextResponse.json(
+        { error: 'Usuário não encontrado nesta empresa.' },
+        { status: 404 }
+      )
+    }
+
+    // Delete from profiles first (escopado por org)
+    await db.from('profiles').delete().eq('id', params.id).eq('organization_id', orgId)
 
     // Delete auth user
     const { error } = await db.auth.admin.deleteUser(params.id)

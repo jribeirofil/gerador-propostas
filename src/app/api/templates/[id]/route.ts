@@ -169,16 +169,20 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 
   const target = allTemplates!.find(t => t.id === params.id)
 
+  if (!target) {
+    return NextResponse.json({ error: 'Template não encontrado.' }, { status: 404 })
+  }
+
   // If deleting the default template, auto-promote the next available template
   if (target?.is_default) {
     const next = allTemplates!.find(t => t.id !== params.id)
     if (next) {
-      await db.from('proposal_template').update({ is_default: true }).eq('id', next.id)
+      await db.from('proposal_template').update({ is_default: true }).eq('id', next.id).eq('organization_id', orgId)
     }
   }
 
   // Detach proposals that reference this template (nullable FK; capa volta a cair no settings)
-  await db.from('proposal').update({ template_id: null }).eq('template_id', params.id)
+  await db.from('proposal').update({ template_id: null }).eq('template_id', params.id).eq('organization_id', orgId)
   await db.from('template_block').delete().eq('template_id', params.id)
   const { error } = await db.from('proposal_template').delete().eq('id', params.id).eq('organization_id', orgId)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
