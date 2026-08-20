@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Lock, Eye, EyeOff, LogIn } from 'lucide-react'
@@ -7,6 +7,14 @@ import { createClient } from '@/lib/supabase/client'
 import { useTheme } from 'next-themes'
 
 export default function ResetPasswordConfirmPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordConfirmContent />
+    </Suspense>
+  )
+}
+
+function ResetPasswordConfirmContent() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)

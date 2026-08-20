@@ -22,3 +22,5 @@ supabase/snippets/
 
 # Logs
 *.log
+.vercel
+.env*
