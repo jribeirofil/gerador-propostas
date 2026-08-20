@@ -4,6 +4,7 @@ import { FileText } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { isStalled } from '@/lib/followup'
 import ProposalTable from '@/components/proposal/ProposalTable'
+import SetupChecklist, { type SetupStep } from '@/components/onboarding/SetupChecklist'
 import PageHeader from '@/components/ui/PageHeader'
 
 export default async function DashboardPage() {
@@ -44,6 +45,66 @@ export default async function DashboardPage() {
   const decididas   = ganhas + perdidas
   const txConversao = decididas > 0 ? Math.round(ganhas / decididas * 100) : 0
 
+  // ── Setup checklist ──────────────────────────────────────
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('full_name, role, organization_id')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  const orgId = profile?.organization_id ?? null
+
+  const [productsRes, settingsRes, teamRes] = await Promise.all([
+    supabase.from('product').select('id').eq('organization_id', orgId).limit(1),
+    supabase.from('company_settings').select('company_name, company_email, company_phone, logo_url').eq('organization_id', orgId).limit(1).maybeSingle(),
+    supabase.from('profiles').select('id').eq('organization_id', orgId).limit(2),
+  ])
+
+  const steps: SetupStep[] = [
+    {
+      key: 'empresa',
+      title: 'Dados da empresa',
+      description: settingsRes.data?.company_name && settingsRes.data.company_name !== 'Minha Empresa'
+        ? (settingsRes.data.company_name || '').trim()
+        : 'Logo, contato e endereço',
+      href: '/dashboard/admin/configuracoes',
+      done: !!(settingsRes.data?.company_email || settingsRes.data?.company_phone || settingsRes.data?.logo_url),
+      icon: 'empresa',
+    },
+    {
+      key: 'catalogo',
+      title: 'Catálogo',
+      description: 'Categorias e produtos com preços',
+      href: '/dashboard/admin/produtos',
+      done: (productsRes.data?.length ?? 0) > 0,
+      icon: 'catalogo',
+    },
+    {
+      key: 'template',
+      title: 'Template padrão',
+      description: 'Blocos e conteúdo da proposta',
+      href: '/dashboard/admin/conteudo',
+      done: true,
+      icon: 'template',
+    },
+    {
+      key: 'equipe',
+      title: 'Equipe',
+      description: 'Convide seus vendedores e colaboradores',
+      href: '/dashboard/admin/usuarios',
+      done: (teamRes.data?.length ?? 0) > 1,
+      icon: 'equipe',
+    },
+    {
+      key: 'proposta',
+      title: 'Primeira proposta',
+      description: 'Crie e envie sua primeira proposta',
+      href: '/dashboard/nova',
+      done: proposals.length > 0,
+      icon: 'proposta',
+    },
+  ]
+
   const stats = [
     { label: 'Rascunhos',  value: rascunhos,        desc: 'Nunca enviadas',       color: '#94A3B8' },
     { label: 'Em aberto',  value: emAberto,          desc: 'Aguardando resposta',  color: '#3B82F6' },
@@ -62,6 +123,8 @@ export default async function DashboardPage() {
         subtitle="Gerencie e acompanhe as propostas comerciais."
         action={{ label: 'Nova proposta', href: '/dashboard/nova' }}
       />
+
+      <SetupChecklist organizationId={profile?.organization_id ?? null} steps={steps} />
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4 mb-10">
